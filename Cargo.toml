@@ -1,13 +1,13 @@
 [package]
-name = "cudarc"
+name = "mistralrs_cudarc_fork"
 version = "0.12.2"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
 description = "Safe wrappers around CUDA apis"
-homepage = "https://github.com/coreylowman/cudarc"
+homepage = "https://github.com/EricLBuehler/cudarc"
 documentation = "https://docs.rs/cudarc"
-repository = "https://github.com/coreylowman/cudarc"
+repository = "https://github.com/EricLBuehler/cudarc"
 readme = "README.md"
 
 keywords = [
