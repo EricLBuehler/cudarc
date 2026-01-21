@@ -1291,6 +1291,7 @@ impl CudaStream {
         self: &Arc<Self>,
         dst: &mut Dst,
     ) -> Result<(), DriverError> {
+        self.ctx.bind_to_thread()?;
         let num_bytes = dst.num_bytes();
         let (dptr, _record) = dst.device_ptr_mut(self);
         unsafe { result::memset_d8_async(dptr, 0, num_bytes, self.cu_stream) }?;
@@ -1325,6 +1326,7 @@ impl CudaStream {
         dst: &mut Dst,
     ) -> Result<(), DriverError> {
         assert!(dst.len() >= src.len());
+        self.ctx.bind_to_thread()?;
         let (src, _record_src) = unsafe { src.stream_synced_slice(self) };
         let (dst, _record_dst) = dst.device_ptr_mut(self);
         unsafe { result::memcpy_htod_async(dst, src, self.cu_stream) }
@@ -1366,6 +1368,7 @@ impl CudaStream {
         dst: &mut Dst,
     ) -> Result<(), DriverError> {
         assert!(dst.len() >= src.len());
+        self.ctx.bind_to_thread()?;
         let (src, _record_src) = src.device_ptr(self);
         let (dst, _record_dst) = unsafe { dst.stream_synced_mut_slice(self) };
         unsafe { result::memcpy_dtoh_async(dst, src, self.cu_stream) }
@@ -1378,10 +1381,26 @@ impl CudaStream {
         dst: &mut Dst,
     ) -> Result<(), DriverError> {
         assert!(dst.len() >= src.len());
+        self.ctx.bind_to_thread()?;
+
         let num_bytes = src.num_bytes();
-        let (src, _record_src) = src.device_ptr(self);
+
+        let src_ctx = src.stream().context();
+        let dst_ctx = self.context();
+
+        let (src, _record_src) = src.device_ptr(src.stream());
         let (dst, _record_dst) = dst.device_ptr_mut(self);
-        unsafe { result::memcpy_dtod_async(dst, src, num_bytes, self.cu_stream) }
+
+        unsafe {
+            result::memcpy_peer_async(
+                dst_ctx.cu_ctx,
+                dst,
+                src_ctx.cu_ctx,
+                src,
+                num_bytes,
+                self.cu_stream,
+            )
+        }
     }
 
     /// Copy a [`CudaSlice`]/[`CudaView`] to a new [`CudaSlice`].

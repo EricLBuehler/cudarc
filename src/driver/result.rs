@@ -951,6 +951,23 @@ pub unsafe fn memcpy_dtod_sync(
     sys::cuMemcpyDtoD_v2(dst, src, num_bytes).result()
 }
 
+/// Copies device memory between two contexts asynchronously.
+///
+/// See [cuda docs](https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__MEM.html#group__CUDA__MEM_1g82fcecb38018e64b98616a8ac30112f2)
+///
+/// # Safety
+/// 1. Neither device pointer should have been freed (double free)
+pub unsafe fn memcpy_peer_async(
+    dst_ctx: sys::CUcontext,
+    dst: sys::CUdeviceptr,
+    src_ctx: sys::CUcontext,
+    src: sys::CUdeviceptr,
+    num_bytes: usize,
+    stream: sys::CUstream,
+) -> Result<(), DriverError> {
+    sys::cuMemcpyPeerAsync(dst, dst_ctx, src, src_ctx, num_bytes, stream).result()
+}
+
 /// Returns (free, total) memory in bytes.
 ///
 /// See [cuda docs](https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__MEM.html#group__CUDA__MEM_1g808f555540d0143a331cc42aa98835c0)
@@ -1350,5 +1367,59 @@ pub mod graph {
         stream: sys::CUstream,
     ) -> Result<(), DriverError> {
         sys::cuGraphLaunch(graph_exec, stream).result()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::super::safe::{CudaContext, CudaSlice};
+    use super::*;
+    use std::println;
+
+    #[test]
+    fn peer_transfer_contexts() -> Result<(), DriverError> {
+        let ctx1 = CudaContext::new(0)?;
+        if device::get_count()? < 2 {
+            println!("Skip test because not enough cuda devices");
+            return Ok(());
+        }
+        let stream1 = ctx1.default_stream();
+        let a: CudaSlice<f64> = stream1.alloc_zeros::<f64>(10)?;
+
+        let ctx2 = CudaContext::new(1)?;
+        let stream2 = ctx2.default_stream();
+        let b = stream2.clone_dtod(&a)?;
+        let _ = stream1.clone_dtoh(&a)?;
+        let _ = stream2.clone_dtoh(&b)?;
+        Ok(())
+    }
+
+    #[test]
+    fn peer_transfer_self() -> Result<(), DriverError> {
+        let ctx1 = CudaContext::new(0)?;
+        let stream1 = ctx1.default_stream();
+        let a: CudaSlice<f64> = stream1.alloc_zeros::<f64>(10)?;
+
+        let ctx2 = CudaContext::new(0)?;
+        let stream2 = ctx2.default_stream();
+        let b = stream2.clone_dtod(&a)?;
+        let _ = stream1.clone_dtoh(&a)?;
+        let _ = stream2.clone_dtoh(&b)?;
+        Ok(())
+    }
+
+    #[test]
+    fn re_associate_context_for_memory_op() -> Result<(), DriverError> {
+        let ctx1 = CudaContext::new(0)?;
+        if device::get_count()? < 2 {
+            println!("Skip test because not enough cuda devices");
+            return Ok(());
+        }
+        let stream1 = ctx1.default_stream();
+        let a: CudaSlice<f64> = stream1.alloc_zeros::<f64>(10)?;
+
+        let _ctx2 = CudaContext::new(1)?;
+
+        stream1.clone_dtoh(&a).map(|_| ())
     }
 }
