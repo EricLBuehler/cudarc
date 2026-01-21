@@ -1388,18 +1388,22 @@ impl CudaStream {
         let src_ctx = src.stream().context();
         let dst_ctx = self.context();
 
-        let (src, _record_src) = src.device_ptr(src.stream());
+        let (src, _record_src) = src.device_ptr(self);
         let (dst, _record_dst) = dst.device_ptr_mut(self);
 
-        unsafe {
-            result::memcpy_peer_async(
-                dst_ctx.cu_ctx,
-                dst,
-                src_ctx.cu_ctx,
-                src,
-                num_bytes,
-                self.cu_stream,
-            )
+        if src_ctx == dst_ctx {
+            unsafe { result::memcpy_dtod_async(dst, src, num_bytes, self.cu_stream) }
+        } else {
+            unsafe {
+                result::memcpy_peer_async(
+                    dst_ctx.cu_ctx,
+                    dst,
+                    src_ctx.cu_ctx,
+                    src,
+                    num_bytes,
+                    self.cu_stream,
+                )
+            }
         }
     }
 
