@@ -216,6 +216,7 @@ pub(crate) fn get_lib_name_candidates(lib_name: &str) -> std::vec::Vec<std::stri
         std::format!("{DLL_PREFIX}{lib_name}{DLL_SUFFIX}.12"),
         std::format!("{DLL_PREFIX}{lib_name}{DLL_SUFFIX}.11"),
         std::format!("{DLL_PREFIX}{lib_name}{DLL_SUFFIX}.10"),
+        std::format!("{DLL_PREFIX}{lib_name}{DLL_SUFFIX}.9"),
         // See issue #296
         std::format!("{DLL_PREFIX}{lib_name}{DLL_SUFFIX}.1"),
     ]
