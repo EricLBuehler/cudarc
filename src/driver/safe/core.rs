@@ -116,7 +116,6 @@ impl CudaContext {
         Ok((capability_major, capability_minor))
     }
 
-    /// Get the underlying [sys::CUdevice] of this [CudaContext].
     /// Get the total memory available on this device, in bytes.
     pub fn total_mem(&self) -> Result<usize, DriverError> {
         self.check_err()?;
@@ -130,6 +129,7 @@ impl CudaContext {
         self.bind_to_thread()?;
         result::mem_get_info()
     }
+    /// Get the underlying [sys::CUdevice] of this [CudaContext].
     ///
     /// # Safety
     /// While this function is marked as safe, actually using the
