@@ -117,6 +117,19 @@ impl CudaContext {
     }
 
     /// Get the underlying [sys::CUdevice] of this [CudaContext].
+    /// Get the total memory available on this device, in bytes.
+    pub fn total_mem(&self) -> Result<usize, DriverError> {
+        self.check_err()?;
+        unsafe { result::device::total_mem(self.cu_device) }
+    }
+
+    /// Returns the free and total device memory in bytes as a `(free, total)` tuple.
+    /// Note: this calls [CudaContext::bind_to_thread()] to ensure the query
+    /// runs against this device's context.
+    pub fn mem_get_info(&self) -> Result<(usize, usize), DriverError> {
+        self.bind_to_thread()?;
+        result::mem_get_info()
+    }
     ///
     /// # Safety
     /// While this function is marked as safe, actually using the
@@ -2280,17 +2293,17 @@ mod tests {
         let ctx = CudaContext::new(0).unwrap();
         let stream = ctx.default_stream();
 
-        let (free1, total1) = result::mem_get_info().unwrap();
+        let (free1, total1) = ctx.mem_get_info().unwrap();
 
         let t = stream.clone_htod(&[0.0f32; 5]).unwrap();
-        let (free2, total2) = result::mem_get_info().unwrap();
+        let (free2, total2) = ctx.mem_get_info().unwrap();
         assert_eq!(total1, total2);
         assert!(free2 < free1);
 
         drop(t);
         ctx.synchronize().unwrap();
 
-        let (free3, total3) = result::mem_get_info().unwrap();
+        let (free3, total3) = ctx.mem_get_info().unwrap();
         assert_eq!(total2, total3);
         assert!(free3 > free2);
         assert_eq!(free3, free1);
