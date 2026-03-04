@@ -2482,7 +2482,7 @@ mod tests {
     }
 
     /// Helper to create a non-primary context for testing `from_raw_context`.
-    /// Uses `cuCtxCreate_v3` (available in CUDA 11.04+).
+    /// Uses `cuCtxCreate_v3` (available in CUDA 11.04 through 12.09 bindings).
     #[cfg(any(
         feature = "cuda-11040",
         feature = "cuda-11050",
@@ -2498,8 +2498,6 @@ mod tests {
         feature = "cuda-12060",
         feature = "cuda-12080",
         feature = "cuda-12090",
-        feature = "cuda-13000",
-        feature = "cuda-13010",
     ))]
     fn create_non_primary_context() -> (sys::CUdevice, sys::CUcontext) {
         result::init().unwrap();
@@ -2539,8 +2537,6 @@ mod tests {
         feature = "cuda-12060",
         feature = "cuda-12080",
         feature = "cuda-12090",
-        feature = "cuda-13000",
-        feature = "cuda-13010",
     ))]
     fn test_from_raw_context_creates_and_destroys() {
         let (cu_device, cu_ctx) = create_non_primary_context();
@@ -2569,8 +2565,6 @@ mod tests {
         feature = "cuda-12060",
         feature = "cuda-12080",
         feature = "cuda-12090",
-        feature = "cuda-13000",
-        feature = "cuda-13010",
     ))]
     fn test_from_raw_context_bind_to_thread() {
         let (cu_device, cu_ctx) = create_non_primary_context();
@@ -2584,7 +2578,7 @@ mod tests {
             let stream = ctx2.default_stream();
             let data = stream.clone_htod(&[1.0f32, 2.0, 3.0]).unwrap();
             let result = stream.clone_dtoh(&data).unwrap();
-            assert_eq!(result, vec![1.0f32, 2.0, 3.0]);
+            assert_eq!(result, std::vec![1.0f32, 2.0, 3.0]);
         });
         handle.join().unwrap();
     }
