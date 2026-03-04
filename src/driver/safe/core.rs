@@ -51,7 +51,7 @@ impl Drop for CudaContext {
                 self.record_err(unsafe { result::primary_ctx::release(self.cu_device) });
             } else {
                 // Non-primary contexts (e.g., CiG) are destroyed directly.
-                unsafe { sys::cuCtxDestroy_v2(ctx) };
+                self.record_err(unsafe { sys::cuCtxDestroy_v2(ctx).result() });
             }
         }
     }
