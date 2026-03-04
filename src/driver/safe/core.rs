@@ -13,8 +13,9 @@ use std::{
     vec::Vec,
 };
 
-/// Represents a primary cuda context on a certain device. When created with [CudaContext::new()] it will
-/// push a new primary context onto the stack.
+/// Represents a CUDA context on a certain device. When created with [CudaContext::new()] it will
+/// retain a primary context. When created with [CudaContext::from_raw_context()] it wraps a
+/// pre-existing non-primary context (e.g., a CiG context created via `cuCtxCreate_v4`).
 ///
 /// This is the entrypoint to using any cuda calls, all objects maintain a pointer to `Arc<CudaContext>`
 /// to ensure proper lifetimes.
@@ -29,6 +30,10 @@ pub struct CudaContext {
     pub(crate) cu_ctx: sys::CUcontext,
     pub(crate) ordinal: usize,
     pub(crate) has_async_alloc: bool,
+    /// Whether this wraps a primary context (true) or a non-primary context (false).
+    /// Primary contexts are released via `cuDevicePrimaryCtxRelease`, while non-primary
+    /// contexts are destroyed via `cuCtxDestroy_v2`.
+    pub(crate) is_primary: bool,
     pub(crate) num_streams: AtomicUsize,
     pub(crate) event_tracking: AtomicBool,
     pub(crate) error_state: AtomicU32,
@@ -42,7 +47,12 @@ impl Drop for CudaContext {
         self.record_err(self.bind_to_thread());
         let ctx = std::mem::replace(&mut self.cu_ctx, std::ptr::null_mut());
         if !ctx.is_null() {
-            self.record_err(unsafe { result::primary_ctx::release(self.cu_device) });
+            if self.is_primary {
+                self.record_err(unsafe { result::primary_ctx::release(self.cu_device) });
+            } else {
+                // Non-primary contexts (e.g., CiG) are destroyed directly.
+                unsafe { sys::cuCtxDestroy_v2(ctx) };
+            }
         }
     }
 }
@@ -74,12 +84,58 @@ impl CudaContext {
             cu_ctx,
             ordinal,
             has_async_alloc,
+            is_primary: true,
             num_streams: AtomicUsize::new(0),
             event_tracking: AtomicBool::new(true),
             error_state: AtomicU32::new(0),
         });
         ctx.bind_to_thread()?;
         Ok(ctx)
+    }
+
+    /// Wrap a pre-existing raw CUcontext (e.g., a CiG context created via `cuCtxCreate_v4`).
+    ///
+    /// The context must already be valid and will be made current on the calling thread.
+    /// On drop, calls `cuCtxDestroy_v2` instead of `cuDevicePrimaryCtxRelease`.
+    ///
+    /// # Safety
+    ///
+    /// - `cu_ctx` must be a valid CUDA context that was created (not yet destroyed).
+    /// - `cu_device` must be the device the context was created for.
+    /// - The caller must not destroy or release the context after calling this function;
+    ///   ownership is transferred to the returned `Arc<CudaContext>`.
+    pub unsafe fn from_raw_context(
+        ordinal: usize,
+        cu_device: sys::CUdevice,
+        cu_ctx: sys::CUcontext,
+    ) -> Result<Arc<Self>, DriverError> {
+        let has_async_alloc = {
+            let memory_pools_supported = result::device::get_attribute(
+                cu_device,
+                sys::CUdevice_attribute_enum::CU_DEVICE_ATTRIBUTE_MEMORY_POOLS_SUPPORTED,
+            )?;
+            memory_pools_supported > 0
+        };
+        let ctx = Arc::new(CudaContext {
+            cu_device,
+            cu_ctx,
+            ordinal,
+            has_async_alloc,
+            is_primary: false,
+            num_streams: AtomicUsize::new(0),
+            event_tracking: AtomicBool::new(true),
+            error_state: AtomicU32::new(0),
+        });
+        ctx.bind_to_thread()?;
+        Ok(ctx)
+    }
+
+    /// Returns whether this context wraps a primary context.
+    ///
+    /// Primary contexts are created via `cuDevicePrimaryCtxRetain` and released on drop.
+    /// Non-primary contexts (e.g., CiG) are destroyed via `cuCtxDestroy_v2` on drop.
+    pub fn is_primary(&self) -> bool {
+        self.is_primary
     }
 
     /// The number of devices available.
@@ -2417,5 +2473,119 @@ mod tests {
             pinned_elapsed.as_secs_f32() * 1.5 < unpinned_elapsed.as_secs_f32(),
             "{unpinned_elapsed:?} vs {pinned_elapsed:?}"
         );
+    }
+
+    #[test]
+    fn test_primary_context_is_primary() {
+        let ctx = CudaContext::new(0).unwrap();
+        assert!(ctx.is_primary());
+    }
+
+    /// Helper to create a non-primary context for testing `from_raw_context`.
+    /// Uses `cuCtxCreate_v3` (available in CUDA 11.04+).
+    #[cfg(any(
+        feature = "cuda-11040",
+        feature = "cuda-11050",
+        feature = "cuda-11060",
+        feature = "cuda-11070",
+        feature = "cuda-11080",
+        feature = "cuda-12000",
+        feature = "cuda-12010",
+        feature = "cuda-12020",
+        feature = "cuda-12030",
+        feature = "cuda-12040",
+        feature = "cuda-12050",
+        feature = "cuda-12060",
+        feature = "cuda-12080",
+        feature = "cuda-12090",
+        feature = "cuda-13000",
+        feature = "cuda-13010",
+    ))]
+    fn create_non_primary_context() -> (sys::CUdevice, sys::CUcontext) {
+        result::init().unwrap();
+        let cu_device = result::device::get(0).unwrap();
+        let mut cu_ctx: sys::CUcontext = std::ptr::null_mut();
+        let r = unsafe {
+            sys::cuCtxCreate_v3(
+                &mut cu_ctx,
+                std::ptr::null_mut(), // no exec affinity params
+                0,
+                0, // default flags
+                cu_device,
+            )
+        };
+        assert_eq!(
+            r,
+            sys::CUresult::CUDA_SUCCESS,
+            "cuCtxCreate_v3 failed: {r:?}"
+        );
+        assert!(!cu_ctx.is_null());
+        (cu_device, cu_ctx)
+    }
+
+    #[test]
+    #[cfg(any(
+        feature = "cuda-11040",
+        feature = "cuda-11050",
+        feature = "cuda-11060",
+        feature = "cuda-11070",
+        feature = "cuda-11080",
+        feature = "cuda-12000",
+        feature = "cuda-12010",
+        feature = "cuda-12020",
+        feature = "cuda-12030",
+        feature = "cuda-12040",
+        feature = "cuda-12050",
+        feature = "cuda-12060",
+        feature = "cuda-12080",
+        feature = "cuda-12090",
+        feature = "cuda-13000",
+        feature = "cuda-13010",
+    ))]
+    fn test_from_raw_context_creates_and_destroys() {
+        let (cu_device, cu_ctx) = create_non_primary_context();
+
+        let ctx = unsafe { CudaContext::from_raw_context(0, cu_device, cu_ctx) }.unwrap();
+        assert!(!ctx.is_primary());
+        // Verify the context is bound and usable.
+        ctx.bind_to_thread().unwrap();
+        // Drop should call cuCtxDestroy_v2, not primary_ctx::release.
+        drop(ctx);
+    }
+
+    #[test]
+    #[cfg(any(
+        feature = "cuda-11040",
+        feature = "cuda-11050",
+        feature = "cuda-11060",
+        feature = "cuda-11070",
+        feature = "cuda-11080",
+        feature = "cuda-12000",
+        feature = "cuda-12010",
+        feature = "cuda-12020",
+        feature = "cuda-12030",
+        feature = "cuda-12040",
+        feature = "cuda-12050",
+        feature = "cuda-12060",
+        feature = "cuda-12080",
+        feature = "cuda-12090",
+        feature = "cuda-13000",
+        feature = "cuda-13010",
+    ))]
+    fn test_from_raw_context_bind_to_thread() {
+        let (cu_device, cu_ctx) = create_non_primary_context();
+
+        let ctx = unsafe { CudaContext::from_raw_context(0, cu_device, cu_ctx) }.unwrap();
+
+        // Verify bind_to_thread works from another thread.
+        let ctx2 = ctx.clone();
+        let handle = std::thread::spawn(move || {
+            ctx2.bind_to_thread().unwrap();
+            let stream = ctx2.default_stream();
+            let data = stream.clone_htod(&[1.0f32, 2.0, 3.0]).unwrap();
+            let result = stream.clone_dtoh(&data).unwrap();
+            assert_eq!(result, vec![1.0f32, 2.0, 3.0]);
+        });
+        handle.join().unwrap();
     }
 }
