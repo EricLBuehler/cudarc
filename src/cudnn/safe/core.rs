@@ -109,7 +109,7 @@ impl CudnnDataType for float4::F4E2M1 {
     const DATA_TYPE: sys::cudnnDataType_t = sys::cudnnDataType_t::CUDNN_DATA_FP4_E2M1;
     type Scalar = f32;
     fn into_scaling_parameter(self) -> Self::Scalar {
-        self.to_f64() as f32
+        f32::from(self)
     }
 }
 
