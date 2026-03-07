@@ -840,6 +840,11 @@ unsafe impl DeviceRepr for float4::E8M0 {}
 #[cfg(feature = "f4")]
 unsafe impl ValidAsZeroBits for float4::E8M0 {}
 
+#[cfg(feature = "f4")]
+unsafe impl DeviceRepr for float4::F4E2M1x2 {}
+#[cfg(feature = "f4")]
+unsafe impl ValidAsZeroBits for float4::F4E2M1x2 {}
+
 unsafe impl<const N: usize, T> DeviceRepr for [T; N] where T: DeviceRepr {}
 
 /// Base trait for abstracting over [CudaSlice]/[CudaView]/[CudaViewMut].

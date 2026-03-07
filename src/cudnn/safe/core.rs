@@ -96,6 +96,23 @@ impl CudnnDataType for half::bf16 {
     }
 }
 
+#[cfg(all(
+    feature = "f4",
+    any(
+        feature = "cuda-12080",
+        feature = "cuda-12090",
+        feature = "cuda-13000",
+        feature = "cuda-13010",
+    )
+))]
+impl CudnnDataType for float4::F4E2M1 {
+    const DATA_TYPE: sys::cudnnDataType_t = sys::cudnnDataType_t::CUDNN_DATA_FP4_E2M1;
+    type Scalar = f32;
+    fn into_scaling_parameter(self) -> Self::Scalar {
+        self.to_f64() as f32
+    }
+}
+
 /// A descriptor of a tensor. Create with:
 /// 1. [`Cudnn::create_4d_tensor()`]
 /// 2. [`Cudnn::create_4d_tensor_ex()`]
