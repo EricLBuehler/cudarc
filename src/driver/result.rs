@@ -197,9 +197,7 @@ pub mod device {
     ///
     /// # Safety
     /// Must be a device returned from [get].
-    pub unsafe fn get_mem_pool(
-        dev: sys::CUdevice,
-    ) -> Result<sys::CUmemoryPool, DriverError> {
+    pub unsafe fn get_mem_pool(dev: sys::CUdevice) -> Result<sys::CUmemoryPool, DriverError> {
         let mut pool = MaybeUninit::uninit();
         sys::cuDeviceGetMemPool(pool.as_mut_ptr(), dev).result()?;
         Ok(pool.assume_init())
