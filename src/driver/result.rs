@@ -1499,7 +1499,7 @@ pub mod mem_pool {
     ///
     /// # Safety
     /// 1. Pool and stream must be valid.
-    /// 2. The returned memory is unset, which may be invalid for `T`.
+    /// 2. The returned memory is uninitialized.
     pub unsafe fn alloc_async(
         pool: sys::CUmemoryPool,
         num_bytes: usize,
