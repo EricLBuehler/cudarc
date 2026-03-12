@@ -2767,7 +2767,7 @@ mod tests {
         let stream = ctx.default_stream();
         let data = stream.clone_htod(&[1.0f32, 2.0, 3.0]).unwrap();
         let result = stream.clone_dtoh(&data).unwrap();
-        assert_eq!(result, vec![1.0f32, 2.0, 3.0]);
+        assert_eq!(result, std::vec![1.0f32, 2.0, 3.0]);
     }
 
     #[test]
@@ -2797,7 +2797,7 @@ mod tests {
             let stream = ctx2.default_stream();
             let data = stream.clone_htod(&[4.0f32, 5.0, 6.0]).unwrap();
             let result = stream.clone_dtoh(&data).unwrap();
-            assert_eq!(result, vec![4.0f32, 5.0, 6.0]);
+            assert_eq!(result, std::vec![4.0f32, 5.0, 6.0]);
         });
         handle.join().unwrap();
     }
