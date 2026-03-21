@@ -168,9 +168,13 @@ pub mod device {
         let id: sys::CUuuid;
         unsafe {
             let mut uuid = MaybeUninit::uninit();
-            #[cfg(not(any(feature = "cuda-13000", feature = "cuda-13010")))]
+            #[cfg(not(any(
+                feature = "cuda-13000",
+                feature = "cuda-13010",
+                feature = "cuda-13020"
+            )))]
             sys::cuDeviceGetUuid(uuid.as_mut_ptr(), dev).result()?;
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             sys::cuDeviceGetUuid_v2(uuid.as_mut_ptr(), dev).result()?;
             id = uuid.assume_init();
         }
