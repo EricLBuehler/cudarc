@@ -61,7 +61,12 @@ pub type nvtxDomainResourceCreate_impl_fntype = ::core::option::Option<
 >;
 pub type nvtxDomainResourceDestroy_impl_fntype =
     ::core::option::Option<unsafe extern "C" fn(resource: nvtxResourceHandle_t)>;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxDomainSyncUserAcquireFailed_fakeimpl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtx_nvtxSyncUser_t)>;
 #[cfg(any(
@@ -81,7 +86,12 @@ pub type nvtxDomainSyncUserAcquireFailed_fakeimpl_fntype =
 ))]
 pub type nvtxDomainSyncUserAcquireFailed_impl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtxSyncUser_t)>;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxDomainSyncUserAcquireStart_fakeimpl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtx_nvtxSyncUser_t)>;
 #[cfg(any(
@@ -101,7 +111,12 @@ pub type nvtxDomainSyncUserAcquireStart_fakeimpl_fntype =
 ))]
 pub type nvtxDomainSyncUserAcquireStart_impl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtxSyncUser_t)>;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxDomainSyncUserAcquireSuccess_fakeimpl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtx_nvtxSyncUser_t)>;
 #[cfg(any(
@@ -121,7 +136,12 @@ pub type nvtxDomainSyncUserAcquireSuccess_fakeimpl_fntype =
 ))]
 pub type nvtxDomainSyncUserAcquireSuccess_impl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtxSyncUser_t)>;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxDomainSyncUserCreate_fakeimpl_fntype = ::core::option::Option<
     unsafe extern "C" fn(
         domain: nvtxDomainHandle_t,
@@ -149,7 +169,12 @@ pub type nvtxDomainSyncUserCreate_impl_fntype = ::core::option::Option<
         attribs: *const nvtxSyncUserAttributes_t,
     ) -> nvtxSyncUser_t,
 >;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxDomainSyncUserDestroy_fakeimpl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtx_nvtxSyncUser_t)>;
 #[cfg(any(
@@ -169,7 +194,12 @@ pub type nvtxDomainSyncUserDestroy_fakeimpl_fntype =
 ))]
 pub type nvtxDomainSyncUserDestroy_impl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtxSyncUser_t)>;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxDomainSyncUserReleasing_fakeimpl_fntype =
     ::core::option::Option<unsafe extern "C" fn(handle: nvtx_nvtxSyncUser_t)>;
 #[cfg(any(
@@ -258,7 +288,12 @@ pub type nvtxNameCuStreamA_fakeimpl_fntype = ::core::option::Option<
 >;
 pub type nvtxNameCuStreamW_fakeimpl_fntype =
     ::core::option::Option<unsafe extern "C" fn(stream: nvtx_CUstream, name: *const wchar_t)>;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxNameCudaDeviceA_fakeimpl_fntype = ::core::option::Option<
     unsafe extern "C" fn(device: ::core::ffi::c_int, name: *const ::core::ffi::c_char),
 >;
@@ -280,7 +315,12 @@ pub type nvtxNameCudaDeviceA_fakeimpl_fntype = ::core::option::Option<
 pub type nvtxNameCudaDeviceA_impl_fntype = ::core::option::Option<
     unsafe extern "C" fn(device: ::core::ffi::c_int, name: *const ::core::ffi::c_char),
 >;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtxNameCudaDeviceW_fakeimpl_fntype =
     ::core::option::Option<unsafe extern "C" fn(device: ::core::ffi::c_int, name: *const wchar_t)>;
 #[cfg(any(
@@ -385,9 +425,19 @@ pub type nvtx_cl_program = *mut ::core::ffi::c_void;
 pub type nvtx_cl_sampler = *mut ::core::ffi::c_void;
 pub type nvtx_cudaEvent_t = *mut ::core::ffi::c_void;
 pub type nvtx_cudaStream_t = *mut ::core::ffi::c_void;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtx_nvtxSyncUserAttributes_t = ::core::ffi::c_void;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type nvtx_nvtxSyncUser_t = *mut ::core::ffi::c_void;
 pub type wchar_t = ::core::ffi::c_int;
 #[repr(u32)]
