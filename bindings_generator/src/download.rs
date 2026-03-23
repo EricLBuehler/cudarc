@@ -174,6 +174,7 @@ fn get_redistrib_path(
     minor: u32,
     patch: u32,
     base_url: &str,
+    downloads_dir: &Path,
     multi_progress: &MultiProgress,
 ) -> Result<PathBuf> {
     {
@@ -204,7 +205,7 @@ fn get_redistrib_path(
     let url = format!("{}/{}", base_url, filename);
     log::debug!("Trying {}", url);
 
-    let out_path = Path::new("downloads").join(&filename);
+    let out_path = downloads_dir.join(&filename);
 
     if to_file(&url, &out_path, multi_progress).is_ok() {
         let mut lock = REVISION.lock().unwrap();
@@ -222,9 +223,11 @@ pub fn cuda_redist(
     minor: u32,
     patch: u32,
     base_url: &str,
+    downloads_dir: &Path,
     multi_progress: &MultiProgress,
 ) -> Result<Value> {
-    let out_path = get_redistrib_path(major, minor, patch, base_url, multi_progress)?;
+    let out_path =
+        get_redistrib_path(major, minor, patch, base_url, downloads_dir, multi_progress)?;
     let content = fs::read_to_string(&out_path)
         .context(format!("Failed to read cached file {}", out_path.display()))?;
     serde_json::from_str(&content)
