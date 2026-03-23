@@ -59,8 +59,6 @@ fn create_modules() -> Vec<ModuleConfig> {
                 functions: vec![
                     "^cuCheckpoint.*",
                     "cuDeviceGetNvSciSyncAttributes",
-                    // NOTE: see https://github.com/chelsea0x3b/cudarc/issues/474
-                    "cuCtxCreate_v4",
                 ],
                 vars: vec![],
             },
