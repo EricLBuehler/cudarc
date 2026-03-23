@@ -73,7 +73,8 @@ pub enum cudaDataType_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -321,7 +322,8 @@ pub struct cutensorTensorDescriptor {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 impl cudaDataType_t {
     pub const CUDA_R_8F_UE4M3: cudaDataType_t = cudaDataType_t::CUDA_R_8F_E4M3;

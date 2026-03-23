@@ -36,18 +36,27 @@ pub const CUPTI_API_VERSION: u32 = 28;
 #[cfg(any(feature = "cuda-13000"))]
 pub const CUPTI_API_VERSION: u32 = 130001;
 #[cfg(any(feature = "cuda-13010"))]
-pub const CUPTI_API_VERSION: u32 = 130100;
+pub const CUPTI_API_VERSION: u32 = 130101;
+#[cfg(any(feature = "cuda-13020"))]
+pub const CUPTI_API_VERSION: u32 = 130200;
 pub const CUPTI_AUTO_BOOST_INVALID_CLIENT_PID: u32 = 0;
 pub const CUPTI_CORRELATION_ID_UNKNOWN: u32 = 0;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub const CUPTI_DECOMPRESSED_BYTES_UNKNOWN: u32 = 0;
 pub const CUPTI_FUNCTION_INDEX_ID_INVALID: u32 = 0;
 pub const CUPTI_GRID_ID_UNKNOWN: u32 = 0;
+#[cfg(any(feature = "cuda-13020"))]
+pub const CUPTI_INVALID_CONTEXT_ID: u32 = 0;
+#[cfg(any(feature = "cuda-13020"))]
+pub const CUPTI_INVALID_STREAM_ID: u32 = 0;
+#[cfg(any(feature = "cuda-13020"))]
+pub const CUPTI_MAX_DEVICES: u32 = 256;
 pub const CUPTI_MAX_GPUS: u32 = 32;
 #[cfg(any(feature = "cuda-11040"))]
 pub const CUPTI_MAX_NVLINK_PORTS: u32 = 16;
@@ -69,11 +78,31 @@ pub const CUPTI_MAX_NVLINK_PORTS: u32 = 16;
     feature = "cuda-13010"
 ))]
 pub const CUPTI_MAX_NVLINK_PORTS: u32 = 32;
+#[cfg(any(feature = "cuda-13020"))]
+pub const CUPTI_MAX_NVLINK_PORTS: u32 = 256;
+#[cfg(any(
+    feature = "cuda-11040",
+    feature = "cuda-11050",
+    feature = "cuda-11060",
+    feature = "cuda-11070",
+    feature = "cuda-11080",
+    feature = "cuda-12000",
+    feature = "cuda-12010",
+    feature = "cuda-12020",
+    feature = "cuda-12030",
+    feature = "cuda-12040",
+    feature = "cuda-12050",
+    feature = "cuda-12060",
+    feature = "cuda-12080",
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010"
+))]
 pub const CUPTI_NVLINK_INVALID_PORT: i32 = -1;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub const CUPTI_OLD_SUBSCRIBER_NAME_MIN_LEN: u32 = 64;
 pub const CUPTI_SOURCE_LOCATOR_ID_UNKNOWN: u32 = 0;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub const CUPTI_SUBSCRIBER_NAME_MAX_LEN: u32 = 53;
 #[cfg(any(
     feature = "cuda-11040",
@@ -106,8 +135,26 @@ pub type CUpti_BuffersCallbackCompleteFunc = ::core::option::Option<
         validSize: usize,
     ),
 >;
+#[cfg(any(feature = "cuda-13020"))]
+pub type CUpti_BuffersCallbackCompleteFunc_v2 = ::core::option::Option<
+    unsafe extern "C" fn(
+        buffer: *mut u8,
+        size: usize,
+        validSize: usize,
+        pBufferCompleteInfo: *mut CUpti_BufferCallbackCompleteInfo,
+    ),
+>;
 pub type CUpti_BuffersCallbackRequestFunc = ::core::option::Option<
     unsafe extern "C" fn(buffer: *mut *mut u8, size: *mut usize, maxNumRecords: *mut usize),
+>;
+#[cfg(any(feature = "cuda-13020"))]
+pub type CUpti_BuffersCallbackRequestFunc_v2 = ::core::option::Option<
+    unsafe extern "C" fn(
+        buffer: *mut *mut u8,
+        size: *mut usize,
+        maxNumRecords: *mut usize,
+        pBufferRequestInfo: *mut CUpti_BufferCallbackRequestInfo,
+    ),
 >;
 pub type CUpti_CallbackFunc = ::core::option::Option<
     unsafe extern "C" fn(
@@ -145,7 +192,8 @@ pub type CUpti_SubscriberHandle = *mut CUpti_Subscriber_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type CUpti_TimestampCallbackFunc = ::core::option::Option<unsafe extern "C" fn() -> u64>;
 pub type cuArray3DCreate_params = cuArray3DCreate_params_st;
@@ -169,7 +217,8 @@ pub type cuArrayGetDescriptor_v2_params = cuArrayGetDescriptor_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuArrayGetMemoryRequirements_params = cuArrayGetMemoryRequirements_params_st;
 pub type cuArrayGetPlane_params = cuArrayGetPlane_params_st;
@@ -178,14 +227,16 @@ pub type cuArrayGetSparseProperties_params = cuArrayGetSparseProperties_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCheckpointProcessCheckpoint_params = cuCheckpointProcessCheckpoint_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCheckpointProcessGetRestoreThreadId_params =
     cuCheckpointProcessGetRestoreThreadId_params_st;
@@ -193,30 +244,39 @@ pub type cuCheckpointProcessGetRestoreThreadId_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCheckpointProcessGetState_params = cuCheckpointProcessGetState_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCheckpointProcessLock_params = cuCheckpointProcessLock_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCheckpointProcessRestore_params = cuCheckpointProcessRestore_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCheckpointProcessUnlock_params = cuCheckpointProcessUnlock_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuCoredumpDeregisterCompleteCallback_params =
+    cuCoredumpDeregisterCompleteCallback_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuCoredumpDeregisterStartCallback_params = cuCoredumpDeregisterStartCallback_params_st;
 #[cfg(any(
     feature = "cuda-12010",
     feature = "cuda-12020",
@@ -227,7 +287,8 @@ pub type cuCheckpointProcessUnlock_params = cuCheckpointProcessUnlock_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCoredumpGetAttributeGlobal_params = cuCoredumpGetAttributeGlobal_params_st;
 #[cfg(any(
@@ -240,9 +301,14 @@ pub type cuCoredumpGetAttributeGlobal_params = cuCoredumpGetAttributeGlobal_para
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCoredumpGetAttribute_params = cuCoredumpGetAttribute_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuCoredumpRegisterCompleteCallback_params = cuCoredumpRegisterCompleteCallback_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuCoredumpRegisterStartCallback_params = cuCoredumpRegisterStartCallback_params_st;
 #[cfg(any(
     feature = "cuda-12010",
     feature = "cuda-12020",
@@ -253,7 +319,8 @@ pub type cuCoredumpGetAttribute_params = cuCoredumpGetAttribute_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCoredumpSetAttributeGlobal_params = cuCoredumpSetAttributeGlobal_params_st;
 #[cfg(any(
@@ -266,7 +333,8 @@ pub type cuCoredumpSetAttributeGlobal_params = cuCoredumpSetAttributeGlobal_para
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCoredumpSetAttribute_params = cuCoredumpSetAttribute_params_st;
 pub type cuCtxAttach_params = cuCtxAttach_params_st;
@@ -279,7 +347,8 @@ pub type cuCtxCreate_v3_params = cuCtxCreate_v3_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCtxCreate_v4_params = cuCtxCreate_v4_params_st;
 pub type cuCtxDestroy_params = cuCtxDestroy_params_st;
@@ -294,7 +363,8 @@ pub type cuCtxEnablePeerAccess_params = cuCtxEnablePeerAccess_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCtxFromGreenCtx_params = cuCtxFromGreenCtx_params_st;
 pub type cuCtxGetApiVersion_params = cuCtxGetApiVersion_params_st;
@@ -307,11 +377,12 @@ pub type cuCtxGetCurrent_params = cuCtxGetCurrent_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCtxGetDevResource_params = cuCtxGetDevResource_params_st;
 pub type cuCtxGetDevice_params = cuCtxGetDevice_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuCtxGetDevice_v2_params = cuCtxGetDevice_v2_params_st;
 pub type cuCtxGetExecAffinity_params = cuCtxGetExecAffinity_params_st;
 pub type cuCtxGetFlags_params = cuCtxGetFlags_params_st;
@@ -326,7 +397,8 @@ pub type cuCtxGetFlags_params = cuCtxGetFlags_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCtxGetId_params = cuCtxGetId_params_st;
 pub type cuCtxGetLimit_params = cuCtxGetLimit_params_st;
@@ -342,7 +414,8 @@ pub type cuCtxPushCurrent_v2_params = cuCtxPushCurrent_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCtxRecordEvent_params = cuCtxRecordEvent_params_st;
 pub type cuCtxSetCacheConfig_params = cuCtxSetCacheConfig_params_st;
@@ -357,12 +430,13 @@ pub type cuCtxSetCurrent_params = cuCtxSetCurrent_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCtxSetFlags_params = cuCtxSetFlags_params_st;
 pub type cuCtxSetLimit_params = cuCtxSetLimit_params_st;
 pub type cuCtxSetSharedMemConfig_params = cuCtxSetSharedMemConfig_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuCtxSynchronize_v2_params = cuCtxSynchronize_v2_params_st;
 #[cfg(any(
     feature = "cuda-12050",
@@ -370,7 +444,8 @@ pub type cuCtxSynchronize_v2_params = cuCtxSynchronize_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuCtxWaitEvent_params = cuCtxWaitEvent_params_st;
 pub type cuDestroyExternalMemory_params = cuDestroyExternalMemory_params_st;
@@ -382,7 +457,8 @@ pub type cuDestroyExternalSemaphore_params = cuDestroyExternalSemaphore_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuDevResourceGenerateDesc_params = cuDevResourceGenerateDesc_params_st;
 #[cfg(any(
@@ -392,10 +468,11 @@ pub type cuDevResourceGenerateDesc_params = cuDevResourceGenerateDesc_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuDevSmResourceSplitByCount_params = cuDevSmResourceSplitByCount_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuDevSmResourceSplit_params = cuDevSmResourceSplit_params_st;
 pub type cuDeviceCanAccessPeer_params = cuDeviceCanAccessPeer_params_st;
 pub type cuDeviceComputeCapability_params = cuDeviceComputeCapability_params_st;
@@ -410,18 +487,19 @@ pub type cuDeviceGetDefaultMemPool_params = cuDeviceGetDefaultMemPool_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuDeviceGetDevResource_params = cuDeviceGetDevResource_params_st;
 pub type cuDeviceGetExecAffinitySupport_params = cuDeviceGetExecAffinitySupport_params_st;
 pub type cuDeviceGetGraphMemAttribute_params = cuDeviceGetGraphMemAttribute_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuDeviceGetHostAtomicCapabilities_params = cuDeviceGetHostAtomicCapabilities_params_st;
 pub type cuDeviceGetLuid_params = cuDeviceGetLuid_params_st;
 pub type cuDeviceGetMemPool_params = cuDeviceGetMemPool_params_st;
 pub type cuDeviceGetName_params = cuDeviceGetName_params_st;
 pub type cuDeviceGetNvSciSyncAttributes_params = cuDeviceGetNvSciSyncAttributes_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuDeviceGetP2PAtomicCapabilities_params = cuDeviceGetP2PAtomicCapabilities_params_st;
 pub type cuDeviceGetP2PAttribute_params = cuDeviceGetP2PAttribute_params_st;
 pub type cuDeviceGetPCIBusId_params = cuDeviceGetPCIBusId_params_st;
@@ -445,7 +523,8 @@ pub type cuDevicePrimaryCtxSetFlags_v2_params = cuDevicePrimaryCtxSetFlags_v2_pa
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuDeviceRegisterAsyncNotification_params = cuDeviceRegisterAsyncNotification_params_st;
 pub type cuDeviceSetGraphMemAttribute_params = cuDeviceSetGraphMemAttribute_params_st;
@@ -458,7 +537,8 @@ pub type cuDeviceTotalMem_v2_params = cuDeviceTotalMem_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuDeviceUnregisterAsyncNotification_params = cuDeviceUnregisterAsyncNotification_params_st;
 pub type cuDriverGetVersion_params = cuDriverGetVersion_params_st;
@@ -470,7 +550,8 @@ pub type cuEventElapsedTime_params = cuEventElapsedTime_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuEventElapsedTime_v2_params = cuEventElapsedTime_v2_params_st;
 pub type cuEventQuery_params = cuEventQuery_params_st;
@@ -497,7 +578,8 @@ pub type cuExternalMemoryGetMappedMipmappedArray_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuFlushGPUDirectRDMAWrites_params = cuFlushGPUDirectRDMAWrites_params_st;
 pub type cuFuncGetAttribute_params = cuFuncGetAttribute_params_st;
@@ -510,9 +592,12 @@ pub type cuFuncGetModule_params = cuFuncGetModule_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuFuncGetName_params = cuFuncGetName_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuFuncGetParamCount_params = cuFuncGetParamCount_params_st;
 #[cfg(any(
     feature = "cuda-12040",
     feature = "cuda-12050",
@@ -520,7 +605,8 @@ pub type cuFuncGetName_params = cuFuncGetName_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuFuncGetParamInfo_params = cuFuncGetParamInfo_params_st;
 #[cfg(any(
@@ -530,7 +616,8 @@ pub type cuFuncGetParamInfo_params = cuFuncGetParamInfo_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuFuncIsLoaded_params = cuFuncIsLoaded_params_st;
 #[cfg(any(
@@ -540,7 +627,8 @@ pub type cuFuncIsLoaded_params = cuFuncIsLoaded_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuFuncLoad_params = cuFuncLoad_params_st;
 pub type cuFuncSetAttribute_params = cuFuncSetAttribute_params_st;
@@ -566,7 +654,8 @@ pub type cuGetExportTable_params = cuGetExportTable_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGetProcAddress_params = cuGetProcAddress_params_st;
 #[cfg(any(
@@ -580,7 +669,8 @@ pub type cuGetProcAddress_params = cuGetProcAddress_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGetProcAddress_v2_params = cuGetProcAddress_v2_params_st;
 #[cfg(any(
@@ -594,7 +684,8 @@ pub type cuGetProcAddress_v2_params = cuGetProcAddress_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphAddBatchMemOpNode_params = cuGraphAddBatchMemOpNode_params_st;
 pub type cuGraphAddChildGraphNode_params = cuGraphAddChildGraphNode_params_st;
@@ -607,7 +698,8 @@ pub type cuGraphAddDependencies_params = cuGraphAddDependencies_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphAddDependencies_v2_params = cuGraphAddDependencies_v2_params_st;
 pub type cuGraphAddEmptyNode_params = cuGraphAddEmptyNode_params_st;
@@ -630,7 +722,8 @@ pub type cuGraphAddKernelNode_params = cuGraphAddKernelNode_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphAddKernelNode_v2_params = cuGraphAddKernelNode_v2_params_st;
 pub type cuGraphAddMemAllocNode_params = cuGraphAddMemAllocNode_params_st;
@@ -646,7 +739,8 @@ pub type cuGraphAddMemsetNode_params = cuGraphAddMemsetNode_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphAddNode_params = cuGraphAddNode_params_st;
 #[cfg(any(
@@ -657,7 +751,8 @@ pub type cuGraphAddNode_params = cuGraphAddNode_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphAddNode_v2_params = cuGraphAddNode_v2_params_st;
 #[cfg(any(
@@ -671,7 +766,8 @@ pub type cuGraphAddNode_v2_params = cuGraphAddNode_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphBatchMemOpNodeGetParams_params = cuGraphBatchMemOpNodeGetParams_params_st;
 #[cfg(any(
@@ -685,7 +781,8 @@ pub type cuGraphBatchMemOpNodeGetParams_params = cuGraphBatchMemOpNodeGetParams_
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphBatchMemOpNodeSetParams_params = cuGraphBatchMemOpNodeSetParams_params_st;
 pub type cuGraphChildGraphNodeGetGraph_params = cuGraphChildGraphNodeGetGraph_params_st;
@@ -698,7 +795,8 @@ pub type cuGraphClone_params = cuGraphClone_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphConditionalHandleCreate_params = cuGraphConditionalHandleCreate_params_st;
 pub type cuGraphCreate_params = cuGraphCreate_params_st;
@@ -720,7 +818,8 @@ pub type cuGraphEventWaitNodeSetEvent_params = cuGraphEventWaitNodeSetEvent_para
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphExecBatchMemOpNodeSetParams_params = cuGraphExecBatchMemOpNodeSetParams_params_st;
 pub type cuGraphExecChildGraphNodeSetParams_params = cuGraphExecChildGraphNodeSetParams_params_st;
@@ -742,10 +841,11 @@ pub type cuGraphExecExternalSemaphoresWaitNodeSetParams_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphExecGetFlags_params = cuGraphExecGetFlags_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuGraphExecGetId_params = cuGraphExecGetId_params_st;
 pub type cuGraphExecHostNodeSetParams_params = cuGraphExecHostNodeSetParams_params_st;
 pub type cuGraphExecKernelNodeSetParams_params = cuGraphExecKernelNodeSetParams_params_st;
@@ -760,7 +860,8 @@ pub type cuGraphExecKernelNodeSetParams_params = cuGraphExecKernelNodeSetParams_
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphExecKernelNodeSetParams_v2_params = cuGraphExecKernelNodeSetParams_v2_params_st;
 pub type cuGraphExecMemcpyNodeSetParams_params = cuGraphExecMemcpyNodeSetParams_params_st;
@@ -774,7 +875,8 @@ pub type cuGraphExecMemsetNodeSetParams_params = cuGraphExecMemsetNodeSetParams_
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphExecNodeSetParams_params = cuGraphExecNodeSetParams_params_st;
 pub type cuGraphExecUpdate_params = cuGraphExecUpdate_params_st;
@@ -789,7 +891,8 @@ pub type cuGraphExecUpdate_params = cuGraphExecUpdate_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphExecUpdate_v2_params = cuGraphExecUpdate_v2_params_st;
 pub type cuGraphExternalSemaphoresSignalNodeGetParams_params =
@@ -809,10 +912,11 @@ pub type cuGraphGetEdges_params = cuGraphGetEdges_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphGetEdges_v2_params = cuGraphGetEdges_v2_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuGraphGetId_params = cuGraphGetId_params_st;
 pub type cuGraphGetNodes_params = cuGraphGetNodes_params_st;
 pub type cuGraphGetRootNodes_params = cuGraphGetRootNodes_params_st;
@@ -830,7 +934,8 @@ pub type cuGraphInstantiateWithFlags_params = cuGraphInstantiateWithFlags_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphInstantiateWithParams_params = cuGraphInstantiateWithParams_params_st;
 #[cfg(any(
@@ -844,7 +949,8 @@ pub type cuGraphInstantiateWithParams_params = cuGraphInstantiateWithParams_para
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphInstantiateWithParams_ptsz_params = cuGraphInstantiateWithParams_ptsz_params_st;
 pub type cuGraphInstantiate_params = cuGraphInstantiate_params_st;
@@ -863,7 +969,8 @@ pub type cuGraphKernelNodeGetParams_params = cuGraphKernelNodeGetParams_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphKernelNodeGetParams_v2_params = cuGraphKernelNodeGetParams_v2_params_st;
 pub type cuGraphKernelNodeSetAttribute_params = cuGraphKernelNodeSetAttribute_params_st;
@@ -879,7 +986,8 @@ pub type cuGraphKernelNodeSetParams_params = cuGraphKernelNodeSetParams_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphKernelNodeSetParams_v2_params = cuGraphKernelNodeSetParams_v2_params_st;
 pub type cuGraphLaunch_params = cuGraphLaunch_params_st;
@@ -891,7 +999,7 @@ pub type cuGraphMemcpyNodeSetParams_params = cuGraphMemcpyNodeSetParams_params_s
 pub type cuGraphMemsetNodeGetParams_params = cuGraphMemsetNodeGetParams_params_st;
 pub type cuGraphMemsetNodeSetParams_params = cuGraphMemsetNodeSetParams_params_st;
 pub type cuGraphNodeFindInClone_params = cuGraphNodeFindInClone_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuGraphNodeGetContainingGraph_params = cuGraphNodeGetContainingGraph_params_st;
 pub type cuGraphNodeGetDependencies_params = cuGraphNodeGetDependencies_params_st;
 #[cfg(any(
@@ -902,7 +1010,8 @@ pub type cuGraphNodeGetDependencies_params = cuGraphNodeGetDependencies_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphNodeGetDependencies_v2_params = cuGraphNodeGetDependencies_v2_params_st;
 pub type cuGraphNodeGetDependentNodes_params = cuGraphNodeGetDependentNodes_params_st;
@@ -914,7 +1023,8 @@ pub type cuGraphNodeGetDependentNodes_params = cuGraphNodeGetDependentNodes_para
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphNodeGetDependentNodes_v2_params = cuGraphNodeGetDependentNodes_v2_params_st;
 #[cfg(any(
@@ -931,12 +1041,15 @@ pub type cuGraphNodeGetDependentNodes_v2_params = cuGraphNodeGetDependentNodes_v
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphNodeGetEnabled_params = cuGraphNodeGetEnabled_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuGraphNodeGetLocalId_params = cuGraphNodeGetLocalId_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuGraphNodeGetParams_params = cuGraphNodeGetParams_params_st;
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuGraphNodeGetToolsId_params = cuGraphNodeGetToolsId_params_st;
 pub type cuGraphNodeGetType_params = cuGraphNodeGetType_params_st;
 #[cfg(any(
@@ -953,7 +1066,8 @@ pub type cuGraphNodeGetType_params = cuGraphNodeGetType_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphNodeSetEnabled_params = cuGraphNodeSetEnabled_params_st;
 #[cfg(any(
@@ -965,7 +1079,8 @@ pub type cuGraphNodeSetEnabled_params = cuGraphNodeSetEnabled_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphNodeSetParams_params = cuGraphNodeSetParams_params_st;
 pub type cuGraphReleaseUserObject_params = cuGraphReleaseUserObject_params_st;
@@ -978,7 +1093,8 @@ pub type cuGraphRemoveDependencies_params = cuGraphRemoveDependencies_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGraphRemoveDependencies_v2_params = cuGraphRemoveDependencies_v2_params_st;
 pub type cuGraphRetainUserObject_params = cuGraphRetainUserObject_params_st;
@@ -1004,7 +1120,8 @@ pub type cuGraphicsUnregisterResource_params = cuGraphicsUnregisterResource_para
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGreenCtxCreate_params = cuGreenCtxCreate_params_st;
 #[cfg(any(
@@ -1014,7 +1131,8 @@ pub type cuGreenCtxCreate_params = cuGreenCtxCreate_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGreenCtxDestroy_params = cuGreenCtxDestroy_params_st;
 #[cfg(any(
@@ -1024,10 +1142,11 @@ pub type cuGreenCtxDestroy_params = cuGreenCtxDestroy_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGreenCtxGetDevResource_params = cuGreenCtxGetDevResource_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuGreenCtxGetId_params = cuGreenCtxGetId_params_st;
 #[cfg(any(
     feature = "cuda-12040",
@@ -1036,7 +1155,8 @@ pub type cuGreenCtxGetId_params = cuGreenCtxGetId_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGreenCtxRecordEvent_params = cuGreenCtxRecordEvent_params_st;
 #[cfg(any(
@@ -1045,7 +1165,8 @@ pub type cuGreenCtxRecordEvent_params = cuGreenCtxRecordEvent_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGreenCtxStreamCreate_params = cuGreenCtxStreamCreate_params_st;
 #[cfg(any(
@@ -1055,7 +1176,8 @@ pub type cuGreenCtxStreamCreate_params = cuGreenCtxStreamCreate_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuGreenCtxWaitEvent_params = cuGreenCtxWaitEvent_params_st;
 pub type cuImportExternalMemory_params = cuImportExternalMemory_params_st;
@@ -1078,7 +1200,8 @@ pub type cuIpcOpenMemHandle_v2_params = cuIpcOpenMemHandle_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuKernelGetAttribute_params = cuKernelGetAttribute_params_st;
 #[cfg(any(
@@ -1092,7 +1215,8 @@ pub type cuKernelGetAttribute_params = cuKernelGetAttribute_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuKernelGetFunction_params = cuKernelGetFunction_params_st;
 #[cfg(any(
@@ -1101,7 +1225,8 @@ pub type cuKernelGetFunction_params = cuKernelGetFunction_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuKernelGetLibrary_params = cuKernelGetLibrary_params_st;
 #[cfg(any(
@@ -1112,9 +1237,12 @@ pub type cuKernelGetLibrary_params = cuKernelGetLibrary_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuKernelGetName_params = cuKernelGetName_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuKernelGetParamCount_params = cuKernelGetParamCount_params_st;
 #[cfg(any(
     feature = "cuda-12040",
     feature = "cuda-12050",
@@ -1122,7 +1250,8 @@ pub type cuKernelGetName_params = cuKernelGetName_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuKernelGetParamInfo_params = cuKernelGetParamInfo_params_st;
 #[cfg(any(
@@ -1136,7 +1265,8 @@ pub type cuKernelGetParamInfo_params = cuKernelGetParamInfo_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuKernelSetAttribute_params = cuKernelSetAttribute_params_st;
 #[cfg(any(
@@ -1150,7 +1280,8 @@ pub type cuKernelSetAttribute_params = cuKernelSetAttribute_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuKernelSetCacheConfig_params = cuKernelSetCacheConfig_params_st;
 pub type cuLaunchCooperativeKernelMultiDevice_params =
@@ -1161,6 +1292,10 @@ pub type cuLaunchGridAsync_params = cuLaunchGridAsync_params_st;
 pub type cuLaunchGrid_params = cuLaunchGrid_params_st;
 pub type cuLaunchHostFunc_params = cuLaunchHostFunc_params_st;
 pub type cuLaunchHostFunc_ptsz_params = cuLaunchHostFunc_ptsz_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuLaunchHostFunc_v2_params = cuLaunchHostFunc_v2_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuLaunchHostFunc_v2_ptsz_params = cuLaunchHostFunc_v2_ptsz_params_st;
 #[cfg(any(
     feature = "cuda-11080",
     feature = "cuda-12000",
@@ -1173,7 +1308,8 @@ pub type cuLaunchHostFunc_ptsz_params = cuLaunchHostFunc_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLaunchKernelEx_params = cuLaunchKernelEx_params_st;
 #[cfg(any(
@@ -1188,7 +1324,8 @@ pub type cuLaunchKernelEx_params = cuLaunchKernelEx_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLaunchKernelEx_ptsz_params = cuLaunchKernelEx_ptsz_params_st;
 pub type cuLaunchKernel_params = cuLaunchKernel_params_st;
@@ -1201,7 +1338,8 @@ pub type cuLaunch_params = cuLaunch_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryEnumerateKernels_params = cuLibraryEnumerateKernels_params_st;
 #[cfg(any(
@@ -1215,7 +1353,8 @@ pub type cuLibraryEnumerateKernels_params = cuLibraryEnumerateKernels_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryGetGlobal_params = cuLibraryGetGlobal_params_st;
 #[cfg(any(
@@ -1225,7 +1364,8 @@ pub type cuLibraryGetGlobal_params = cuLibraryGetGlobal_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryGetKernelCount_params = cuLibraryGetKernelCount_params_st;
 #[cfg(any(
@@ -1239,7 +1379,8 @@ pub type cuLibraryGetKernelCount_params = cuLibraryGetKernelCount_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryGetKernel_params = cuLibraryGetKernel_params_st;
 #[cfg(any(
@@ -1253,7 +1394,8 @@ pub type cuLibraryGetKernel_params = cuLibraryGetKernel_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryGetManaged_params = cuLibraryGetManaged_params_st;
 #[cfg(any(
@@ -1267,7 +1409,8 @@ pub type cuLibraryGetManaged_params = cuLibraryGetManaged_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryGetModule_params = cuLibraryGetModule_params_st;
 #[cfg(any(
@@ -1281,7 +1424,8 @@ pub type cuLibraryGetModule_params = cuLibraryGetModule_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryGetUnifiedFunction_params = cuLibraryGetUnifiedFunction_params_st;
 #[cfg(any(
@@ -1295,7 +1439,8 @@ pub type cuLibraryGetUnifiedFunction_params = cuLibraryGetUnifiedFunction_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryLoadData_params = cuLibraryLoadData_params_st;
 #[cfg(any(
@@ -1309,7 +1454,8 @@ pub type cuLibraryLoadData_params = cuLibraryLoadData_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryLoadFromFile_params = cuLibraryLoadFromFile_params_st;
 #[cfg(any(
@@ -1323,7 +1469,8 @@ pub type cuLibraryLoadFromFile_params = cuLibraryLoadFromFile_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuLibraryUnload_params = cuLibraryUnload_params_st;
 pub type cuLinkAddData_params = cuLinkAddData_params_st;
@@ -1334,15 +1481,40 @@ pub type cuLinkComplete_params = cuLinkComplete_params_st;
 pub type cuLinkCreate_params = cuLinkCreate_params_st;
 pub type cuLinkCreate_v2_params = cuLinkCreate_v2_params_st;
 pub type cuLinkDestroy_params = cuLinkDestroy_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cuLogsCurrent_params = cuLogsCurrent_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cuLogsDumpToFile_params = cuLogsDumpToFile_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cuLogsDumpToMemory_params = cuLogsDumpToMemory_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cuLogsRegisterCallback_params = cuLogsRegisterCallback_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cuLogsUnregisterCallback_params = cuLogsUnregisterCallback_params_st;
 pub type cuMemAddressFree_params = cuMemAddressFree_params_st;
 pub type cuMemAddressReserve_params = cuMemAddressReserve_params_st;
@@ -1356,7 +1528,8 @@ pub type cuMemAdvise_params = cuMemAdvise_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemAdvise_v2_params = cuMemAdvise_v2_params_st;
 pub type cuMemAllocAsync_params = cuMemAllocAsync_params_st;
@@ -1374,25 +1547,27 @@ pub type cuMemAlloc_v2_params = cuMemAlloc_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemBatchDecompressAsync_params = cuMemBatchDecompressAsync_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemBatchDecompressAsync_ptsz_params = cuMemBatchDecompressAsync_ptsz_params_st;
 pub type cuMemCreate_params = cuMemCreate_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemDiscardAndPrefetchBatchAsync_params = cuMemDiscardAndPrefetchBatchAsync_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemDiscardAndPrefetchBatchAsync_ptsz_params =
     cuMemDiscardAndPrefetchBatchAsync_ptsz_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemDiscardBatchAsync_params = cuMemDiscardBatchAsync_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemDiscardBatchAsync_ptsz_params = cuMemDiscardBatchAsync_ptsz_params_st;
 pub type cuMemExportToShareableHandle_params = cuMemExportToShareableHandle_params_st;
 pub type cuMemFreeAsync_params = cuMemFreeAsync_params_st;
@@ -1406,7 +1581,7 @@ pub type cuMemGetAddressRange_v2_params = cuMemGetAddressRange_v2_params_st;
 pub type cuMemGetAllocationGranularity_params = cuMemGetAllocationGranularity_params_st;
 pub type cuMemGetAllocationPropertiesFromHandle_params =
     cuMemGetAllocationPropertiesFromHandle_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemGetDefaultMemPool_params = cuMemGetDefaultMemPool_params_st;
 #[cfg(any(
     feature = "cuda-11080",
@@ -1420,12 +1595,13 @@ pub type cuMemGetDefaultMemPool_params = cuMemGetDefaultMemPool_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemGetHandleForAddressRange_params = cuMemGetHandleForAddressRange_params_st;
 pub type cuMemGetInfo_params = cuMemGetInfo_params_st;
 pub type cuMemGetInfo_v2_params = cuMemGetInfo_v2_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemGetMemPool_params = cuMemGetMemPool_params_st;
 pub type cuMemHostAlloc_params = cuMemHostAlloc_params_st;
 pub type cuMemHostGetDevicePointer_params = cuMemHostGetDevicePointer_params_st;
@@ -1460,7 +1636,8 @@ pub type cuMemPrefetchAsync_ptsz_params = cuMemPrefetchAsync_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemPrefetchAsync_v2_params = cuMemPrefetchAsync_v2_params_st;
 #[cfg(any(
@@ -1472,19 +1649,20 @@ pub type cuMemPrefetchAsync_v2_params = cuMemPrefetchAsync_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemPrefetchAsync_v2_ptsz_params = cuMemPrefetchAsync_v2_ptsz_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemPrefetchBatchAsync_params = cuMemPrefetchBatchAsync_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemPrefetchBatchAsync_ptsz_params = cuMemPrefetchBatchAsync_ptsz_params_st;
 pub type cuMemRangeGetAttribute_params = cuMemRangeGetAttribute_params_st;
 pub type cuMemRangeGetAttributes_params = cuMemRangeGetAttributes_params_st;
 pub type cuMemRelease_params = cuMemRelease_params_st;
 pub type cuMemRetainAllocationHandle_params = cuMemRetainAllocationHandle_params_st;
 pub type cuMemSetAccess_params = cuMemSetAccess_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemSetMemPool_params = cuMemSetMemPool_params_st;
 pub type cuMemUnmap_params = cuMemUnmap_params_st;
 pub type cuMemcpy2DAsync_params = cuMemcpy2DAsync_params_st;
@@ -1503,24 +1681,30 @@ pub type cuMemcpy3DAsync_v2_ptsz_params = cuMemcpy3DAsync_v2_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemcpy3DBatchAsync_params = cuMemcpy3DBatchAsync_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemcpy3DBatchAsync_ptsz_params = cuMemcpy3DBatchAsync_ptsz_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemcpy3DBatchAsync_v2_params = cuMemcpy3DBatchAsync_v2_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemcpy3DBatchAsync_v2_ptsz_params = cuMemcpy3DBatchAsync_v2_ptsz_params_st;
 pub type cuMemcpy3DPeerAsync_params = cuMemcpy3DPeerAsync_params_st;
 pub type cuMemcpy3DPeerAsync_ptsz_params = cuMemcpy3DPeerAsync_ptsz_params_st;
 pub type cuMemcpy3DPeer_params = cuMemcpy3DPeer_params_st;
 pub type cuMemcpy3DPeer_ptds_params = cuMemcpy3DPeer_ptds_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuMemcpy3DWithAttributesAsync_params = cuMemcpy3DWithAttributesAsync_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuMemcpy3DWithAttributesAsync_ptsz_params = cuMemcpy3DWithAttributesAsync_ptsz_params_st;
 pub type cuMemcpy3D_params = cuMemcpy3D_params_st;
 pub type cuMemcpy3D_v2_params = cuMemcpy3D_v2_params_st;
 pub type cuMemcpy3D_v2_ptds_params = cuMemcpy3D_v2_ptds_params_st;
@@ -1542,19 +1726,21 @@ pub type cuMemcpyAtoH_v2_ptds_params = cuMemcpyAtoH_v2_ptds_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemcpyBatchAsync_params = cuMemcpyBatchAsync_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMemcpyBatchAsync_ptsz_params = cuMemcpyBatchAsync_ptsz_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemcpyBatchAsync_v2_params = cuMemcpyBatchAsync_v2_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuMemcpyBatchAsync_v2_ptsz_params = cuMemcpyBatchAsync_v2_ptsz_params_st;
 pub type cuMemcpyDtoA_params = cuMemcpyDtoA_params_st;
 pub type cuMemcpyDtoA_v2_params = cuMemcpyDtoA_v2_params_st;
@@ -1587,6 +1773,10 @@ pub type cuMemcpyPeerAsync_params = cuMemcpyPeerAsync_params_st;
 pub type cuMemcpyPeerAsync_ptsz_params = cuMemcpyPeerAsync_ptsz_params_st;
 pub type cuMemcpyPeer_params = cuMemcpyPeer_params_st;
 pub type cuMemcpyPeer_ptds_params = cuMemcpyPeer_ptds_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuMemcpyWithAttributesAsync_params = cuMemcpyWithAttributesAsync_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuMemcpyWithAttributesAsync_ptsz_params = cuMemcpyWithAttributesAsync_ptsz_params_st;
 pub type cuMemcpy_params = cuMemcpy_params_st;
 pub type cuMemcpy_ptds_params = cuMemcpy_ptds_params_st;
 pub type cuMemsetD16Async_params = cuMemsetD16Async_params_st;
@@ -1634,7 +1824,8 @@ pub type cuMipmappedArrayGetLevel_params = cuMipmappedArrayGetLevel_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMipmappedArrayGetMemoryRequirements_params =
     cuMipmappedArrayGetMemoryRequirements_params_st;
@@ -1646,7 +1837,8 @@ pub type cuMipmappedArrayGetSparseProperties_params = cuMipmappedArrayGetSparseP
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuModuleEnumerateFunctions_params = cuModuleEnumerateFunctions_params_st;
 #[cfg(any(
@@ -1656,7 +1848,8 @@ pub type cuModuleEnumerateFunctions_params = cuModuleEnumerateFunctions_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuModuleGetFunctionCount_params = cuModuleGetFunctionCount_params_st;
 pub type cuModuleGetFunction_params = cuModuleGetFunction_params_st;
@@ -1674,7 +1867,8 @@ pub type cuModuleGetGlobal_v2_params = cuModuleGetGlobal_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuModuleGetLoadingMode_params = cuModuleGetLoadingMode_params_st;
 pub type cuModuleGetSurfRef_params = cuModuleGetSurfRef_params_st;
@@ -1694,7 +1888,8 @@ pub type cuModuleUnload_params = cuModuleUnload_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMulticastAddDevice_params = cuMulticastAddDevice_params_st;
 #[cfg(any(
@@ -1707,9 +1902,12 @@ pub type cuMulticastAddDevice_params = cuMulticastAddDevice_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMulticastBindAddr_params = cuMulticastBindAddr_params_st;
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
+pub type cuMulticastBindAddr_v2_params = cuMulticastBindAddr_v2_params_st;
 #[cfg(any(
     feature = "cuda-12010",
     feature = "cuda-12020",
@@ -1720,9 +1918,12 @@ pub type cuMulticastBindAddr_params = cuMulticastBindAddr_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMulticastBindMem_params = cuMulticastBindMem_params_st;
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
+pub type cuMulticastBindMem_v2_params = cuMulticastBindMem_v2_params_st;
 #[cfg(any(
     feature = "cuda-12010",
     feature = "cuda-12020",
@@ -1733,7 +1934,8 @@ pub type cuMulticastBindMem_params = cuMulticastBindMem_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMulticastCreate_params = cuMulticastCreate_params_st;
 #[cfg(any(
@@ -1746,7 +1948,8 @@ pub type cuMulticastCreate_params = cuMulticastCreate_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMulticastGetGranularity_params = cuMulticastGetGranularity_params_st;
 #[cfg(any(
@@ -1759,7 +1962,8 @@ pub type cuMulticastGetGranularity_params = cuMulticastGetGranularity_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuMulticastUnbind_params = cuMulticastUnbind_params_st;
 pub type cuOccupancyAvailableDynamicSMemPerBlock_params =
@@ -1780,7 +1984,8 @@ pub type cuOccupancyMaxActiveBlocksPerMultiprocessor_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuOccupancyMaxActiveClusters_params = cuOccupancyMaxActiveClusters_params_st;
 pub type cuOccupancyMaxPotentialBlockSizeWithFlags_params =
@@ -1798,7 +2003,8 @@ pub type cuOccupancyMaxPotentialBlockSize_params = cuOccupancyMaxPotentialBlockS
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuOccupancyMaxPotentialClusterSize_params = cuOccupancyMaxPotentialClusterSize_params_st;
 pub type cuParamSetSize_params = cuParamSetSize_params_st;
@@ -1829,7 +2035,8 @@ pub type cuStreamBatchMemOp_ptsz_params = cuStreamBatchMemOp_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamBatchMemOp_v2_params = cuStreamBatchMemOp_v2_params_st;
 #[cfg(any(
@@ -1843,9 +2050,14 @@ pub type cuStreamBatchMemOp_v2_params = cuStreamBatchMemOp_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamBatchMemOp_v2_ptsz_params = cuStreamBatchMemOp_v2_ptsz_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuStreamBeginCaptureToCig_params = cuStreamBeginCaptureToCig_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuStreamBeginCaptureToCig_ptsz_params = cuStreamBeginCaptureToCig_ptsz_params_st;
 #[cfg(any(
     feature = "cuda-12030",
     feature = "cuda-12040",
@@ -1854,7 +2066,8 @@ pub type cuStreamBatchMemOp_v2_ptsz_params = cuStreamBatchMemOp_v2_ptsz_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamBeginCaptureToGraph_params = cuStreamBeginCaptureToGraph_params_st;
 #[cfg(any(
@@ -1865,7 +2078,8 @@ pub type cuStreamBeginCaptureToGraph_params = cuStreamBeginCaptureToGraph_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamBeginCaptureToGraph_ptsz_params = cuStreamBeginCaptureToGraph_ptsz_params_st;
 pub type cuStreamBeginCapture_params = cuStreamBeginCapture_params_st;
@@ -1878,6 +2092,10 @@ pub type cuStreamCreateWithPriority_params = cuStreamCreateWithPriority_params_s
 pub type cuStreamCreate_params = cuStreamCreate_params_st;
 pub type cuStreamDestroy_params = cuStreamDestroy_params_st;
 pub type cuStreamDestroy_v2_params = cuStreamDestroy_v2_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuStreamEndCaptureToCig_params = cuStreamEndCaptureToCig_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cuStreamEndCaptureToCig_ptsz_params = cuStreamEndCaptureToCig_ptsz_params_st;
 pub type cuStreamEndCapture_params = cuStreamEndCapture_params_st;
 pub type cuStreamEndCapture_ptsz_params = cuStreamEndCapture_ptsz_params_st;
 pub type cuStreamGetAttribute_params = cuStreamGetAttribute_params_st;
@@ -1894,7 +2112,8 @@ pub type cuStreamGetCaptureInfo_v2_ptsz_params = cuStreamGetCaptureInfo_v2_ptsz_
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetCaptureInfo_v3_params = cuStreamGetCaptureInfo_v3_params_st;
 #[cfg(any(
@@ -1905,7 +2124,8 @@ pub type cuStreamGetCaptureInfo_v3_params = cuStreamGetCaptureInfo_v3_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetCaptureInfo_v3_ptsz_params = cuStreamGetCaptureInfo_v3_ptsz_params_st;
 pub type cuStreamGetCtx_params = cuStreamGetCtx_params_st;
@@ -1916,7 +2136,8 @@ pub type cuStreamGetCtx_ptsz_params = cuStreamGetCtx_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetCtx_v2_params = cuStreamGetCtx_v2_params_st;
 #[cfg(any(
@@ -1925,25 +2146,28 @@ pub type cuStreamGetCtx_v2_params = cuStreamGetCtx_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetCtx_v2_ptsz_params = cuStreamGetCtx_v2_ptsz_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuStreamGetDevResource_params = cuStreamGetDevResource_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cuStreamGetDevResource_ptsz_params = cuStreamGetDevResource_ptsz_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetDevice_params = cuStreamGetDevice_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetDevice_ptsz_params = cuStreamGetDevice_ptsz_params_st;
 pub type cuStreamGetFlags_params = cuStreamGetFlags_params_st;
@@ -1955,7 +2179,8 @@ pub type cuStreamGetFlags_ptsz_params = cuStreamGetFlags_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetGreenCtx_params = cuStreamGetGreenCtx_params_st;
 #[cfg(any(
@@ -1969,7 +2194,8 @@ pub type cuStreamGetGreenCtx_params = cuStreamGetGreenCtx_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetId_params = cuStreamGetId_params_st;
 #[cfg(any(
@@ -1983,7 +2209,8 @@ pub type cuStreamGetId_params = cuStreamGetId_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamGetId_ptsz_params = cuStreamGetId_ptsz_params_st;
 pub type cuStreamGetPriority_params = cuStreamGetPriority_params_st;
@@ -2007,7 +2234,8 @@ pub type cuStreamUpdateCaptureDependencies_ptsz_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamUpdateCaptureDependencies_v2_params =
     cuStreamUpdateCaptureDependencies_v2_params_st;
@@ -2019,7 +2247,8 @@ pub type cuStreamUpdateCaptureDependencies_v2_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamUpdateCaptureDependencies_v2_ptsz_params =
     cuStreamUpdateCaptureDependencies_v2_ptsz_params_st;
@@ -2038,7 +2267,8 @@ pub type cuStreamWaitValue32_ptsz_params = cuStreamWaitValue32_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWaitValue32_v2_params = cuStreamWaitValue32_v2_params_st;
 #[cfg(any(
@@ -2052,7 +2282,8 @@ pub type cuStreamWaitValue32_v2_params = cuStreamWaitValue32_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWaitValue32_v2_ptsz_params = cuStreamWaitValue32_v2_ptsz_params_st;
 pub type cuStreamWaitValue64_params = cuStreamWaitValue64_params_st;
@@ -2068,7 +2299,8 @@ pub type cuStreamWaitValue64_ptsz_params = cuStreamWaitValue64_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWaitValue64_v2_params = cuStreamWaitValue64_v2_params_st;
 #[cfg(any(
@@ -2082,7 +2314,8 @@ pub type cuStreamWaitValue64_v2_params = cuStreamWaitValue64_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWaitValue64_v2_ptsz_params = cuStreamWaitValue64_v2_ptsz_params_st;
 pub type cuStreamWriteValue32_params = cuStreamWriteValue32_params_st;
@@ -2098,7 +2331,8 @@ pub type cuStreamWriteValue32_ptsz_params = cuStreamWriteValue32_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWriteValue32_v2_params = cuStreamWriteValue32_v2_params_st;
 #[cfg(any(
@@ -2112,7 +2346,8 @@ pub type cuStreamWriteValue32_v2_params = cuStreamWriteValue32_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWriteValue32_v2_ptsz_params = cuStreamWriteValue32_v2_ptsz_params_st;
 pub type cuStreamWriteValue64_params = cuStreamWriteValue64_params_st;
@@ -2128,7 +2363,8 @@ pub type cuStreamWriteValue64_ptsz_params = cuStreamWriteValue64_ptsz_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWriteValue64_v2_params = cuStreamWriteValue64_v2_params_st;
 #[cfg(any(
@@ -2142,7 +2378,8 @@ pub type cuStreamWriteValue64_v2_params = cuStreamWriteValue64_v2_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuStreamWriteValue64_v2_ptsz_params = cuStreamWriteValue64_v2_ptsz_params_st;
 pub type cuSurfObjectCreate_params = cuSurfObjectCreate_params_st;
@@ -2150,7 +2387,12 @@ pub type cuSurfObjectDestroy_params = cuSurfObjectDestroy_params_st;
 pub type cuSurfObjectGetResourceDesc_params = cuSurfObjectGetResourceDesc_params_st;
 pub type cuSurfRefGetArray_params = cuSurfRefGetArray_params_st;
 pub type cuSurfRefSetArray_params = cuSurfRefSetArray_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cuTensorMapEncodeIm2colWide_params = cuTensorMapEncodeIm2colWide_params_st;
 #[cfg(any(
     feature = "cuda-12000",
@@ -2163,7 +2405,8 @@ pub type cuTensorMapEncodeIm2colWide_params = cuTensorMapEncodeIm2colWide_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuTensorMapEncodeIm2col_params = cuTensorMapEncodeIm2col_params_st;
 #[cfg(any(
@@ -2177,7 +2420,8 @@ pub type cuTensorMapEncodeIm2col_params = cuTensorMapEncodeIm2col_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuTensorMapEncodeTiled_params = cuTensorMapEncodeTiled_params_st;
 #[cfg(any(
@@ -2191,7 +2435,8 @@ pub type cuTensorMapEncodeTiled_params = cuTensorMapEncodeTiled_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cuTensorMapReplaceAddress_params = cuTensorMapReplaceAddress_params_st;
 pub type cuTexObjectCreate_params = cuTexObjectCreate_params_st;
@@ -2251,7 +2496,8 @@ pub type cudaArrayGetInfo_v4010_params = cudaArrayGetInfo_v4010_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaArrayGetMemoryRequirements_v11060_params =
     cudaArrayGetMemoryRequirements_v11060_params_st;
@@ -2306,12 +2552,12 @@ pub type cudaDestroyExternalMemory_v10000_params = cudaDestroyExternalMemory_v10
 pub type cudaDestroyExternalSemaphore_v10000_params = cudaDestroyExternalSemaphore_v10000_params_st;
 pub type cudaDestroySurfaceObject_v5000_params = cudaDestroySurfaceObject_v5000_params_st;
 pub type cudaDestroyTextureObject_v5000_params = cudaDestroyTextureObject_v5000_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaDevResourceGenerateDesc_v13010_params = cudaDevResourceGenerateDesc_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaDevSmResourceSplitByCount_v13010_params =
     cudaDevSmResourceSplitByCount_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaDevSmResourceSplit_v13010_params = cudaDevSmResourceSplit_v13010_params_st;
 pub type cudaDeviceCanAccessPeer_v4000_params = cudaDeviceCanAccessPeer_v4000_params_st;
 pub type cudaDeviceDisablePeerAccess_v4000_params = cudaDeviceDisablePeerAccess_v4000_params_st;
@@ -2322,20 +2568,20 @@ pub type cudaDeviceGetAttribute_v5000_params = cudaDeviceGetAttribute_v5000_para
 pub type cudaDeviceGetByPCIBusId_v4010_params = cudaDeviceGetByPCIBusId_v4010_params_st;
 pub type cudaDeviceGetCacheConfig_v3020_params = cudaDeviceGetCacheConfig_v3020_params_st;
 pub type cudaDeviceGetDefaultMemPool_v11020_params = cudaDeviceGetDefaultMemPool_v11020_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaDeviceGetDevResource_v13010_params = cudaDeviceGetDevResource_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaDeviceGetExecutionCtx_v13010_params = cudaDeviceGetExecutionCtx_v13010_params_st;
 pub type cudaDeviceGetGraphMemAttribute_v11040_params =
     cudaDeviceGetGraphMemAttribute_v11040_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaDeviceGetHostAtomicCapabilities_v13000_params =
     cudaDeviceGetHostAtomicCapabilities_v13000_params_st;
 pub type cudaDeviceGetLimit_v3020_params = cudaDeviceGetLimit_v3020_params_st;
 pub type cudaDeviceGetMemPool_v11020_params = cudaDeviceGetMemPool_v11020_params_st;
 pub type cudaDeviceGetNvSciSyncAttributes_v10020_params =
     cudaDeviceGetNvSciSyncAttributes_v10020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaDeviceGetP2PAtomicCapabilities_v13000_params =
     cudaDeviceGetP2PAtomicCapabilities_v13000_params_st;
 pub type cudaDeviceGetP2PAttribute_v8000_params = cudaDeviceGetP2PAttribute_v8000_params_st;
@@ -2352,7 +2598,8 @@ pub type cudaDeviceGraphMemTrim_v11040_params = cudaDeviceGraphMemTrim_v11040_pa
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaDeviceRegisterAsyncNotification_v12040_params =
     cudaDeviceRegisterAsyncNotification_v12040_params_st;
@@ -2368,7 +2615,8 @@ pub type cudaDeviceSetSharedMemConfig_v4020_params = cudaDeviceSetSharedMemConfi
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaDeviceUnregisterAsyncNotification_v12040_params =
     cudaDeviceUnregisterAsyncNotification_v12040_params_st;
@@ -2376,7 +2624,7 @@ pub type cudaDriverGetVersion_v3020_params = cudaDriverGetVersion_v3020_params_s
 pub type cudaEventCreateWithFlags_v3020_params = cudaEventCreateWithFlags_v3020_params_st;
 pub type cudaEventCreate_v3020_params = cudaEventCreate_v3020_params_st;
 pub type cudaEventDestroy_v3020_params = cudaEventDestroy_v3020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaEventElapsedTime_v12080_params = cudaEventElapsedTime_v12080_params_st;
 #[cfg(any(feature = "cuda-12080", feature = "cuda-12090"))]
 pub type cudaEventElapsedTime_v2_v12080_params = cudaEventElapsedTime_v2_v12080_params_st;
@@ -2404,22 +2652,22 @@ pub type cudaEventRecordWithFlags_v11010_params = cudaEventRecordWithFlags_v1101
 pub type cudaEventRecord_ptsz_v7000_params = cudaEventRecord_ptsz_v7000_params_st;
 pub type cudaEventRecord_v3020_params = cudaEventRecord_v3020_params_st;
 pub type cudaEventSynchronize_v3020_params = cudaEventSynchronize_v3020_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxDestroy_v13010_params = cudaExecutionCtxDestroy_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxGetDevResource_v13010_params =
     cudaExecutionCtxGetDevResource_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxGetDevice_v13010_params = cudaExecutionCtxGetDevice_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxGetId_v13010_params = cudaExecutionCtxGetId_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxRecordEvent_v13010_params = cudaExecutionCtxRecordEvent_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxStreamCreate_v13010_params = cudaExecutionCtxStreamCreate_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxSynchronize_v13010_params = cudaExecutionCtxSynchronize_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaExecutionCtxWaitEvent_v13010_params = cudaExecutionCtxWaitEvent_v13010_params_st;
 pub type cudaExternalMemoryGetMappedBuffer_v10000_params =
     cudaExternalMemoryGetMappedBuffer_v10000_params_st;
@@ -2440,9 +2688,12 @@ pub type cudaFuncGetAttributes_v3020_params = cudaFuncGetAttributes_v3020_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaFuncGetName_v12030_params = cudaFuncGetName_v12030_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaFuncGetParamCount_v13020_params = cudaFuncGetParamCount_v13020_params_st;
 #[cfg(any(
     feature = "cuda-12040",
     feature = "cuda-12050",
@@ -2450,7 +2701,8 @@ pub type cudaFuncGetName_v12030_params = cudaFuncGetName_v12030_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaFuncGetParamInfo_v12040_params = cudaFuncGetParamInfo_v12040_params_st;
 pub type cudaFuncSetAttribute_v9000_params = cudaFuncSetAttribute_v9000_params_st;
@@ -2459,7 +2711,7 @@ pub type cudaFuncSetSharedMemConfig_v4020_params = cudaFuncSetSharedMemConfig_v4
 pub type cudaGetChannelDesc_v3020_params = cudaGetChannelDesc_v3020_params_st;
 pub type cudaGetDeviceCount_v3020_params = cudaGetDeviceCount_v3020_params_st;
 pub type cudaGetDeviceFlags_v7000_params = cudaGetDeviceFlags_v7000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGetDeviceProperties_v12000_params = cudaGetDeviceProperties_v12000_params_st;
 #[cfg(any(
     feature = "cuda-12000",
@@ -2497,7 +2749,8 @@ pub type cudaGetDevice_v3020_params = cudaGetDevice_v3020_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGetDriverEntryPointByVersion_ptsz_v12050_params =
     cudaGetDriverEntryPointByVersion_ptsz_v12050_params_st;
@@ -2507,7 +2760,8 @@ pub type cudaGetDriverEntryPointByVersion_ptsz_v12050_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGetDriverEntryPointByVersion_v12050_params =
     cudaGetDriverEntryPointByVersion_v12050_params_st;
@@ -2526,7 +2780,8 @@ pub type cudaGetFuncBySymbol_v11000_params = cudaGetFuncBySymbol_v11000_params_s
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGetKernel_v12000_params = cudaGetKernel_v12000_params_st;
 pub type cudaGetMipmappedArrayLevel_v5000_params = cudaGetMipmappedArrayLevel_v5000_params_st;
@@ -2582,7 +2837,7 @@ pub type cudaGraphAddChildGraphNode_v10000_params = cudaGraphAddChildGraphNode_v
     feature = "cuda-12090"
 ))]
 pub type cudaGraphAddDependencies_v10000_params = cudaGraphAddDependencies_v10000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphAddDependencies_v12030_params = cudaGraphAddDependencies_v12030_params_st;
 #[cfg(any(
     feature = "cuda-12030",
@@ -2621,7 +2876,7 @@ pub type cudaGraphAddMemsetNode_v10000_params = cudaGraphAddMemsetNode_v10000_pa
     feature = "cuda-12090"
 ))]
 pub type cudaGraphAddNode_v12020_params = cudaGraphAddNode_v12020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphAddNode_v12030_params = cudaGraphAddNode_v12030_params_st;
 #[cfg(any(
     feature = "cuda-12030",
@@ -2643,11 +2898,12 @@ pub type cudaGraphClone_v10000_params = cudaGraphClone_v10000_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphConditionalHandleCreate_v12030_params =
     cudaGraphConditionalHandleCreate_v12030_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphConditionalHandleCreate_v2_v13010_params =
     cudaGraphConditionalHandleCreate_v2_v13010_params_st;
 pub type cudaGraphCreate_v10000_params = cudaGraphCreate_v10000_params_st;
@@ -2684,10 +2940,11 @@ pub type cudaGraphExecExternalSemaphoresWaitNodeSetParams_v11020_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphExecGetFlags_v12000_params = cudaGraphExecGetFlags_v12000_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphExecGetId_v13010_params = cudaGraphExecGetId_v13010_params_st;
 pub type cudaGraphExecHostNodeSetParams_v10020_params =
     cudaGraphExecHostNodeSetParams_v10020_params_st;
@@ -2712,7 +2969,8 @@ pub type cudaGraphExecMemsetNodeSetParams_v10020_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphExecNodeSetParams_v12020_params = cudaGraphExecNodeSetParams_v12020_params_st;
 pub type cudaGraphExecUpdate_v10020_params = cudaGraphExecUpdate_v10020_params_st;
@@ -2741,7 +2999,7 @@ pub type cudaGraphExternalSemaphoresWaitNodeSetParams_v11020_params =
     feature = "cuda-12090"
 ))]
 pub type cudaGraphGetEdges_v10000_params = cudaGraphGetEdges_v10000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphGetEdges_v12030_params = cudaGraphGetEdges_v12030_params_st;
 #[cfg(any(
     feature = "cuda-12030",
@@ -2752,7 +3010,7 @@ pub type cudaGraphGetEdges_v12030_params = cudaGraphGetEdges_v12030_params_st;
     feature = "cuda-12090"
 ))]
 pub type cudaGraphGetEdges_v2_v12030_params = cudaGraphGetEdges_v2_v12030_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphGetId_v13010_params = cudaGraphGetId_v13010_params_st;
 pub type cudaGraphGetNodes_v10000_params = cudaGraphGetNodes_v10000_params_st;
 pub type cudaGraphGetRootNodes_v10000_params = cudaGraphGetRootNodes_v10000_params_st;
@@ -2771,7 +3029,8 @@ pub type cudaGraphInstantiateWithFlags_v11040_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphInstantiateWithParams_ptsz_v12000_params =
     cudaGraphInstantiateWithParams_ptsz_v12000_params_st;
@@ -2786,7 +3045,8 @@ pub type cudaGraphInstantiateWithParams_ptsz_v12000_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphInstantiateWithParams_v12000_params =
     cudaGraphInstantiateWithParams_v12000_params_st;
@@ -2809,7 +3069,8 @@ pub type cudaGraphInstantiate_v10000_params = cudaGraphInstantiate_v10000_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphInstantiate_v12000_params = cudaGraphInstantiate_v12000_params_st;
 pub type cudaGraphKernelNodeCopyAttributes_v11000_params =
@@ -2837,7 +3098,7 @@ pub type cudaGraphMemcpyNodeSetParams_v10000_params = cudaGraphMemcpyNodeSetPara
 pub type cudaGraphMemsetNodeGetParams_v10000_params = cudaGraphMemsetNodeGetParams_v10000_params_st;
 pub type cudaGraphMemsetNodeSetParams_v10000_params = cudaGraphMemsetNodeSetParams_v10000_params_st;
 pub type cudaGraphNodeFindInClone_v10000_params = cudaGraphNodeFindInClone_v10000_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphNodeGetContainingGraph_v13010_params =
     cudaGraphNodeGetContainingGraph_v13010_params_st;
 #[cfg(any(
@@ -2857,7 +3118,7 @@ pub type cudaGraphNodeGetContainingGraph_v13010_params =
     feature = "cuda-12090"
 ))]
 pub type cudaGraphNodeGetDependencies_v10000_params = cudaGraphNodeGetDependencies_v10000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphNodeGetDependencies_v12030_params = cudaGraphNodeGetDependencies_v12030_params_st;
 #[cfg(any(
     feature = "cuda-12030",
@@ -2887,7 +3148,7 @@ pub type cudaGraphNodeGetDependencies_v2_v12030_params =
 ))]
 pub type cudaGraphNodeGetDependentNodes_v10000_params =
     cudaGraphNodeGetDependentNodes_v10000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphNodeGetDependentNodes_v12030_params =
     cudaGraphNodeGetDependentNodes_v12030_params_st;
 #[cfg(any(
@@ -2914,12 +3175,15 @@ pub type cudaGraphNodeGetDependentNodes_v2_v12030_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphNodeGetEnabled_v11060_params = cudaGraphNodeGetEnabled_v11060_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphNodeGetLocalId_v13010_params = cudaGraphNodeGetLocalId_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaGraphNodeGetParams_v13020_params = cudaGraphNodeGetParams_v13020_params_st;
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphNodeGetToolsId_v13010_params = cudaGraphNodeGetToolsId_v13010_params_st;
 pub type cudaGraphNodeGetType_v10000_params = cudaGraphNodeGetType_v10000_params_st;
 #[cfg(any(
@@ -2936,7 +3200,8 @@ pub type cudaGraphNodeGetType_v10000_params = cudaGraphNodeGetType_v10000_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphNodeSetEnabled_v11060_params = cudaGraphNodeSetEnabled_v11060_params_st;
 #[cfg(any(
@@ -2948,7 +3213,8 @@ pub type cudaGraphNodeSetEnabled_v11060_params = cudaGraphNodeSetEnabled_v11060_
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaGraphNodeSetParams_v12020_params = cudaGraphNodeSetParams_v12020_params_st;
 pub type cudaGraphReleaseUserObject_v11030_params = cudaGraphReleaseUserObject_v11030_params_st;
@@ -2969,7 +3235,7 @@ pub type cudaGraphReleaseUserObject_v11030_params = cudaGraphReleaseUserObject_v
     feature = "cuda-12090"
 ))]
 pub type cudaGraphRemoveDependencies_v10000_params = cudaGraphRemoveDependencies_v10000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGraphRemoveDependencies_v12030_params = cudaGraphRemoveDependencies_v12030_params_st;
 #[cfg(any(
     feature = "cuda-12030",
@@ -2996,7 +3262,7 @@ pub type cudaGraphicsSubResourceGetMappedArray_v3020_params =
 pub type cudaGraphicsUnmapResources_v3020_params = cudaGraphicsUnmapResources_v3020_params_st;
 pub type cudaGraphicsUnregisterResource_v3020_params =
     cudaGraphicsUnregisterResource_v3020_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaGreenCtxCreate_v13010_params = cudaGreenCtxCreate_v13010_params_st;
 pub type cudaHostAlloc_v3020_params = cudaHostAlloc_v3020_params_st;
 pub type cudaHostGetDevicePointer_v3020_params = cudaHostGetDevicePointer_v3020_params_st;
@@ -3015,7 +3281,8 @@ pub type cudaImportExternalSemaphore_v10000_params = cudaImportExternalSemaphore
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaInitDevice_v12000_params = cudaInitDevice_v12000_params_st;
 pub type cudaIpcCloseMemHandle_v4010_params = cudaIpcCloseMemHandle_v4010_params_st;
@@ -3023,7 +3290,12 @@ pub type cudaIpcGetEventHandle_v4010_params = cudaIpcGetEventHandle_v4010_params
 pub type cudaIpcGetMemHandle_v4010_params = cudaIpcGetMemHandle_v4010_params_st;
 pub type cudaIpcOpenEventHandle_v4010_params = cudaIpcOpenEventHandle_v4010_params_st;
 pub type cudaIpcOpenMemHandle_v4010_params = cudaIpcOpenMemHandle_v4010_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaKernelSetAttributeForDevice_v12060_params =
     cudaKernelSetAttributeForDevice_v12060_params_st;
 #[cfg(any(
@@ -3049,6 +3321,10 @@ pub type cudaLaunchCooperativeKernel_ptsz_v9000_params =
 pub type cudaLaunchCooperativeKernel_v9000_params = cudaLaunchCooperativeKernel_v9000_params_st;
 pub type cudaLaunchHostFunc_ptsz_v10000_params = cudaLaunchHostFunc_ptsz_v10000_params_st;
 pub type cudaLaunchHostFunc_v10000_params = cudaLaunchHostFunc_v10000_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaLaunchHostFunc_v2_ptsz_v13020_params = cudaLaunchHostFunc_v2_ptsz_v13020_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaLaunchHostFunc_v2_v13020_params = cudaLaunchHostFunc_v2_v13020_params_st;
 #[cfg(any(
     feature = "cuda-11080",
     feature = "cuda-12000",
@@ -3061,7 +3337,8 @@ pub type cudaLaunchHostFunc_v10000_params = cudaLaunchHostFunc_v10000_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaLaunchKernelExC_ptsz_v11060_params = cudaLaunchKernelExC_ptsz_v11060_params_st;
 #[cfg(any(
@@ -3076,39 +3353,85 @@ pub type cudaLaunchKernelExC_ptsz_v11060_params = cudaLaunchKernelExC_ptsz_v1106
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaLaunchKernelExC_v11060_params = cudaLaunchKernelExC_v11060_params_st;
 pub type cudaLaunchKernel_ptsz_v7000_params = cudaLaunchKernel_ptsz_v7000_params_st;
 pub type cudaLaunchKernel_v7000_params = cudaLaunchKernel_v7000_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryEnumerateKernels_v12060_params = cudaLibraryEnumerateKernels_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryGetGlobal_v12060_params = cudaLibraryGetGlobal_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryGetKernelCount_v12060_params = cudaLibraryGetKernelCount_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryGetKernel_v12060_params = cudaLibraryGetKernel_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryGetManaged_v12060_params = cudaLibraryGetManaged_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryGetUnifiedFunction_v12060_params =
     cudaLibraryGetUnifiedFunction_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryLoadData_v12060_params = cudaLibraryLoadData_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryLoadFromFile_v12060_params = cudaLibraryLoadFromFile_v12060_params_st;
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 pub type cudaLibraryUnload_v12060_params = cudaLibraryUnload_v12060_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaLogsCurrent_v13000_params = cudaLogsCurrent_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaLogsDumpToFile_v13000_params = cudaLogsDumpToFile_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaLogsDumpToMemory_v13000_params = cudaLogsDumpToMemory_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaLogsRegisterCallback_v13000_params = cudaLogsRegisterCallback_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaLogsUnregisterCallback_v13000_params = cudaLogsUnregisterCallback_v13000_params_st;
 pub type cudaMalloc3DArray_v3020_params = cudaMalloc3DArray_v3020_params_st;
 pub type cudaMalloc3D_v3020_params = cudaMalloc3D_v3020_params_st;
@@ -3122,7 +3445,7 @@ pub type cudaMallocManaged_v6000_params = cudaMallocManaged_v6000_params_st;
 pub type cudaMallocMipmappedArray_v5000_params = cudaMallocMipmappedArray_v5000_params_st;
 pub type cudaMallocPitch_v3020_params = cudaMallocPitch_v3020_params_st;
 pub type cudaMalloc_v3020_params = cudaMalloc_v3020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemAdvise_v12020_params = cudaMemAdvise_v12020_params_st;
 #[cfg(any(
     feature = "cuda-12020",
@@ -3151,21 +3474,21 @@ pub type cudaMemAdvise_v2_v12020_params = cudaMemAdvise_v2_v12020_params_st;
     feature = "cuda-12090"
 ))]
 pub type cudaMemAdvise_v8000_params = cudaMemAdvise_v8000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemDiscardAndPrefetchBatchAsync_ptsz_v13000_params =
     cudaMemDiscardAndPrefetchBatchAsync_ptsz_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemDiscardAndPrefetchBatchAsync_v13000_params =
     cudaMemDiscardAndPrefetchBatchAsync_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemDiscardBatchAsync_ptsz_v13000_params =
     cudaMemDiscardBatchAsync_ptsz_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemDiscardBatchAsync_v13000_params = cudaMemDiscardBatchAsync_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemGetDefaultMemPool_v13000_params = cudaMemGetDefaultMemPool_v13000_params_st;
 pub type cudaMemGetInfo_v3020_params = cudaMemGetInfo_v3020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemGetMemPool_v13000_params = cudaMemGetMemPool_v13000_params_st;
 pub type cudaMemPoolCreate_v11020_params = cudaMemPoolCreate_v11020_params_st;
 pub type cudaMemPoolDestroy_v11020_params = cudaMemPoolDestroy_v11020_params_st;
@@ -3180,7 +3503,7 @@ pub type cudaMemPoolImportPointer_v11020_params = cudaMemPoolImportPointer_v1102
 pub type cudaMemPoolSetAccess_v11020_params = cudaMemPoolSetAccess_v11020_params_st;
 pub type cudaMemPoolSetAttribute_v11020_params = cudaMemPoolSetAttribute_v11020_params_st;
 pub type cudaMemPoolTrimTo_v11020_params = cudaMemPoolTrimTo_v11020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemPrefetchAsync_ptsz_v12020_params = cudaMemPrefetchAsync_ptsz_v12020_params_st;
 #[cfg(any(
     feature = "cuda-11040",
@@ -3199,7 +3522,7 @@ pub type cudaMemPrefetchAsync_ptsz_v12020_params = cudaMemPrefetchAsync_ptsz_v12
     feature = "cuda-12090"
 ))]
 pub type cudaMemPrefetchAsync_ptsz_v8000_params = cudaMemPrefetchAsync_ptsz_v8000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemPrefetchAsync_v12020_params = cudaMemPrefetchAsync_v12020_params_st;
 #[cfg(any(
     feature = "cuda-12020",
@@ -3238,14 +3561,14 @@ pub type cudaMemPrefetchAsync_v2_v12020_params = cudaMemPrefetchAsync_v2_v12020_
     feature = "cuda-12090"
 ))]
 pub type cudaMemPrefetchAsync_v8000_params = cudaMemPrefetchAsync_v8000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemPrefetchBatchAsync_ptsz_v13000_params =
     cudaMemPrefetchBatchAsync_ptsz_v13000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemPrefetchBatchAsync_v13000_params = cudaMemPrefetchBatchAsync_v13000_params_st;
 pub type cudaMemRangeGetAttribute_v8000_params = cudaMemRangeGetAttribute_v8000_params_st;
 pub type cudaMemRangeGetAttributes_v8000_params = cudaMemRangeGetAttributes_v8000_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemSetMemPool_v13000_params = cudaMemSetMemPool_v13000_params_st;
 pub type cudaMemcpy2DArrayToArray_ptds_v7000_params = cudaMemcpy2DArrayToArray_ptds_v7000_params_st;
 pub type cudaMemcpy2DArrayToArray_v3020_params = cudaMemcpy2DArrayToArray_v3020_params_st;
@@ -3266,16 +3589,22 @@ pub type cudaMemcpy3DAsync_ptsz_v7000_params = cudaMemcpy3DAsync_ptsz_v7000_para
 pub type cudaMemcpy3DAsync_v3020_params = cudaMemcpy3DAsync_v3020_params_st;
 #[cfg(any(feature = "cuda-12080", feature = "cuda-12090"))]
 pub type cudaMemcpy3DBatchAsync_ptsz_v12080_params = cudaMemcpy3DBatchAsync_ptsz_v12080_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemcpy3DBatchAsync_ptsz_v13000_params = cudaMemcpy3DBatchAsync_ptsz_v13000_params_st;
 #[cfg(any(feature = "cuda-12080", feature = "cuda-12090"))]
 pub type cudaMemcpy3DBatchAsync_v12080_params = cudaMemcpy3DBatchAsync_v12080_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemcpy3DBatchAsync_v13000_params = cudaMemcpy3DBatchAsync_v13000_params_st;
 pub type cudaMemcpy3DPeerAsync_ptsz_v7000_params = cudaMemcpy3DPeerAsync_ptsz_v7000_params_st;
 pub type cudaMemcpy3DPeerAsync_v4000_params = cudaMemcpy3DPeerAsync_v4000_params_st;
 pub type cudaMemcpy3DPeer_ptds_v7000_params = cudaMemcpy3DPeer_ptds_v7000_params_st;
 pub type cudaMemcpy3DPeer_v4000_params = cudaMemcpy3DPeer_v4000_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaMemcpy3DWithAttributesAsync_ptsz_v13020_params =
+    cudaMemcpy3DWithAttributesAsync_ptsz_v13020_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaMemcpy3DWithAttributesAsync_v13020_params =
+    cudaMemcpy3DWithAttributesAsync_v13020_params_st;
 pub type cudaMemcpy3D_ptds_v7000_params = cudaMemcpy3D_ptds_v7000_params_st;
 pub type cudaMemcpy3D_v3020_params = cudaMemcpy3D_v3020_params_st;
 pub type cudaMemcpyArrayToArray_ptds_v7000_params = cudaMemcpyArrayToArray_ptds_v7000_params_st;
@@ -3284,11 +3613,11 @@ pub type cudaMemcpyAsync_ptsz_v7000_params = cudaMemcpyAsync_ptsz_v7000_params_s
 pub type cudaMemcpyAsync_v3020_params = cudaMemcpyAsync_v3020_params_st;
 #[cfg(any(feature = "cuda-12080", feature = "cuda-12090"))]
 pub type cudaMemcpyBatchAsync_ptsz_v12080_params = cudaMemcpyBatchAsync_ptsz_v12080_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemcpyBatchAsync_ptsz_v13000_params = cudaMemcpyBatchAsync_ptsz_v13000_params_st;
 #[cfg(any(feature = "cuda-12080", feature = "cuda-12090"))]
 pub type cudaMemcpyBatchAsync_v12080_params = cudaMemcpyBatchAsync_v12080_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaMemcpyBatchAsync_v13000_params = cudaMemcpyBatchAsync_v13000_params_st;
 pub type cudaMemcpyFromArrayAsync_ptsz_v7000_params = cudaMemcpyFromArrayAsync_ptsz_v7000_params_st;
 pub type cudaMemcpyFromArrayAsync_v3020_params = cudaMemcpyFromArrayAsync_v3020_params_st;
@@ -3309,6 +3638,12 @@ pub type cudaMemcpyToSymbolAsync_ptsz_v7000_params = cudaMemcpyToSymbolAsync_pts
 pub type cudaMemcpyToSymbolAsync_v3020_params = cudaMemcpyToSymbolAsync_v3020_params_st;
 pub type cudaMemcpyToSymbol_ptds_v7000_params = cudaMemcpyToSymbol_ptds_v7000_params_st;
 pub type cudaMemcpyToSymbol_v3020_params = cudaMemcpyToSymbol_v3020_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaMemcpyWithAttributesAsync_ptsz_v13020_params =
+    cudaMemcpyWithAttributesAsync_ptsz_v13020_params_st;
+#[cfg(any(feature = "cuda-13020"))]
+pub type cudaMemcpyWithAttributesAsync_v13020_params =
+    cudaMemcpyWithAttributesAsync_v13020_params_st;
 pub type cudaMemcpy_ptds_v7000_params = cudaMemcpy_ptds_v7000_params_st;
 pub type cudaMemcpy_v3020_params = cudaMemcpy_v3020_params_st;
 pub type cudaMemset2DAsync_ptsz_v7000_params = cudaMemset2DAsync_ptsz_v7000_params_st;
@@ -3337,7 +3672,8 @@ pub type cudaMemset_v3020_params = cudaMemset_v3020_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaMipmappedArrayGetMemoryRequirements_v11060_params =
     cudaMipmappedArrayGetMemoryRequirements_v11060_params_st;
@@ -3361,7 +3697,8 @@ pub type cudaOccupancyMaxActiveBlocksPerMultiprocessor_v6050_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaOccupancyMaxActiveClusters_v11070_params =
     cudaOccupancyMaxActiveClusters_v11070_params_st;
@@ -3377,7 +3714,8 @@ pub type cudaOccupancyMaxActiveClusters_v11070_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaOccupancyMaxPotentialClusterSize_v11070_params =
     cudaOccupancyMaxPotentialClusterSize_v11070_params_st;
@@ -3400,10 +3738,10 @@ pub type cudaSetDoubleForDevice_v3020_params = cudaSetDoubleForDevice_v3020_para
 ))]
 pub type cudaSetDoubleForHost_v3020_params = cudaSetDoubleForHost_v3020_params_st;
 pub type cudaSetValidDevices_v3020_params = cudaSetValidDevices_v3020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaSignalExternalSemaphoresAsync_ptsz_v11020_params =
     cudaSignalExternalSemaphoresAsync_ptsz_v11020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaSignalExternalSemaphoresAsync_v11020_params =
     cudaSignalExternalSemaphoresAsync_v11020_params_st;
 #[cfg(any(
@@ -3454,7 +3792,8 @@ pub type cudaStreamAttachMemAsync_v6000_params = cudaStreamAttachMemAsync_v6000_
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaStreamBeginCaptureToGraph_ptsz_v12030_params =
     cudaStreamBeginCaptureToGraph_ptsz_v12030_params_st;
@@ -3466,7 +3805,8 @@ pub type cudaStreamBeginCaptureToGraph_ptsz_v12030_params =
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaStreamBeginCaptureToGraph_v12030_params =
     cudaStreamBeginCaptureToGraph_v12030_params_st;
@@ -3501,7 +3841,7 @@ pub type cudaStreamGetAttribute_v11000_params = cudaStreamGetAttribute_v11000_pa
 ))]
 pub type cudaStreamGetCaptureInfo_ptsz_v10010_params =
     cudaStreamGetCaptureInfo_ptsz_v10010_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaStreamGetCaptureInfo_ptsz_v12030_params =
     cudaStreamGetCaptureInfo_ptsz_v12030_params_st;
 #[cfg(any(
@@ -3521,7 +3861,7 @@ pub type cudaStreamGetCaptureInfo_ptsz_v12030_params =
     feature = "cuda-12090"
 ))]
 pub type cudaStreamGetCaptureInfo_v10010_params = cudaStreamGetCaptureInfo_v10010_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaStreamGetCaptureInfo_v12030_params = cudaStreamGetCaptureInfo_v12030_params_st;
 #[cfg(any(
     feature = "cuda-11040",
@@ -3577,23 +3917,25 @@ pub type cudaStreamGetCaptureInfo_v3_ptsz_v12030_params =
     feature = "cuda-12090"
 ))]
 pub type cudaStreamGetCaptureInfo_v3_v12030_params = cudaStreamGetCaptureInfo_v3_v12030_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaStreamGetDevResource_ptsz_v13010_params =
     cudaStreamGetDevResource_ptsz_v13010_params_st;
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaStreamGetDevResource_v13010_params = cudaStreamGetDevResource_v13010_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaStreamGetDevice_ptsz_v12080_params = cudaStreamGetDevice_ptsz_v12080_params_st;
 #[cfg(any(
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaStreamGetDevice_v12080_params = cudaStreamGetDevice_v12080_params_st;
 pub type cudaStreamGetFlags_ptsz_v7000_params = cudaStreamGetFlags_ptsz_v7000_params_st;
@@ -3609,7 +3951,8 @@ pub type cudaStreamGetFlags_v5050_params = cudaStreamGetFlags_v5050_params_st;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaStreamGetId_ptsz_v12000_params = cudaStreamGetId_ptsz_v12000_params_st;
 #[cfg(any(
@@ -3623,7 +3966,8 @@ pub type cudaStreamGetId_ptsz_v12000_params = cudaStreamGetId_ptsz_v12000_params
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cudaStreamGetId_v12000_params = cudaStreamGetId_v12000_params_st;
 pub type cudaStreamGetPriority_ptsz_v7000_params = cudaStreamGetPriority_ptsz_v7000_params_st;
@@ -3654,7 +3998,7 @@ pub type cudaStreamSynchronize_v3020_params = cudaStreamSynchronize_v3020_params
 ))]
 pub type cudaStreamUpdateCaptureDependencies_ptsz_v11030_params =
     cudaStreamUpdateCaptureDependencies_ptsz_v11030_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaStreamUpdateCaptureDependencies_ptsz_v12030_params =
     cudaStreamUpdateCaptureDependencies_ptsz_v12030_params_st;
 #[cfg(any(
@@ -3675,7 +4019,7 @@ pub type cudaStreamUpdateCaptureDependencies_ptsz_v12030_params =
 ))]
 pub type cudaStreamUpdateCaptureDependencies_v11030_params =
     cudaStreamUpdateCaptureDependencies_v11030_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaStreamUpdateCaptureDependencies_v12030_params =
     cudaStreamUpdateCaptureDependencies_v12030_params_st;
 #[cfg(any(
@@ -3741,10 +4085,10 @@ pub type cudaUnbindTexture_v3020_params = cudaUnbindTexture_v3020_params_st;
 pub type cudaUserObjectCreate_v11030_params = cudaUserObjectCreate_v11030_params_st;
 pub type cudaUserObjectRelease_v11030_params = cudaUserObjectRelease_v11030_params_st;
 pub type cudaUserObjectRetain_v11030_params = cudaUserObjectRetain_v11030_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaWaitExternalSemaphoresAsync_ptsz_v11020_params =
     cudaWaitExternalSemaphoresAsync_ptsz_v11020_params_st;
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 pub type cudaWaitExternalSemaphoresAsync_v11020_params =
     cudaWaitExternalSemaphoresAsync_v11020_params_st;
 #[cfg(any(
@@ -4001,7 +4345,7 @@ pub enum CUptiResult {
     CUPTI_ERROR_UNKNOWN = 999,
     CUPTI_ERROR_FORCE_INT = 2147483647,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUptiResult {
@@ -4055,6 +4399,20 @@ pub enum CUptiResult {
     CUPTI_ERROR_HES_TRACE_NOT_SUPPORTED_ON_MPS = 47,
     CUPTI_ERROR_UNKNOWN = 999,
     CUPTI_ERROR_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityApiFieldIds {
+    API_FIELD_KIND = 0,
+    API_FIELD_CBID = 1,
+    API_FIELD_START = 2,
+    API_FIELD_END = 3,
+    API_FIELD_PROCESS_ID = 4,
+    API_FIELD_THREAD_ID = 5,
+    API_FIELD_CORRELATION_ID = 6,
+    API_FIELD_RETURN_VALUE = 7,
+    API_FIELD_MAX = 8,
 }
 #[cfg(any(
     feature = "cuda-11040",
@@ -4119,6 +4477,36 @@ pub enum CUpti_ActivityAttribute {
     CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_SIZE_DEVICE_GRAPHS = 10,
     CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_FORCE_INT = 2147483647,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityAttribute {
+    CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_SIZE = 0,
+    CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_SIZE_CDP = 1,
+    CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_POOL_LIMIT = 2,
+    CUPTI_ACTIVITY_ATTR_PROFILING_SEMAPHORE_POOL_SIZE = 3,
+    CUPTI_ACTIVITY_ATTR_PROFILING_SEMAPHORE_POOL_LIMIT = 4,
+    CUPTI_ACTIVITY_ATTR_ZEROED_OUT_ACTIVITY_BUFFER = 5,
+    CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_PRE_ALLOCATE_VALUE = 6,
+    CUPTI_ACTIVITY_ATTR_PROFILING_SEMAPHORE_PRE_ALLOCATE_VALUE = 7,
+    CUPTI_ACTIVITY_ATTR_MEM_ALLOCATION_TYPE_HOST_PINNED = 8,
+    CUPTI_ACTIVITY_ATTR_PER_THREAD_ACTIVITY_BUFFER = 9,
+    CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_SIZE_DEVICE_GRAPHS = 10,
+    CUPTI_ACTIVITY_ATTR_USER_DEFINED_RECORDS = 11,
+    CUPTI_ACTIVITY_ATTR_MULTIPLE_SUBSCRIBER_STATE = 12,
+    CUPTI_ACTIVITY_ATTR_ENABLE_HES = 13,
+    CUPTI_ACTIVITY_ATTR_ENABLE_ALLOCATION_SOURCE_TRACKING = 14,
+    CUPTI_ACTIVITY_ATTR_ENABLE_KERNEL_LATENCY_TIMESTAMPS = 15,
+    CUPTI_ACTIVITY_ATTR_ENABLE_ALL_SYNC_RECORDS = 16,
+    CUPTI_ACTIVITY_ATTR_ENABLE_CUDA_EVENT_DEVICE_TIMESTAMPS = 17,
+    CUPTI_ACTIVITY_ATTR_ENABLE_KERNEL_LAUNCH_ATTRIBUTES = 18,
+    CUPTI_ACTIVITY_ATTR_ENABLE_DEVICE_GRAPH_TRACE = 19,
+    CUPTI_ACTIVITY_ATTR_ENABLE_MULTI_SUBSCRIBER_GRAPH_LEVEL_TRACE = 20,
+    CUPTI_ACTIVITY_ATTR_THREAD_ID_TYPE = 21,
+    CUPTI_ACTIVITY_ATTR_TIMESTAMP_CALLBACK = 22,
+    CUPTI_ACTIVITY_ATTR_CIG_MODE = 23,
+    CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_FORCE_INT = 2147483647,
+}
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_ActivityComputeApiKind {
@@ -4126,6 +4514,118 @@ pub enum CUpti_ActivityComputeApiKind {
     CUPTI_ACTIVITY_COMPUTE_API_CUDA = 1,
     CUPTI_ACTIVITY_COMPUTE_API_CUDA_MPS = 2,
     CUPTI_ACTIVITY_COMPUTE_API_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityComputeEngineCtxSwitchFieldIds {
+    COMPUTE_ENGINE_CTX_SWITCH_FIELD_KIND = 0,
+    COMPUTE_ENGINE_CTX_SWITCH_FIELD_CONTEXT_ID = 1,
+    COMPUTE_ENGINE_CTX_SWITCH_FIELD_TIMESTAMP = 2,
+    COMPUTE_ENGINE_CTX_SWITCH_FIELD_OPERATION_TYPE = 3,
+    COMPUTE_ENGINE_CTX_SWITCH_FIELD_MAX = 4,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityConfidentialComputeRotationFieldIds {
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_KIND = 0,
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_EVENT_TYPE = 1,
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_DEVICE_ID = 2,
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_CONTEXT_ID = 3,
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_CHANNEL_ID = 4,
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_CHANNEL_TYPE = 5,
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_TIMESTAMP = 6,
+    CONFIDENTIAL_COMPUTE_ROTATION_FIELD_MAX = 7,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityContextFieldIds {
+    CONTEXT_FIELD_KIND = 0,
+    CONTEXT_FIELD_CONTEXT_ID = 1,
+    CONTEXT_FIELD_DEVICE_ID = 2,
+    CONTEXT_FIELD_COMPUTE_API_KIND = 3,
+    CONTEXT_FIELD_NULL_STREAM_ID = 4,
+    CONTEXT_FIELD_PARENT_CONTEXT_ID = 5,
+    CONTEXT_FIELD_IS_GREEN_CONTEXT = 6,
+    CONTEXT_FIELD_NUM_MULTIPROCESSORS = 7,
+    CONTEXT_FIELD_CIG_MODE = 8,
+    CONTEXT_FIELD_PROCESS_ID = 9,
+    CONTEXT_FIELD_MAX = 10,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityCudaEventFieldIds {
+    CUDA_EVENT_FIELD_KIND = 0,
+    CUDA_EVENT_FIELD_CORRELATION_ID = 1,
+    CUDA_EVENT_FIELD_CONTEXT_ID = 2,
+    CUDA_EVENT_FIELD_STREAM_ID = 3,
+    CUDA_EVENT_FIELD_EVENT_ID = 4,
+    CUDA_EVENT_FIELD_DEVICE_ID = 5,
+    CUDA_EVENT_FIELD_DEVICE_TIMESTAMP = 6,
+    CUDA_EVENT_FIELD_CUDA_EVENT_SYNC_ID = 7,
+    CUDA_EVENT_FIELD_MAX = 8,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityDeviceFieldIds {
+    DEVICE_FIELD_KIND = 0,
+    DEVICE_FIELD_FLAGS = 1,
+    DEVICE_FIELD_GLOBAL_MEMORY_BANDWIDTH = 2,
+    DEVICE_FIELD_GLOBAL_MEMORY_SIZE = 3,
+    DEVICE_FIELD_CONSTANT_MEMORY_SIZE = 4,
+    DEVICE_FIELD_L2_CACHE_SIZE = 5,
+    DEVICE_FIELD_NUM_THREADS_PER_WARP = 6,
+    DEVICE_FIELD_CORE_CLOCK_RATE = 7,
+    DEVICE_FIELD_NUM_MEMCPY_ENGINES = 8,
+    DEVICE_FIELD_NUM_MULTIPROCESSORS = 9,
+    DEVICE_FIELD_MAX_IPC = 10,
+    DEVICE_FIELD_MAX_WARPS_PER_MULTIPROCESSOR = 11,
+    DEVICE_FIELD_MAX_BLOCKS_PER_MULTIPROCESSOR = 12,
+    DEVICE_FIELD_MAX_SHARED_MEMORY_PER_MULTIPROCESSOR = 13,
+    DEVICE_FIELD_MAX_REGISTERS_PER_MULTIPROCESSOR = 14,
+    DEVICE_FIELD_MAX_REGISTERS_PER_BLOCK = 15,
+    DEVICE_FIELD_MAX_SHARED_MEMORY_PER_BLOCK = 16,
+    DEVICE_FIELD_MAX_THREADS_PER_BLOCK = 17,
+    DEVICE_FIELD_MAX_BLOCK_DIM_X = 18,
+    DEVICE_FIELD_MAX_BLOCK_DIM_Y = 19,
+    DEVICE_FIELD_MAX_BLOCK_DIM_Z = 20,
+    DEVICE_FIELD_MAX_GRID_DIM_X = 21,
+    DEVICE_FIELD_MAX_GRID_DIM_Y = 22,
+    DEVICE_FIELD_MAX_GRID_DIM_Z = 23,
+    DEVICE_FIELD_COMPUTE_CAPABILITY_MAJOR = 24,
+    DEVICE_FIELD_COMPUTE_CAPABILITY_MINOR = 25,
+    DEVICE_FIELD_ID = 26,
+    DEVICE_FIELD_ECC_ENABLED = 27,
+    DEVICE_FIELD_UUID = 28,
+    DEVICE_FIELD_NAME = 29,
+    DEVICE_FIELD_IS_CUDA_VISIBLE = 30,
+    DEVICE_FIELD_IS_MIG_ENABLED = 31,
+    DEVICE_FIELD_GPU_INSTANCE_ID = 32,
+    DEVICE_FIELD_COMPUTE_INSTANCE_ID = 33,
+    DEVICE_FIELD_MIG_UUID = 34,
+    DEVICE_FIELD_IS_NUMA_NODE = 35,
+    DEVICE_FIELD_NUMA_ID = 36,
+    DEVICE_FIELD_NUM_TPCS = 37,
+    DEVICE_FIELD_MAX = 38,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityDeviceGraphTraceFieldIds {
+    DEVICE_GRAPH_TRACE_FIELD_KIND = 0,
+    DEVICE_GRAPH_TRACE_FIELD_DEVICE_ID = 1,
+    DEVICE_GRAPH_TRACE_FIELD_START = 2,
+    DEVICE_GRAPH_TRACE_FIELD_END = 3,
+    DEVICE_GRAPH_TRACE_FIELD_GRAPH_ID = 4,
+    DEVICE_GRAPH_TRACE_FIELD_LAUNCHER_GRAPH_ID = 5,
+    DEVICE_GRAPH_TRACE_FIELD_DEVICE_LAUNCH_MODE = 6,
+    DEVICE_GRAPH_TRACE_FIELD_CONTEXT_ID = 7,
+    DEVICE_GRAPH_TRACE_FIELD_STREAM_ID = 8,
+    DEVICE_GRAPH_TRACE_FIELD_MAX = 9,
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4137,6 +4637,16 @@ pub enum CUpti_ActivityEnvironmentKind {
     CUPTI_ACTIVITY_ENVIRONMENT_COOLING = 4,
     CUPTI_ACTIVITY_ENVIRONMENT_COUNT = 5,
     CUPTI_ACTIVITY_ENVIRONMENT_KIND_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityExternalCorrelationFieldIds {
+    EXTERNAL_CORRELATION_FIELD_KIND = 0,
+    EXTERNAL_CORRELATION_FIELD_EXTERNAL_KIND = 1,
+    EXTERNAL_CORRELATION_FIELD_EXTERNAL_ID = 2,
+    EXTERNAL_CORRELATION_FIELD_CORRELATION_ID = 3,
+    EXTERNAL_CORRELATION_FIELD_MAX = 4,
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4154,6 +4664,68 @@ pub enum CUpti_ActivityFlag {
     CUPTI_ACTIVITY_FLAG_GLOBAL_ACCESS_KIND_CACHED = 512,
     CUPTI_ACTIVITY_FLAG_INSTRUCTION_CLASS_MASK = 510,
     CUPTI_ACTIVITY_FLAG_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityGraphHostNodeFieldIds {
+    GRAPH_HOST_NODE_FIELD_KIND = 0,
+    GRAPH_HOST_NODE_FIELD_STREAM_ID = 1,
+    GRAPH_HOST_NODE_FIELD_CONTEXT_ID = 2,
+    GRAPH_HOST_NODE_FIELD_DEVICE_ID = 3,
+    GRAPH_HOST_NODE_FIELD_CORRELATION_ID = 4,
+    GRAPH_HOST_NODE_FIELD_GRAPH_ID = 5,
+    GRAPH_HOST_NODE_FIELD_GRAPH_NODE_ID = 6,
+    GRAPH_HOST_NODE_FIELD_PROCESS_ID = 7,
+    GRAPH_HOST_NODE_FIELD_THREAD_ID = 8,
+    GRAPH_HOST_NODE_FIELD_START = 9,
+    GRAPH_HOST_NODE_FIELD_END = 10,
+    GRAPH_HOST_NODE_FIELD_MAX = 11,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityGraphTraceFieldIds {
+    GRAPH_TRACE_FIELD_KIND = 0,
+    GRAPH_TRACE_FIELD_CORRELATION_ID = 1,
+    GRAPH_TRACE_FIELD_START = 2,
+    GRAPH_TRACE_FIELD_END = 3,
+    GRAPH_TRACE_FIELD_DEVICE_ID = 4,
+    GRAPH_TRACE_FIELD_GRAPH_ID = 5,
+    GRAPH_TRACE_FIELD_CONTEXT_ID = 6,
+    GRAPH_TRACE_FIELD_STREAM_ID = 7,
+    GRAPH_TRACE_FIELD_END_DEVICE_ID = 8,
+    GRAPH_TRACE_FIELD_END_CONTEXT_ID = 9,
+    GRAPH_TRACE_FIELD_MAX = 10,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityGreenContextFieldIds {
+    GREEN_CONTEXT_FIELD_KIND = 0,
+    GREEN_CONTEXT_FIELD_CONTEXT_ID = 1,
+    GREEN_CONTEXT_FIELD_PARENT_CONTEXT_ID = 2,
+    GREEN_CONTEXT_FIELD_DEVICE_ID = 3,
+    GREEN_CONTEXT_FIELD_NUM_MULTIPROCESSORS = 4,
+    GREEN_CONTEXT_FIELD_NUM_TPCS = 5,
+    GREEN_CONTEXT_FIELD_LOGICAL_TPC_MASK_SIZE = 6,
+    GREEN_CONTEXT_FIELD_LOGICAL_TPC_MASK = 7,
+    GREEN_CONTEXT_FIELD_MAX = 8,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityHostLaunchFieldIds {
+    HOST_LAUNCH_FIELD_KIND = 0,
+    HOST_LAUNCH_FIELD_STREAM_ID = 1,
+    HOST_LAUNCH_FIELD_CONTEXT_ID = 2,
+    HOST_LAUNCH_FIELD_DEVICE_ID = 3,
+    HOST_LAUNCH_FIELD_CORRELATION_ID = 4,
+    HOST_LAUNCH_FIELD_PROCESS_ID = 5,
+    HOST_LAUNCH_FIELD_THREAD_ID = 6,
+    HOST_LAUNCH_FIELD_START = 7,
+    HOST_LAUNCH_FIELD_END = 8,
+    HOST_LAUNCH_FIELD_MAX = 9,
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4193,7 +4765,8 @@ pub enum CUpti_ActivityInstructionClass {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4202,6 +4775,24 @@ pub enum CUpti_ActivityJitEntryType {
     CUPTI_ACTIVITY_JIT_ENTRY_PTX_TO_CUBIN = 1,
     CUPTI_ACTIVITY_JIT_ENTRY_NVVM_IR_TO_PTX = 2,
     CUPTI_ACTIVITY_JIT_ENTRY_TYPE_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityJitFieldIds {
+    JIT_FIELD_KIND = 0,
+    JIT_FIELD_ENTRY_TYPE = 1,
+    JIT_FIELD_OPERATION_TYPE = 2,
+    JIT_FIELD_DEVICE_ID = 3,
+    JIT_FIELD_START = 4,
+    JIT_FIELD_END = 5,
+    JIT_FIELD_CORRELATION_ID = 6,
+    JIT_FIELD_OPERATION_CORRELATION_ID = 7,
+    JIT_FIELD_CACHE_SIZE = 8,
+    JIT_FIELD_CACHE_PATH = 9,
+    JIT_FIELD_PROCESS_ID = 10,
+    JIT_FIELD_THREAD_ID = 11,
+    JIT_FIELD_MAX = 12,
 }
 #[cfg(any(
     feature = "cuda-11080",
@@ -4215,7 +4806,8 @@ pub enum CUpti_ActivityJitEntryType {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4225,6 +4817,58 @@ pub enum CUpti_ActivityJitOperationType {
     CUPTI_ACTIVITY_JIT_OPERATION_CACHE_STORE = 2,
     CUPTI_ACTIVITY_JIT_OPERATION_COMPILE = 3,
     CUPTI_ACTIVITY_JIT_OPERATION_TYPE_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityKernelFieldIds {
+    KERNEL_FIELD_KIND = 0,
+    KERNEL_FIELD_CACHE_CONFIG_REQUESTED = 1,
+    KERNEL_FIELD_CACHE_CONFIG_EXECUTED = 2,
+    KERNEL_FIELD_SHARED_MEMORY_CONFIG = 3,
+    KERNEL_FIELD_REGISTERS_PER_THREAD = 4,
+    KERNEL_FIELD_PARTITIONED_GLOBAL_CACHE_REQUESTED = 5,
+    KERNEL_FIELD_PARTITIONED_GLOBAL_CACHE_EXECUTED = 6,
+    KERNEL_FIELD_START = 7,
+    KERNEL_FIELD_END = 8,
+    KERNEL_FIELD_COMPLETED = 9,
+    KERNEL_FIELD_DEVICE_ID = 10,
+    KERNEL_FIELD_CONTEXT_ID = 11,
+    KERNEL_FIELD_STREAM_ID = 12,
+    KERNEL_FIELD_GRID_X = 13,
+    KERNEL_FIELD_GRID_Y = 14,
+    KERNEL_FIELD_GRID_Z = 15,
+    KERNEL_FIELD_BLOCK_X = 16,
+    KERNEL_FIELD_BLOCK_Y = 17,
+    KERNEL_FIELD_BLOCK_Z = 18,
+    KERNEL_FIELD_STATIC_SHARED_MEMORY = 19,
+    KERNEL_FIELD_DYNAMIC_SHARED_MEMORY = 20,
+    KERNEL_FIELD_LOCAL_MEMORY_PER_THREAD = 21,
+    KERNEL_FIELD_CORRELATION_ID = 22,
+    KERNEL_FIELD_GRID_ID = 23,
+    KERNEL_FIELD_NAME = 24,
+    KERNEL_FIELD_QUEUED = 25,
+    KERNEL_FIELD_SUBMITTED = 26,
+    KERNEL_FIELD_LAUNCH_TYPE = 27,
+    KERNEL_FIELD_IS_SHARED_MEMORY_CARVEOUT_REQUESTED = 28,
+    KERNEL_FIELD_SHARED_MEMORY_CARVEOUT_REQUESTED = 29,
+    KERNEL_FIELD_SHARED_MEMORY_EXECUTED = 30,
+    KERNEL_FIELD_GRAPH_NODE_ID = 31,
+    KERNEL_FIELD_SHMEM_LIMIT_CONFIG = 32,
+    KERNEL_FIELD_GRAPH_ID = 33,
+    KERNEL_FIELD_ACCESS_POLICY_WINDOW = 34,
+    KERNEL_FIELD_CHANNEL_ID = 35,
+    KERNEL_FIELD_CHANNEL_TYPE = 36,
+    KERNEL_FIELD_CLUSTER_X = 37,
+    KERNEL_FIELD_CLUSTER_Y = 38,
+    KERNEL_FIELD_CLUSTER_Z = 39,
+    KERNEL_FIELD_CLUSTER_SCHEDULING_POLICY = 40,
+    KERNEL_FIELD_LOCAL_MEMORY_TOTAL = 41,
+    KERNEL_FIELD_MAX_POTENTIAL_CLUSTER_SIZE = 42,
+    KERNEL_FIELD_MAX_ACTIVE_CLUSTERS = 43,
+    KERNEL_FIELD_IS_DEVICE_LAUNCHED = 44,
+    KERNEL_FIELD_LAUNCH_PRIORITY = 45,
+    KERNEL_FIELD_MAX = 46,
 }
 #[cfg(any(feature = "cuda-11040", feature = "cuda-11050", feature = "cuda-11060"))]
 #[repr(u32)]
@@ -4603,6 +5247,73 @@ pub enum CUpti_ActivityKind {
     CUPTI_ACTIVITY_KIND_COUNT = 59,
     CUPTI_ACTIVITY_KIND_FORCE_INT = 2147483647,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityKind {
+    CUPTI_ACTIVITY_KIND_INVALID = 0,
+    CUPTI_ACTIVITY_KIND_MEMCPY = 1,
+    CUPTI_ACTIVITY_KIND_MEMSET = 2,
+    CUPTI_ACTIVITY_KIND_KERNEL = 3,
+    CUPTI_ACTIVITY_KIND_DRIVER = 4,
+    CUPTI_ACTIVITY_KIND_RUNTIME = 5,
+    CUPTI_ACTIVITY_KIND_EVENT = 6,
+    CUPTI_ACTIVITY_KIND_METRIC = 7,
+    CUPTI_ACTIVITY_KIND_DEVICE = 8,
+    CUPTI_ACTIVITY_KIND_CONTEXT = 9,
+    CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL = 10,
+    CUPTI_ACTIVITY_KIND_NAME = 11,
+    CUPTI_ACTIVITY_KIND_MARKER = 12,
+    CUPTI_ACTIVITY_KIND_MARKER_DATA = 13,
+    CUPTI_ACTIVITY_KIND_SOURCE_LOCATOR = 14,
+    CUPTI_ACTIVITY_KIND_GLOBAL_ACCESS = 15,
+    CUPTI_ACTIVITY_KIND_BRANCH = 16,
+    CUPTI_ACTIVITY_KIND_OVERHEAD = 17,
+    CUPTI_ACTIVITY_KIND_CDP_KERNEL = 18,
+    CUPTI_ACTIVITY_KIND_PREEMPTION = 19,
+    CUPTI_ACTIVITY_KIND_ENVIRONMENT = 20,
+    CUPTI_ACTIVITY_KIND_EVENT_INSTANCE = 21,
+    CUPTI_ACTIVITY_KIND_MEMCPY2 = 22,
+    CUPTI_ACTIVITY_KIND_METRIC_INSTANCE = 23,
+    CUPTI_ACTIVITY_KIND_INSTRUCTION_EXECUTION = 24,
+    CUPTI_ACTIVITY_KIND_UNIFIED_MEMORY_COUNTER = 25,
+    CUPTI_ACTIVITY_KIND_FUNCTION = 26,
+    CUPTI_ACTIVITY_KIND_MODULE = 27,
+    CUPTI_ACTIVITY_KIND_DEVICE_ATTRIBUTE = 28,
+    CUPTI_ACTIVITY_KIND_SHARED_ACCESS = 29,
+    CUPTI_ACTIVITY_KIND_PC_SAMPLING = 30,
+    CUPTI_ACTIVITY_KIND_PC_SAMPLING_RECORD_INFO = 31,
+    CUPTI_ACTIVITY_KIND_INSTRUCTION_CORRELATION = 32,
+    CUPTI_ACTIVITY_KIND_OPENACC_DATA = 33,
+    CUPTI_ACTIVITY_KIND_OPENACC_LAUNCH = 34,
+    CUPTI_ACTIVITY_KIND_OPENACC_OTHER = 35,
+    CUPTI_ACTIVITY_KIND_CUDA_EVENT = 36,
+    CUPTI_ACTIVITY_KIND_STREAM = 37,
+    CUPTI_ACTIVITY_KIND_SYNCHRONIZATION = 38,
+    CUPTI_ACTIVITY_KIND_EXTERNAL_CORRELATION = 39,
+    CUPTI_ACTIVITY_KIND_NVLINK = 40,
+    CUPTI_ACTIVITY_KIND_INSTANTANEOUS_EVENT = 41,
+    CUPTI_ACTIVITY_KIND_INSTANTANEOUS_EVENT_INSTANCE = 42,
+    CUPTI_ACTIVITY_KIND_INSTANTANEOUS_METRIC = 43,
+    CUPTI_ACTIVITY_KIND_INSTANTANEOUS_METRIC_INSTANCE = 44,
+    CUPTI_ACTIVITY_KIND_MEMORY = 45,
+    CUPTI_ACTIVITY_KIND_PCIE = 46,
+    CUPTI_ACTIVITY_KIND_OPENMP = 47,
+    CUPTI_ACTIVITY_KIND_INTERNAL_LAUNCH_API = 48,
+    CUPTI_ACTIVITY_KIND_MEMORY2 = 49,
+    CUPTI_ACTIVITY_KIND_MEMORY_POOL = 50,
+    CUPTI_ACTIVITY_KIND_GRAPH_TRACE = 51,
+    CUPTI_ACTIVITY_KIND_JIT = 52,
+    CUPTI_ACTIVITY_KIND_DEVICE_GRAPH_TRACE = 53,
+    CUPTI_ACTIVITY_KIND_MEM_DECOMPRESS = 54,
+    CUPTI_ACTIVITY_KIND_CONFIDENTIAL_COMPUTE_ROTATION = 55,
+    CUPTI_ACTIVITY_KIND_GRAPH_HOST_NODE = 56,
+    CUPTI_ACTIVITY_KIND_COMPUTE_ENGINE_CTX_SWITCH = 57,
+    CUPTI_ACTIVITY_KIND_HOST_LAUNCH = 58,
+    CUPTI_ACTIVITY_KIND_GREEN_CONTEXT = 59,
+    CUPTI_ACTIVITY_KIND_COUNT = 60,
+    CUPTI_ACTIVITY_KIND_FORCE_INT = 2147483647,
+}
 #[cfg(any(
     feature = "cuda-11040",
     feature = "cuda-11050",
@@ -4628,7 +5339,8 @@ pub enum CUpti_ActivityLaunchType {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4637,6 +5349,101 @@ pub enum CUpti_ActivityLaunchType {
     CUPTI_ACTIVITY_LAUNCH_TYPE_COOPERATIVE_SINGLE_DEVICE = 1,
     CUPTI_ACTIVITY_LAUNCH_TYPE_COOPERATIVE_MULTI_DEVICE = 2,
     CUPTI_ACTIVITY_LAUNCH_TYPE_CBL_COMMANDLIST = 3,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMarkerDataFieldIds {
+    MARKER_DATA_FIELD_KIND = 0,
+    MARKER_DATA_FIELD_FLAGS = 1,
+    MARKER_DATA_FIELD_ID = 2,
+    MARKER_DATA_FIELD_PAYLOAD_KIND = 3,
+    MARKER_DATA_FIELD_PAYLOAD = 4,
+    MARKER_DATA_FIELD_COLOR = 5,
+    MARKER_DATA_FIELD_CATEGORY = 6,
+    MARKER_DATA_FIELD_CUPTI_DOMAIN_ID = 7,
+    MARKER_DATA_FIELD_MAX = 8,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMarkerFieldIds {
+    MARKER_FIELD_KIND = 0,
+    MARKER_FIELD_FLAGS = 1,
+    MARKER_FIELD_TIMESTAMP = 2,
+    MARKER_FIELD_ID = 3,
+    MARKER_FIELD_PROCESS_ID = 4,
+    MARKER_FIELD_THREAD_ID = 5,
+    MARKER_FIELD_NAME = 6,
+    MARKER_FIELD_DOMAIN = 7,
+    MARKER_FIELD_MAX = 8,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMemDecompressFieldIds {
+    MEM_DECOMPRESS_FIELD_KIND = 0,
+    MEM_DECOMPRESS_FIELD_DEVICE_ID = 1,
+    MEM_DECOMPRESS_FIELD_CONTEXT_ID = 2,
+    MEM_DECOMPRESS_FIELD_STREAM_ID = 3,
+    MEM_DECOMPRESS_FIELD_CHANNEL_ID = 4,
+    MEM_DECOMPRESS_FIELD_CHANNEL_TYPE = 5,
+    MEM_DECOMPRESS_FIELD_CORRELATION_ID = 6,
+    MEM_DECOMPRESS_FIELD_NUMBER_OF_OPERATIONS = 7,
+    MEM_DECOMPRESS_FIELD_SOURCE_BYTES = 8,
+    MEM_DECOMPRESS_FIELD_START = 9,
+    MEM_DECOMPRESS_FIELD_END = 10,
+    MEM_DECOMPRESS_FIELD_MAX = 11,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMemcpy2FieldIds {
+    MEMCPY2_FIELD_KIND = 0,
+    MEMCPY2_FIELD_COPY_KIND = 1,
+    MEMCPY2_FIELD_SRC_KIND = 2,
+    MEMCPY2_FIELD_DST_KIND = 3,
+    MEMCPY2_FIELD_FLAGS = 4,
+    MEMCPY2_FIELD_BYTES = 5,
+    MEMCPY2_FIELD_START = 6,
+    MEMCPY2_FIELD_END = 7,
+    MEMCPY2_FIELD_DEVICE_ID = 8,
+    MEMCPY2_FIELD_CONTEXT_ID = 9,
+    MEMCPY2_FIELD_STREAM_ID = 10,
+    MEMCPY2_FIELD_SRC_DEVICE_ID = 11,
+    MEMCPY2_FIELD_SRC_CONTEXT_ID = 12,
+    MEMCPY2_FIELD_DST_DEVICE_ID = 13,
+    MEMCPY2_FIELD_DST_CONTEXT_ID = 14,
+    MEMCPY2_FIELD_CORRELATION_ID = 15,
+    MEMCPY2_FIELD_GRAPH_NODE_ID = 16,
+    MEMCPY2_FIELD_GRAPH_ID = 17,
+    MEMCPY2_FIELD_CHANNEL_ID = 18,
+    MEMCPY2_FIELD_CHANNEL_TYPE = 19,
+    MEMCPY2_FIELD_MAX = 20,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMemcpyFieldIds {
+    MEMCPY_FIELD_KIND = 0,
+    MEMCPY_FIELD_COPY_KIND = 1,
+    MEMCPY_FIELD_SRC_KIND = 2,
+    MEMCPY_FIELD_DST_KIND = 3,
+    MEMCPY_FIELD_FLAGS = 4,
+    MEMCPY_FIELD_BYTES = 5,
+    MEMCPY_FIELD_START = 6,
+    MEMCPY_FIELD_END = 7,
+    MEMCPY_FIELD_DEVICE_ID = 8,
+    MEMCPY_FIELD_CONTEXT_ID = 9,
+    MEMCPY_FIELD_STREAM_ID = 10,
+    MEMCPY_FIELD_CORRELATION_ID = 11,
+    MEMCPY_FIELD_GRAPH_NODE_ID = 12,
+    MEMCPY_FIELD_GRAPH_ID = 13,
+    MEMCPY_FIELD_CHANNEL_ID = 14,
+    MEMCPY_FIELD_CHANNEL_TYPE = 15,
+    MEMCPY_FIELD_IS_DEVICE_LAUNCHED = 16,
+    MEMCPY_FIELD_COPY_COUNT = 17,
+    MEMCPY_FIELD_MAX = 18,
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4653,6 +5460,31 @@ pub enum CUpti_ActivityMemcpyKind {
     CUPTI_ACTIVITY_MEMCPY_KIND_HTOH = 9,
     CUPTI_ACTIVITY_MEMCPY_KIND_PTOP = 10,
     CUPTI_ACTIVITY_MEMCPY_KIND_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMemoryFieldIds {
+    MEMORY_FIELD_KIND = 0,
+    MEMORY_FIELD_OPERATION_TYPE = 1,
+    MEMORY_FIELD_MEMORY_KIND = 2,
+    MEMORY_FIELD_CORRELATION_ID = 3,
+    MEMORY_FIELD_ADDRESS = 4,
+    MEMORY_FIELD_BYTES = 5,
+    MEMORY_FIELD_TIMESTAMP = 6,
+    MEMORY_FIELD_PROCESS_ID = 7,
+    MEMORY_FIELD_DEVICE_ID = 8,
+    MEMORY_FIELD_CONTEXT_ID = 9,
+    MEMORY_FIELD_STREAM_ID = 10,
+    MEMORY_FIELD_IS_ASYNC = 11,
+    MEMORY_FIELD_POOL_TYPE = 12,
+    MEMORY_FIELD_POOL_ADDRESS = 13,
+    MEMORY_FIELD_POOL_RELEASE_THRESHOLD = 14,
+    MEMORY_FIELD_POOL_SIZE = 15,
+    MEMORY_FIELD_POOL_PROCESS_ID = 16,
+    MEMORY_FIELD_POOL_UTILIZED_SIZE = 17,
+    MEMORY_FIELD_SOURCE = 18,
+    MEMORY_FIELD_MAX = 19,
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4675,6 +5507,25 @@ pub enum CUpti_ActivityMemoryOperationType {
     CUPTI_ACTIVITY_MEMORY_OPERATION_TYPE_RELEASE = 2,
     CUPTI_ACTIVITY_MEMORY_OPERATION_TYPE_FORCE_INT = 2147483647,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMemoryPoolFieldIds {
+    MEMORY_POOL_FIELD_KIND = 0,
+    MEMORY_POOL_FIELD_OPERATION_TYPE = 1,
+    MEMORY_POOL_FIELD_POOL_TYPE = 2,
+    MEMORY_POOL_FIELD_CORRELATION_ID = 3,
+    MEMORY_POOL_FIELD_PROCESS_ID = 4,
+    MEMORY_POOL_FIELD_DEVICE_ID = 5,
+    MEMORY_POOL_FIELD_MIN_BYTES_TO_KEEP = 6,
+    MEMORY_POOL_FIELD_ADDRESS = 7,
+    MEMORY_POOL_FIELD_SIZE = 8,
+    MEMORY_POOL_FIELD_RELEASE_THRESHOLD = 9,
+    MEMORY_POOL_FIELD_TIMESTAMP = 10,
+    MEMORY_POOL_FIELD_UTILIZED_SIZE = 11,
+    MEMORY_POOL_FIELD_IS_MANAGED_POOL = 12,
+    MEMORY_POOL_FIELD_MAX = 13,
+}
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_ActivityMemoryPoolOperationType {
@@ -4692,6 +5543,38 @@ pub enum CUpti_ActivityMemoryPoolType {
     CUPTI_ACTIVITY_MEMORY_POOL_TYPE_IMPORTED = 2,
     CUPTI_ACTIVITY_MEMORY_POOL_TYPE_FORCE_INT = 2147483647,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityMemsetFieldIds {
+    MEMSET_FIELD_KIND = 0,
+    MEMSET_FIELD_VALUE = 1,
+    MEMSET_FIELD_BYTES = 2,
+    MEMSET_FIELD_START = 3,
+    MEMSET_FIELD_END = 4,
+    MEMSET_FIELD_DEVICE_ID = 5,
+    MEMSET_FIELD_CONTEXT_ID = 6,
+    MEMSET_FIELD_STREAM_ID = 7,
+    MEMSET_FIELD_CORRELATION_ID = 8,
+    MEMSET_FIELD_FLAGS = 9,
+    MEMSET_FIELD_MEMORY_KIND = 10,
+    MEMSET_FIELD_GRAPH_NODE_ID = 11,
+    MEMSET_FIELD_GRAPH_ID = 12,
+    MEMSET_FIELD_CHANNEL_ID = 13,
+    MEMSET_FIELD_CHANNEL_TYPE = 14,
+    MEMSET_FIELD_IS_DEVICE_LAUNCHED = 15,
+    MEMSET_FIELD_MAX = 16,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityNameFieldIds {
+    NAME_FIELD_KIND = 0,
+    NAME_FIELD_OBJECT_KIND = 1,
+    NAME_FIELD_OBJECT_ID = 2,
+    NAME_FIELD_NAME = 3,
+    NAME_FIELD_MAX = 4,
+}
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_ActivityObjectKind {
@@ -4702,6 +5585,20 @@ pub enum CUpti_ActivityObjectKind {
     CUPTI_ACTIVITY_OBJECT_CONTEXT = 4,
     CUPTI_ACTIVITY_OBJECT_STREAM = 5,
     CUPTI_ACTIVITY_OBJECT_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityOverheadFieldIds {
+    OVERHEAD_FIELD_KIND = 0,
+    OVERHEAD_FIELD_OVERHEAD_KIND = 1,
+    OVERHEAD_FIELD_PROCESS_ID = 2,
+    OVERHEAD_FIELD_THREAD_ID = 3,
+    OVERHEAD_FIELD_START = 4,
+    OVERHEAD_FIELD_END = 5,
+    OVERHEAD_FIELD_CORRELATION_ID = 6,
+    OVERHEAD_FIELD_OVERHEAD_DATA = 7,
+    OVERHEAD_FIELD_MAX = 8,
 }
 #[cfg(any(
     feature = "cuda-11040",
@@ -4769,7 +5666,8 @@ pub enum CUpti_ActivityOverheadKind {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4832,6 +5730,18 @@ pub enum CUpti_ActivityPreemptionKind {
     CUPTI_ACTIVITY_PREEMPTION_KIND_RESTORE = 2,
     CUPTI_ACTIVITY_PREEMPTION_KIND_FORCE_INT = 2147483647,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityStreamFieldIds {
+    STREAM_FIELD_KIND = 0,
+    STREAM_FIELD_CONTEXT_ID = 1,
+    STREAM_FIELD_STREAM_ID = 2,
+    STREAM_FIELD_PRIORITY = 3,
+    STREAM_FIELD_FLAG = 4,
+    STREAM_FIELD_CORRELATION_ID = 5,
+    STREAM_FIELD_MAX = 6,
+}
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_ActivityStreamFlag {
@@ -4841,6 +5751,22 @@ pub enum CUpti_ActivityStreamFlag {
     CUPTI_ACTIVITY_STREAM_CREATE_FLAG_NULL = 3,
     CUPTI_ACTIVITY_STREAM_CREATE_MASK = 65535,
     CUPTI_ACTIVITY_STREAM_CREATE_FLAG_FORCE_INT = 2147483647,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivitySynchronizationFieldIds {
+    SYNCHRONIZATION_FIELD_KIND = 0,
+    SYNCHRONIZATION_FIELD_TYPE = 1,
+    SYNCHRONIZATION_FIELD_START = 2,
+    SYNCHRONIZATION_FIELD_END = 3,
+    SYNCHRONIZATION_FIELD_CORRELATION_ID = 4,
+    SYNCHRONIZATION_FIELD_CONTEXT_ID = 5,
+    SYNCHRONIZATION_FIELD_STREAM_ID = 6,
+    SYNCHRONIZATION_FIELD_CUDA_EVENT_ID = 7,
+    SYNCHRONIZATION_FIELD_CUDA_EVENT_SYNC_ID = 8,
+    SYNCHRONIZATION_FIELD_RETURN_VALUE = 9,
+    SYNCHRONIZATION_FIELD_MAX = 10,
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4877,7 +5803,8 @@ pub enum CUpti_ActivityThreadIdType {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -4940,6 +5867,24 @@ pub enum CUpti_ActivityUnifiedMemoryRemoteMapCause {
     CUPTI_ACTIVITY_UNIFIED_MEMORY_REMOTE_MAP_CAUSE_OUT_OF_MEMORY = 4,
     CUPTI_ACTIVITY_UNIFIED_MEMORY_REMOTE_MAP_CAUSE_EVICTION = 5,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_ActivityUvmCounterFieldIds {
+    UVM_COUNTER_FIELD_KIND = 0,
+    UVM_COUNTER_FIELD_COUNTER_KIND = 1,
+    UVM_COUNTER_FIELD_VALUE = 2,
+    UVM_COUNTER_FIELD_START = 3,
+    UVM_COUNTER_FIELD_END = 4,
+    UVM_COUNTER_FIELD_ADDRESS = 5,
+    UVM_COUNTER_FIELD_SRC_ID = 6,
+    UVM_COUNTER_FIELD_DST_ID = 7,
+    UVM_COUNTER_FIELD_STREAM_ID = 8,
+    UVM_COUNTER_FIELD_PROCESS_ID = 9,
+    UVM_COUNTER_FIELD_FLAGS = 10,
+    UVM_COUNTER_FIELD_PROCESSORS = 11,
+    UVM_COUNTER_FIELD_MAX = 12,
+}
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_ApiCallbackSite {
@@ -4977,7 +5922,8 @@ pub enum CUpti_CallbackDomain {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -5065,7 +6011,7 @@ pub enum CUpti_CallbackIdResource {
     CUPTI_CBID_RESOURCE_SIZE = 22,
     CUPTI_CBID_RESOURCE_FORCE_INT = 2147483647,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_CallbackIdResource {
@@ -5105,7 +6051,8 @@ pub enum CUpti_CallbackIdResource {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -5157,7 +6104,8 @@ pub enum CUpti_ChannelType {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -5168,7 +6116,7 @@ pub enum CUpti_ChannelType {
     CUPTI_CHANNEL_TYPE_DECOMP = 3,
     CUPTI_CHANNEL_TYPE_FORCE_INT = 2147483647,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_ComputeEngineCtxSwitchOperationType {
@@ -5177,7 +6125,12 @@ pub enum CUpti_ComputeEngineCtxSwitchOperationType {
     CUPTI_COMPUTE_ENGINE_CTX_SWITCH_OPERATION_END = 2,
     CUPTI_COMPUTE_ENGINE_CTX_SWITCH_OPERATION_COUNT = 2147483647,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_ConfidentialComputeRotationEventType {
@@ -5193,7 +6146,8 @@ pub enum CUpti_ConfidentialComputeRotationEventType {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -5248,7 +6202,8 @@ pub enum CUpti_DeviceAttributeDeviceClass {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -5457,7 +6412,7 @@ pub enum CUpti_MetricValueKind {
     CUPTI_METRIC_VALUE_KIND_UTILIZATION_LEVEL = 5,
     CUPTI_METRIC_VALUE_KIND_FORCE_INT = 2147483647,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_MetricValueKind {
@@ -5480,7 +6435,7 @@ pub enum CUpti_MetricValueUtilizationLevel {
     CUPTI_METRIC_VALUE_UTILIZATION_MAX = 10,
     CUPTI_METRIC_VALUE_UTILIZATION_FORCE_INT = 2147483647,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_NvtxExtPayloadType {
@@ -5580,7 +6535,8 @@ pub enum CUpti_PcieGen {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -15188,7 +16144,7 @@ pub enum CUpti_driver_api_trace_cbid_enum {
     CUPTI_DRIVER_TRACE_CBID_SIZE = 807,
     CUPTI_DRIVER_TRACE_CBID_FORCE_INT = 2147483647,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum CUpti_driver_api_trace_cbid_enum {
@@ -16015,7 +16971,30 @@ pub enum CUpti_driver_api_trace_cbid_enum {
     CUPTI_DRIVER_TRACE_CBID_cuMulticastBindMem_v2 = 820,
     CUPTI_DRIVER_TRACE_CBID_cuMulticastBindAddr_v2 = 821,
     CUPTI_DRIVER_TRACE_CBID_cuDevSmResourceSplit = 822,
-    CUPTI_DRIVER_TRACE_CBID_SIZE = 823,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridScheduleCreate = 823,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridWorkerGridCreate = 824,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridWorksetCreate = 825,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridCreate = 826,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridScheduleFinalize = 827,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridScheduleLaunch = 828,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridScheduleLaunch_ptsz = 829,
+    CUPTI_DRIVER_TRACE_CBID_cuSubgridScheduleDestroy = 830,
+    CUPTI_DRIVER_TRACE_CBID_cuLaunchHostFunc_v2 = 831,
+    CUPTI_DRIVER_TRACE_CBID_cuLaunchHostFunc_v2_ptsz = 832,
+    CUPTI_DRIVER_TRACE_CBID_cuFuncGetDeviceCodeInfo = 833,
+    CUPTI_DRIVER_TRACE_CBID_cuKernelGetDeviceCodeInfo = 834,
+    CUPTI_DRIVER_TRACE_CBID_cuFuncGetParamCount = 835,
+    CUPTI_DRIVER_TRACE_CBID_cuKernelGetParamCount = 836,
+    CUPTI_DRIVER_TRACE_CBID_cuMemcpyWithAttributesAsync = 837,
+    CUPTI_DRIVER_TRACE_CBID_cuMemcpyWithAttributesAsync_ptsz = 838,
+    CUPTI_DRIVER_TRACE_CBID_cuMemcpy3DWithAttributesAsync = 839,
+    CUPTI_DRIVER_TRACE_CBID_cuMemcpy3DWithAttributesAsync_ptsz = 840,
+    CUPTI_DRIVER_TRACE_CBID_cuGraphNodeGetParams = 841,
+    CUPTI_DRIVER_TRACE_CBID_cuCoredumpRegisterStartCallback = 842,
+    CUPTI_DRIVER_TRACE_CBID_cuCoredumpRegisterCompleteCallback = 843,
+    CUPTI_DRIVER_TRACE_CBID_cuCoredumpDeregisterStartCallback = 844,
+    CUPTI_DRIVER_TRACE_CBID_cuCoredumpDeregisterCompleteCallback = 845,
+    CUPTI_DRIVER_TRACE_CBID_SIZE = 846,
     CUPTI_DRIVER_TRACE_CBID_FORCE_INT = 2147483647,
 }
 #[repr(u32)]
@@ -22733,6 +23712,572 @@ pub enum CUpti_runtime_api_trace_cbid_enum {
     CUPTI_RUNTIME_TRACE_CBID_SIZE = 550,
     CUPTI_RUNTIME_TRACE_CBID_FORCE_INT = 2147483647,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum CUpti_runtime_api_trace_cbid_enum {
+    CUPTI_RUNTIME_TRACE_CBID_INVALID = 0,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDriverGetVersion_v3020 = 1,
+    CUPTI_RUNTIME_TRACE_CBID_cudaRuntimeGetVersion_v3020 = 2,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDeviceCount_v3020 = 3,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDeviceProperties_v3020 = 4,
+    CUPTI_RUNTIME_TRACE_CBID_cudaChooseDevice_v3020 = 5,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetChannelDesc_v3020 = 6,
+    CUPTI_RUNTIME_TRACE_CBID_cudaCreateChannelDesc_v3020 = 7,
+    CUPTI_RUNTIME_TRACE_CBID_cudaConfigureCall_v3020 = 8,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSetupArgument_v3020 = 9,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetLastError_v3020 = 10,
+    CUPTI_RUNTIME_TRACE_CBID_cudaPeekAtLastError_v3020 = 11,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetErrorString_v3020 = 12,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunch_v3020 = 13,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFuncSetCacheConfig_v3020 = 14,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFuncGetAttributes_v3020 = 15,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSetDevice_v3020 = 16,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDevice_v3020 = 17,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSetValidDevices_v3020 = 18,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSetDeviceFlags_v3020 = 19,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMalloc_v3020 = 20,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocPitch_v3020 = 21,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFree_v3020 = 22,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocArray_v3020 = 23,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFreeArray_v3020 = 24,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocHost_v3020 = 25,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFreeHost_v3020 = 26,
+    CUPTI_RUNTIME_TRACE_CBID_cudaHostAlloc_v3020 = 27,
+    CUPTI_RUNTIME_TRACE_CBID_cudaHostGetDevicePointer_v3020 = 28,
+    CUPTI_RUNTIME_TRACE_CBID_cudaHostGetFlags_v3020 = 29,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemGetInfo_v3020 = 30,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy_v3020 = 31,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2D_v3020 = 32,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToArray_v3020 = 33,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DToArray_v3020 = 34,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromArray_v3020 = 35,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DFromArray_v3020 = 36,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyArrayToArray_v3020 = 37,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DArrayToArray_v3020 = 38,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToSymbol_v3020 = 39,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromSymbol_v3020 = 40,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyAsync_v3020 = 41,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToArrayAsync_v3020 = 42,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromArrayAsync_v3020 = 43,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DAsync_v3020 = 44,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DToArrayAsync_v3020 = 45,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DFromArrayAsync_v3020 = 46,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToSymbolAsync_v3020 = 47,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromSymbolAsync_v3020 = 48,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset_v3020 = 49,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset2D_v3020 = 50,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemsetAsync_v3020 = 51,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset2DAsync_v3020 = 52,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetSymbolAddress_v3020 = 53,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetSymbolSize_v3020 = 54,
+    CUPTI_RUNTIME_TRACE_CBID_cudaBindTexture_v3020 = 55,
+    CUPTI_RUNTIME_TRACE_CBID_cudaBindTexture2D_v3020 = 56,
+    CUPTI_RUNTIME_TRACE_CBID_cudaBindTextureToArray_v3020 = 57,
+    CUPTI_RUNTIME_TRACE_CBID_cudaUnbindTexture_v3020 = 58,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetTextureAlignmentOffset_v3020 = 59,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetTextureReference_v3020 = 60,
+    CUPTI_RUNTIME_TRACE_CBID_cudaBindSurfaceToArray_v3020 = 61,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetSurfaceReference_v3020 = 62,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLSetGLDevice_v3020 = 63,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLRegisterBufferObject_v3020 = 64,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLMapBufferObject_v3020 = 65,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLUnmapBufferObject_v3020 = 66,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLUnregisterBufferObject_v3020 = 67,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLSetBufferObjectMapFlags_v3020 = 68,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLMapBufferObjectAsync_v3020 = 69,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLUnmapBufferObjectAsync_v3020 = 70,
+    CUPTI_RUNTIME_TRACE_CBID_cudaWGLGetDevice_v3020 = 71,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsGLRegisterImage_v3020 = 72,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsGLRegisterBuffer_v3020 = 73,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsUnregisterResource_v3020 = 74,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsResourceSetMapFlags_v3020 = 75,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsMapResources_v3020 = 76,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsUnmapResources_v3020 = 77,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsResourceGetMappedPointer_v3020 = 78,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsSubResourceGetMappedArray_v3020 = 79,
+    CUPTI_RUNTIME_TRACE_CBID_cudaVDPAUGetDevice_v3020 = 80,
+    CUPTI_RUNTIME_TRACE_CBID_cudaVDPAUSetVDPAUDevice_v3020 = 81,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsVDPAURegisterVideoSurface_v3020 = 82,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsVDPAURegisterOutputSurface_v3020 = 83,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D11GetDevice_v3020 = 84,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D11GetDevices_v3020 = 85,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D11SetDirect3DDevice_v3020 = 86,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsD3D11RegisterResource_v3020 = 87,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10GetDevice_v3020 = 88,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10GetDevices_v3020 = 89,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10SetDirect3DDevice_v3020 = 90,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsD3D10RegisterResource_v3020 = 91,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10RegisterResource_v3020 = 92,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10UnregisterResource_v3020 = 93,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10MapResources_v3020 = 94,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10UnmapResources_v3020 = 95,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10ResourceSetMapFlags_v3020 = 96,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10ResourceGetSurfaceDimensions_v3020 = 97,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10ResourceGetMappedArray_v3020 = 98,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10ResourceGetMappedPointer_v3020 = 99,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10ResourceGetMappedSize_v3020 = 100,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10ResourceGetMappedPitch_v3020 = 101,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9GetDevice_v3020 = 102,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9GetDevices_v3020 = 103,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9SetDirect3DDevice_v3020 = 104,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9GetDirect3DDevice_v3020 = 105,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsD3D9RegisterResource_v3020 = 106,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9RegisterResource_v3020 = 107,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9UnregisterResource_v3020 = 108,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9MapResources_v3020 = 109,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9UnmapResources_v3020 = 110,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9ResourceSetMapFlags_v3020 = 111,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9ResourceGetSurfaceDimensions_v3020 = 112,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9ResourceGetMappedArray_v3020 = 113,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9ResourceGetMappedPointer_v3020 = 114,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9ResourceGetMappedSize_v3020 = 115,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9ResourceGetMappedPitch_v3020 = 116,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9Begin_v3020 = 117,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9End_v3020 = 118,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9RegisterVertexBuffer_v3020 = 119,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9UnregisterVertexBuffer_v3020 = 120,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9MapVertexBuffer_v3020 = 121,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D9UnmapVertexBuffer_v3020 = 122,
+    CUPTI_RUNTIME_TRACE_CBID_cudaThreadExit_v3020 = 123,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSetDoubleForDevice_v3020 = 124,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSetDoubleForHost_v3020 = 125,
+    CUPTI_RUNTIME_TRACE_CBID_cudaThreadSynchronize_v3020 = 126,
+    CUPTI_RUNTIME_TRACE_CBID_cudaThreadGetLimit_v3020 = 127,
+    CUPTI_RUNTIME_TRACE_CBID_cudaThreadSetLimit_v3020 = 128,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamCreate_v3020 = 129,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamDestroy_v3020 = 130,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamSynchronize_v3020 = 131,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamQuery_v3020 = 132,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventCreate_v3020 = 133,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventCreateWithFlags_v3020 = 134,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventRecord_v3020 = 135,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventDestroy_v3020 = 136,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventSynchronize_v3020 = 137,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventQuery_v3020 = 138,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventElapsedTime_v3020 = 139,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMalloc3D_v3020 = 140,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMalloc3DArray_v3020 = 141,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset3D_v3020 = 142,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset3DAsync_v3020 = 143,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3D_v3020 = 144,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DAsync_v3020 = 145,
+    CUPTI_RUNTIME_TRACE_CBID_cudaThreadSetCacheConfig_v3020 = 146,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamWaitEvent_v3020 = 147,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D11GetDirect3DDevice_v3020 = 148,
+    CUPTI_RUNTIME_TRACE_CBID_cudaD3D10GetDirect3DDevice_v3020 = 149,
+    CUPTI_RUNTIME_TRACE_CBID_cudaThreadGetCacheConfig_v3020 = 150,
+    CUPTI_RUNTIME_TRACE_CBID_cudaPointerGetAttributes_v4000 = 151,
+    CUPTI_RUNTIME_TRACE_CBID_cudaHostRegister_v4000 = 152,
+    CUPTI_RUNTIME_TRACE_CBID_cudaHostUnregister_v4000 = 153,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceCanAccessPeer_v4000 = 154,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceEnablePeerAccess_v4000 = 155,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceDisablePeerAccess_v4000 = 156,
+    CUPTI_RUNTIME_TRACE_CBID_cudaPeerRegister_v4000 = 157,
+    CUPTI_RUNTIME_TRACE_CBID_cudaPeerUnregister_v4000 = 158,
+    CUPTI_RUNTIME_TRACE_CBID_cudaPeerGetDevicePointer_v4000 = 159,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyPeer_v4000 = 160,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyPeerAsync_v4000 = 161,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DPeer_v4000 = 162,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DPeerAsync_v4000 = 163,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceReset_v3020 = 164,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceSynchronize_v3020 = 165,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetLimit_v3020 = 166,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceSetLimit_v3020 = 167,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetCacheConfig_v3020 = 168,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceSetCacheConfig_v3020 = 169,
+    CUPTI_RUNTIME_TRACE_CBID_cudaProfilerInitialize_v4000 = 170,
+    CUPTI_RUNTIME_TRACE_CBID_cudaProfilerStart_v4000 = 171,
+    CUPTI_RUNTIME_TRACE_CBID_cudaProfilerStop_v4000 = 172,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetByPCIBusId_v4010 = 173,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetPCIBusId_v4010 = 174,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGLGetDevices_v4010 = 175,
+    CUPTI_RUNTIME_TRACE_CBID_cudaIpcGetEventHandle_v4010 = 176,
+    CUPTI_RUNTIME_TRACE_CBID_cudaIpcOpenEventHandle_v4010 = 177,
+    CUPTI_RUNTIME_TRACE_CBID_cudaIpcGetMemHandle_v4010 = 178,
+    CUPTI_RUNTIME_TRACE_CBID_cudaIpcOpenMemHandle_v4010 = 179,
+    CUPTI_RUNTIME_TRACE_CBID_cudaIpcCloseMemHandle_v4010 = 180,
+    CUPTI_RUNTIME_TRACE_CBID_cudaArrayGetInfo_v4010 = 181,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFuncSetSharedMemConfig_v4020 = 182,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetSharedMemConfig_v4020 = 183,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceSetSharedMemConfig_v4020 = 184,
+    CUPTI_RUNTIME_TRACE_CBID_cudaCreateTextureObject_v5000 = 185,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDestroyTextureObject_v5000 = 186,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetTextureObjectResourceDesc_v5000 = 187,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetTextureObjectTextureDesc_v5000 = 188,
+    CUPTI_RUNTIME_TRACE_CBID_cudaCreateSurfaceObject_v5000 = 189,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDestroySurfaceObject_v5000 = 190,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetSurfaceObjectResourceDesc_v5000 = 191,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocMipmappedArray_v5000 = 192,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetMipmappedArrayLevel_v5000 = 193,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFreeMipmappedArray_v5000 = 194,
+    CUPTI_RUNTIME_TRACE_CBID_cudaBindTextureToMipmappedArray_v5000 = 195,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsResourceGetMappedMipmappedArray_v5000 = 196,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamAddCallback_v5000 = 197,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamCreateWithFlags_v5000 = 198,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetTextureObjectResourceViewDesc_v5000 = 199,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetAttribute_v5000 = 200,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamDestroy_v5050 = 201,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamCreateWithPriority_v5050 = 202,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetPriority_v5050 = 203,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetFlags_v5050 = 204,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetStreamPriorityRange_v5050 = 205,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocManaged_v6000 = 206,
+    CUPTI_RUNTIME_TRACE_CBID_cudaOccupancyMaxActiveBlocksPerMultiprocessor_v6000 = 207,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamAttachMemAsync_v6000 = 208,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetErrorName_v6050 = 209,
+    CUPTI_RUNTIME_TRACE_CBID_cudaOccupancyMaxActiveBlocksPerMultiprocessor_v6050 = 210,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernel_v7000 = 211,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDeviceFlags_v7000 = 212,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunch_ptsz_v7000 = 213,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernel_ptsz_v7000 = 214,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy_ptds_v7000 = 215,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2D_ptds_v7000 = 216,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToArray_ptds_v7000 = 217,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DToArray_ptds_v7000 = 218,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromArray_ptds_v7000 = 219,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DFromArray_ptds_v7000 = 220,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyArrayToArray_ptds_v7000 = 221,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DArrayToArray_ptds_v7000 = 222,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToSymbol_ptds_v7000 = 223,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromSymbol_ptds_v7000 = 224,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyAsync_ptsz_v7000 = 225,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToArrayAsync_ptsz_v7000 = 226,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromArrayAsync_ptsz_v7000 = 227,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DAsync_ptsz_v7000 = 228,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DToArrayAsync_ptsz_v7000 = 229,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy2DFromArrayAsync_ptsz_v7000 = 230,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyToSymbolAsync_ptsz_v7000 = 231,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyFromSymbolAsync_ptsz_v7000 = 232,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset_ptds_v7000 = 233,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset2D_ptds_v7000 = 234,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemsetAsync_ptsz_v7000 = 235,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset2DAsync_ptsz_v7000 = 236,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetPriority_ptsz_v7000 = 237,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetFlags_ptsz_v7000 = 238,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamSynchronize_ptsz_v7000 = 239,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamQuery_ptsz_v7000 = 240,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamAttachMemAsync_ptsz_v7000 = 241,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventRecord_ptsz_v7000 = 242,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset3D_ptds_v7000 = 243,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemset3DAsync_ptsz_v7000 = 244,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3D_ptds_v7000 = 245,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DAsync_ptsz_v7000 = 246,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamWaitEvent_ptsz_v7000 = 247,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamAddCallback_ptsz_v7000 = 248,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DPeer_ptds_v7000 = 249,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DPeerAsync_ptsz_v7000 = 250,
+    CUPTI_RUNTIME_TRACE_CBID_cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags_v7000 = 251,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPrefetchAsync_v8000 = 252,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPrefetchAsync_ptsz_v8000 = 253,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemAdvise_v8000 = 254,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetP2PAttribute_v8000 = 255,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsEGLRegisterImage_v7000 = 256,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamConsumerConnect_v7000 = 257,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamConsumerDisconnect_v7000 = 258,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamConsumerAcquireFrame_v7000 = 259,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamConsumerReleaseFrame_v7000 = 260,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamProducerConnect_v7000 = 261,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamProducerDisconnect_v7000 = 262,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamProducerPresentFrame_v7000 = 263,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamProducerReturnFrame_v7000 = 264,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphicsResourceGetMappedEglFrame_v7000 = 265,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemRangeGetAttribute_v8000 = 266,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemRangeGetAttributes_v8000 = 267,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEGLStreamConsumerConnectWithFlags_v7000 = 268,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchCooperativeKernel_v9000 = 269,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchCooperativeKernel_ptsz_v9000 = 270,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventCreateFromEGLSync_v9000 = 271,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchCooperativeKernelMultiDevice_v9000 = 272,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFuncSetAttribute_v9000 = 273,
+    CUPTI_RUNTIME_TRACE_CBID_cudaImportExternalMemory_v10000 = 274,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExternalMemoryGetMappedBuffer_v10000 = 275,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExternalMemoryGetMappedMipmappedArray_v10000 = 276,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDestroyExternalMemory_v10000 = 277,
+    CUPTI_RUNTIME_TRACE_CBID_cudaImportExternalSemaphore_v10000 = 278,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSignalExternalSemaphoresAsync_v10000 = 279,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSignalExternalSemaphoresAsync_ptsz_v10000 = 280,
+    CUPTI_RUNTIME_TRACE_CBID_cudaWaitExternalSemaphoresAsync_v10000 = 281,
+    CUPTI_RUNTIME_TRACE_CBID_cudaWaitExternalSemaphoresAsync_ptsz_v10000 = 282,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDestroyExternalSemaphore_v10000 = 283,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchHostFunc_v10000 = 284,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchHostFunc_ptsz_v10000 = 285,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphCreate_v10000 = 286,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphKernelNodeGetParams_v10000 = 287,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphKernelNodeSetParams_v10000 = 288,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddKernelNode_v10000 = 289,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddMemcpyNode_v10000 = 290,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemcpyNodeGetParams_v10000 = 291,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemcpyNodeSetParams_v10000 = 292,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddMemsetNode_v10000 = 293,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemsetNodeGetParams_v10000 = 294,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemsetNodeSetParams_v10000 = 295,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddHostNode_v10000 = 296,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphHostNodeGetParams_v10000 = 297,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddChildGraphNode_v10000 = 298,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphChildGraphNodeGetGraph_v10000 = 299,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddEmptyNode_v10000 = 300,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphClone_v10000 = 301,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeFindInClone_v10000 = 302,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetType_v10000 = 303,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphGetRootNodes_v10000 = 304,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetDependencies_v10000 = 305,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetDependentNodes_v10000 = 306,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddDependencies_v10000 = 307,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphRemoveDependencies_v10000 = 308,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphDestroyNode_v10000 = 309,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphInstantiate_v10000 = 310,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphLaunch_v10000 = 311,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphLaunch_ptsz_v10000 = 312,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecDestroy_v10000 = 313,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphDestroy_v10000 = 314,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamBeginCapture_v10000 = 315,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamBeginCapture_ptsz_v10000 = 316,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamIsCapturing_v10000 = 317,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamIsCapturing_ptsz_v10000 = 318,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamEndCapture_v10000 = 319,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamEndCapture_ptsz_v10000 = 320,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphHostNodeSetParams_v10000 = 321,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphGetNodes_v10000 = 322,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphGetEdges_v10000 = 323,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetCaptureInfo_v10010 = 324,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetCaptureInfo_ptsz_v10010 = 325,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecKernelNodeSetParams_v10010 = 326,
+    CUPTI_RUNTIME_TRACE_CBID_cudaThreadExchangeStreamCaptureMode_v10010 = 327,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetNvSciSyncAttributes_v10020 = 328,
+    CUPTI_RUNTIME_TRACE_CBID_cudaOccupancyAvailableDynamicSMemPerBlock_v10200 = 329,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamSetFlags_v10200 = 330,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamSetFlags_ptsz_v10200 = 331,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecMemcpyNodeSetParams_v10020 = 332,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecMemsetNodeSetParams_v10020 = 333,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecHostNodeSetParams_v10020 = 334,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecUpdate_v10020 = 335,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetFuncBySymbol_v11000 = 336,
+    CUPTI_RUNTIME_TRACE_CBID_cudaCtxResetPersistingL2Cache_v11000 = 337,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphKernelNodeCopyAttributes_v11000 = 338,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphKernelNodeGetAttribute_v11000 = 339,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphKernelNodeSetAttribute_v11000 = 340,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamCopyAttributes_v11000 = 341,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamCopyAttributes_ptsz_v11000 = 342,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetAttribute_v11000 = 343,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetAttribute_ptsz_v11000 = 344,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamSetAttribute_v11000 = 345,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamSetAttribute_ptsz_v11000 = 346,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetTexture1DLinearMaxWidth_v11010 = 347,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphUpload_v10000 = 348,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphUpload_ptsz_v10000 = 349,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddMemcpyNodeToSymbol_v11010 = 350,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddMemcpyNodeFromSymbol_v11010 = 351,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddMemcpyNode1D_v11010 = 352,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemcpyNodeSetParamsToSymbol_v11010 = 353,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemcpyNodeSetParamsFromSymbol_v11010 = 354,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemcpyNodeSetParams1D_v11010 = 355,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecMemcpyNodeSetParamsToSymbol_v11010 = 356,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecMemcpyNodeSetParamsFromSymbol_v11010 = 357,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecMemcpyNodeSetParams1D_v11010 = 358,
+    CUPTI_RUNTIME_TRACE_CBID_cudaArrayGetSparseProperties_v11010 = 359,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMipmappedArrayGetSparseProperties_v11010 = 360,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecChildGraphNodeSetParams_v11010 = 361,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddEventRecordNode_v11010 = 362,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphEventRecordNodeGetEvent_v11010 = 363,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphEventRecordNodeSetEvent_v11010 = 364,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddEventWaitNode_v11010 = 365,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphEventWaitNodeGetEvent_v11010 = 366,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphEventWaitNodeSetEvent_v11010 = 367,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecEventRecordNodeSetEvent_v11010 = 368,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecEventWaitNodeSetEvent_v11010 = 369,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventRecordWithFlags_v11010 = 370,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventRecordWithFlags_ptsz_v11010 = 371,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetDefaultMemPool_v11020 = 372,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocAsync_v11020 = 373,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocAsync_ptsz_v11020 = 374,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFreeAsync_v11020 = 375,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFreeAsync_ptsz_v11020 = 376,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolTrimTo_v11020 = 377,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolSetAttribute_v11020 = 378,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolGetAttribute_v11020 = 379,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolSetAccess_v11020 = 380,
+    CUPTI_RUNTIME_TRACE_CBID_cudaArrayGetPlane_v11020 = 381,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolGetAccess_v11020 = 382,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolCreate_v11020 = 383,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolDestroy_v11020 = 384,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceSetMemPool_v11020 = 385,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetMemPool_v11020 = 386,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolExportToShareableHandle_v11020 = 387,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolImportFromShareableHandle_v11020 = 388,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolExportPointer_v11020 = 389,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPoolImportPointer_v11020 = 390,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocFromPoolAsync_v11020 = 391,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMallocFromPoolAsync_ptsz_v11020 = 392,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSignalExternalSemaphoresAsync_v11020 = 393,
+    CUPTI_RUNTIME_TRACE_CBID_cudaSignalExternalSemaphoresAsync_ptsz_v11020 = 394,
+    CUPTI_RUNTIME_TRACE_CBID_cudaWaitExternalSemaphoresAsync_v11020 = 395,
+    CUPTI_RUNTIME_TRACE_CBID_cudaWaitExternalSemaphoresAsync_ptsz_v11020 = 396,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddExternalSemaphoresSignalNode_v11020 = 397,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExternalSemaphoresSignalNodeGetParams_v11020 = 398,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExternalSemaphoresSignalNodeSetParams_v11020 = 399,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddExternalSemaphoresWaitNode_v11020 = 400,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExternalSemaphoresWaitNodeGetParams_v11020 = 401,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExternalSemaphoresWaitNodeSetParams_v11020 = 402,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecExternalSemaphoresSignalNodeSetParams_v11020 = 403,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecExternalSemaphoresWaitNodeSetParams_v11020 = 404,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceFlushGPUDirectRDMAWrites_v11030 = 405,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDriverEntryPoint_v11030 = 406,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDriverEntryPoint_ptsz_v11030 = 407,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphDebugDotPrint_v11030 = 408,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetCaptureInfo_v2_v11030 = 409,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetCaptureInfo_v2_ptsz_v11030 = 410,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamUpdateCaptureDependencies_v11030 = 411,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamUpdateCaptureDependencies_ptsz_v11030 = 412,
+    CUPTI_RUNTIME_TRACE_CBID_cudaUserObjectCreate_v11030 = 413,
+    CUPTI_RUNTIME_TRACE_CBID_cudaUserObjectRetain_v11030 = 414,
+    CUPTI_RUNTIME_TRACE_CBID_cudaUserObjectRelease_v11030 = 415,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphRetainUserObject_v11030 = 416,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphReleaseUserObject_v11030 = 417,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphInstantiateWithFlags_v11040 = 418,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddMemAllocNode_v11040 = 419,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemAllocNodeGetParams_v11040 = 420,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddMemFreeNode_v11040 = 421,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphMemFreeNodeGetParams_v11040 = 422,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGraphMemTrim_v11040 = 423,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetGraphMemAttribute_v11040 = 424,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceSetGraphMemAttribute_v11040 = 425,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeSetEnabled_v11060 = 426,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetEnabled_v11060 = 427,
+    CUPTI_RUNTIME_TRACE_CBID_cudaArrayGetMemoryRequirements_v11060 = 428,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMipmappedArrayGetMemoryRequirements_v11060 = 429,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernelExC_v11060 = 430,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernelExC_ptsz_v11060 = 431,
+    CUPTI_RUNTIME_TRACE_CBID_cudaOccupancyMaxPotentialClusterSize_v11070 = 432,
+    CUPTI_RUNTIME_TRACE_CBID_cudaOccupancyMaxActiveClusters_v11070 = 433,
+    CUPTI_RUNTIME_TRACE_CBID_cudaCreateTextureObject_v2_v11080 = 434,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetTextureObjectTextureDesc_v2_v11080 = 435,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphInstantiateWithParams_v12000 = 436,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphInstantiateWithParams_ptsz_v12000 = 437,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecGetFlags_v12000 = 438,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetKernel_v12000 = 439,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDeviceProperties_v12000 = 440,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetId_v12000 = 441,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetId_ptsz_v12000 = 442,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphInstantiate_v12000 = 443,
+    CUPTI_RUNTIME_TRACE_CBID_cudaInitDevice_v12000 = 444,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddNode_v12020 = 445,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeSetParams_v12020 = 446,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecNodeSetParams_v12020 = 447,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemAdvise_v12020 = 448,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPrefetchAsync_v12020 = 449,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPrefetchAsync_ptsz_v12020 = 450,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFuncGetName_v12030 = 451,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamBeginCaptureToGraph_v12030 = 452,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamBeginCaptureToGraph_ptsz_v12030 = 453,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphConditionalHandleCreate_v12030 = 454,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphGetEdges_v12030 = 455,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetDependencies_v12030 = 456,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetDependentNodes_v12030 = 457,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddDependencies_v12030 = 458,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphRemoveDependencies_v12030 = 459,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphAddNode_v12030 = 460,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetCaptureInfo_v12030 = 461,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetCaptureInfo_ptsz_v12030 = 462,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamUpdateCaptureDependencies_v12030 = 463,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamUpdateCaptureDependencies_ptsz_v12030 = 464,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceRegisterAsyncNotification_v12040 = 465,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceUnregisterAsyncNotification_v12040 = 466,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFuncGetParamInfo_v12040 = 467,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDriverEntryPointByVersion_v12050 = 468,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetDriverEntryPointByVersion_ptsz_v12050 = 469,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryLoadData_v12060 = 470,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryLoadFromFile_v12060 = 471,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryUnload_v12060 = 472,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryGetKernel_v12060 = 473,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryGetGlobal_v12060 = 474,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryGetManaged_v12060 = 475,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryGetUnifiedFunction_v12060 = 476,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryGetKernelCount_v12060 = 477,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLibraryEnumerateKernels_v12060 = 478,
+    CUPTI_RUNTIME_TRACE_CBID_cudaKernelSetAttributeForDevice_v12060 = 479,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetDevice_v12080 = 480,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetDevice_ptsz_v12080 = 481,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyBatchAsync_v12080 = 482,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyBatchAsync_ptsz_v12080 = 483,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DBatchAsync_v12080 = 484,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DBatchAsync_ptsz_v12080 = 485,
+    CUPTI_RUNTIME_TRACE_CBID_cudaEventElapsedTime_v12080 = 486,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPrefetchBatchAsync_v13000 = 487,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemPrefetchBatchAsync_ptsz_v13000 = 488,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemDiscardBatchAsync_v13000 = 489,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemDiscardBatchAsync_ptsz_v13000 = 490,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemDiscardAndPrefetchBatchAsync_v13000 = 491,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemDiscardAndPrefetchBatchAsync_ptsz_v13000 = 492,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGetExportTable_v13000 = 493,
+    CUPTI_RUNTIME_TRACE_CBID___cudaRegisterFatBinary_v13000 = 494,
+    CUPTI_RUNTIME_TRACE_CBID___cudaRegisterFatBinaryEnd_v13000 = 495,
+    CUPTI_RUNTIME_TRACE_CBID___cudaUnregisterFatBinary_v13000 = 496,
+    CUPTI_RUNTIME_TRACE_CBID___cudaRegisterVar_v13000 = 497,
+    CUPTI_RUNTIME_TRACE_CBID___cudaRegisterHostVar_v13000 = 498,
+    CUPTI_RUNTIME_TRACE_CBID___cudaRegisterFunction_v13000 = 499,
+    CUPTI_RUNTIME_TRACE_CBID___cudaRegisterManagedVar_v13000 = 500,
+    CUPTI_RUNTIME_TRACE_CBID___cudaInitModule_v13000 = 501,
+    CUPTI_RUNTIME_TRACE_CBID___cudaPushCallConfiguration_v13000 = 502,
+    CUPTI_RUNTIME_TRACE_CBID___cudaPopCallConfiguration_v13000 = 503,
+    CUPTI_RUNTIME_TRACE_CBID___cudaGetKernel_v13000 = 504,
+    CUPTI_RUNTIME_TRACE_CBID___cudaLaunchKernel_v13000 = 505,
+    CUPTI_RUNTIME_TRACE_CBID___cudaLaunchKernel_ptsz_v13000 = 506,
+    CUPTI_RUNTIME_TRACE_CBID___cudaRegisterUnifiedTable_v13000 = 507,
+    CUPTI_RUNTIME_TRACE_CBID___cudaGetProcAddress_v13000 = 508,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyBatchAsync_v13000 = 509,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyBatchAsync_ptsz_v13000 = 510,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DBatchAsync_v13000 = 511,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DBatchAsync_ptsz_v13000 = 512,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLogsRegisterCallback_v13000 = 513,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLogsUnregisterCallback_v13000 = 514,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLogsCurrent_v13000 = 515,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLogsDumpToFile_v13000 = 516,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLogsDumpToMemory_v13000 = 517,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemGetDefaultMemPool_v13000 = 518,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemGetMemPool_v13000 = 519,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemSetMemPool_v13000 = 520,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetHostAtomicCapabilities_v13000 = 521,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetP2PAtomicCapabilities_v13000 = 522,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetDevResource_v13010 = 523,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDevSmResourceSplitByCount_v13010 = 524,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDevResourceGenerateDesc_v13010 = 525,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGreenCtxCreate_v13010 = 526,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxDestroy_v13010 = 527,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxGetDevResource_v13010 = 528,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxGetDevice_v13010 = 529,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxGetId_v13010 = 530,
+    CUPTI_RUNTIME_TRACE_CBID_cuda531_v13010 = 531,
+    CUPTI_RUNTIME_TRACE_CBID_cuda532_v13010 = 532,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxStreamCreate_v13010 = 533,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxSynchronize_v13010 = 534,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphConditionalHandleCreate_v2_v13010 = 535,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetDevResource_v13010 = 536,
+    CUPTI_RUNTIME_TRACE_CBID_cudaStreamGetDevResource_ptsz_v13010 = 537,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetContainingGraph_v13010 = 538,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetLocalId_v13010 = 539,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetToolsId_v13010 = 540,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphGetId_v13010 = 541,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphExecGetId_v13010 = 542,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxRecordEvent_v13010 = 543,
+    CUPTI_RUNTIME_TRACE_CBID_cudaExecutionCtxWaitEvent_v13010 = 544,
+    CUPTI_RUNTIME_TRACE_CBID_cuda545_v13010 = 545,
+    CUPTI_RUNTIME_TRACE_CBID_cuda546_v13010 = 546,
+    CUPTI_RUNTIME_TRACE_CBID_cuda547_v13010 = 547,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDeviceGetExecutionCtx_v13010 = 548,
+    CUPTI_RUNTIME_TRACE_CBID_cudaDevSmResourceSplit_v13010 = 549,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchHostFunc_v2_v13020 = 550,
+    CUPTI_RUNTIME_TRACE_CBID_cudaLaunchHostFunc_v2_ptsz_v13020 = 551,
+    CUPTI_RUNTIME_TRACE_CBID_cudaFuncGetParamCount_v13020 = 552,
+    CUPTI_RUNTIME_TRACE_CBID_cuda553_v13020 = 553,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyWithAttributesAsync_v13020 = 554,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpyWithAttributesAsync_ptsz_v13020 = 555,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DWithAttributesAsync_v13020 = 556,
+    CUPTI_RUNTIME_TRACE_CBID_cudaMemcpy3DWithAttributesAsync_ptsz_v13020 = 557,
+    CUPTI_RUNTIME_TRACE_CBID_cudaGraphNodeGetParams_v13020 = 558,
+    CUPTI_RUNTIME_TRACE_CBID_SIZE = 559,
+    CUPTI_RUNTIME_TRACE_CBID_FORCE_INT = 2147483647,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUDA_ARRAY3D_DESCRIPTOR_v1_st {
@@ -22842,7 +24387,7 @@ pub struct CUpti_ActivityCdpKernel__bindgen_ty_1__bindgen_ty_1 {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityComputeEngineCtxSwitch {
@@ -22852,7 +24397,12 @@ pub struct CUpti_ActivityComputeEngineCtxSwitch {
     pub operationType: CUpti_ComputeEngineCtxSwitchOperationType,
     pub padding: u32,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityConfidentialComputeRotation {
@@ -22863,6 +24413,13 @@ pub struct CUpti_ActivityConfidentialComputeRotation {
     pub channelId: u32,
     pub channelType: CUpti_ChannelType,
     pub timestamp: u64,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_ActivityConfig {
+    pub structSize: usize,
+    pub fieldSelection: CUpti_ActivityFieldSelection,
 }
 #[repr(C)]
 #[repr(align(8))]
@@ -22894,7 +24451,8 @@ pub struct CUpti_ActivityContext2 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[repr(align(8))]
@@ -22916,7 +24474,8 @@ pub struct CUpti_ActivityContext2 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[repr(align(8))]
@@ -22934,7 +24493,7 @@ pub struct CUpti_ActivityContext3 {
     pub cigMode: CUpti_ContextCigMode,
     pub padding2: u32,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityContext4 {
@@ -22966,7 +24525,8 @@ pub struct CUpti_ActivityCudaEvent {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -23062,7 +24622,8 @@ pub struct CUpti_ActivityDevice2 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 pub struct CUpti_ActivityDevice3 {
@@ -23113,7 +24674,8 @@ pub struct CUpti_ActivityDevice3 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 pub struct CUpti_ActivityDevice4 {
@@ -23163,7 +24725,8 @@ pub struct CUpti_ActivityDevice4 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 pub struct CUpti_ActivityDevice5 {
@@ -23206,6 +24769,50 @@ pub struct CUpti_ActivityDevice5 {
     pub isNumaNode: u32,
     pub numaId: u32,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C, packed(8))]
+pub struct CUpti_ActivityDevice6 {
+    pub kind: CUpti_ActivityKind,
+    pub flags: CUpti_ActivityFlag,
+    pub globalMemoryBandwidth: u64,
+    pub globalMemorySize: u64,
+    pub constantMemorySize: u32,
+    pub l2CacheSize: u32,
+    pub numThreadsPerWarp: u32,
+    pub coreClockRate: u32,
+    pub numMemcpyEngines: u32,
+    pub numMultiprocessors: u32,
+    pub maxIPC: u32,
+    pub maxWarpsPerMultiprocessor: u32,
+    pub maxBlocksPerMultiprocessor: u32,
+    pub maxSharedMemoryPerMultiprocessor: u32,
+    pub maxRegistersPerMultiprocessor: u32,
+    pub maxRegistersPerBlock: u32,
+    pub maxSharedMemoryPerBlock: u32,
+    pub maxThreadsPerBlock: u32,
+    pub maxBlockDimX: u32,
+    pub maxBlockDimY: u32,
+    pub maxBlockDimZ: u32,
+    pub maxGridDimX: u32,
+    pub maxGridDimY: u32,
+    pub maxGridDimZ: u32,
+    pub computeCapabilityMajor: u32,
+    pub computeCapabilityMinor: u32,
+    pub id: u32,
+    pub eccEnabled: u32,
+    pub uuid: CUuuid,
+    pub name: *const ::core::ffi::c_char,
+    pub isCudaVisible: u8,
+    pub isMigEnabled: u8,
+    pub reserved: [u8; 6usize],
+    pub gpuInstanceId: u32,
+    pub computeInstanceId: u32,
+    pub migUuid: CUuuid,
+    pub isNumaNode: u32,
+    pub numaId: u32,
+    pub numTpcs: u32,
+    pub reserved0: u32,
+}
 #[repr(C, packed(8))]
 pub struct CUpti_ActivityDeviceAttribute {
     pub kind: CUpti_ActivityKind,
@@ -23224,7 +24831,8 @@ pub struct CUpti_ActivityDeviceAttribute__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -23303,6 +24911,24 @@ pub struct CUpti_ActivityExternalCorrelation {
     pub correlationId: u32,
     pub reserved: u32,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_ActivityFieldLayoutEntry {
+    pub structSize: usize,
+    pub fieldId: ::core::ffi::c_int,
+    pub offset: usize,
+    pub size: usize,
+    pub alignment: usize,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_ActivityFieldSelection {
+    pub structSize: usize,
+    pub numFields: usize,
+    pub pFieldIds: *mut ::core::ffi::c_int,
+}
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityFunction {
@@ -23355,7 +24981,7 @@ pub struct CUpti_ActivityGlobalAccess3 {
     pub l2_transactions: u64,
     pub theoreticalL2Transactions: u64,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityGraphHostNode {
@@ -23384,7 +25010,8 @@ pub struct CUpti_ActivityGraphHostNode {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -23407,7 +25034,8 @@ pub struct CUpti_ActivityGraphTrace {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -23424,7 +25052,22 @@ pub struct CUpti_ActivityGraphTrace2 {
     pub endDeviceId: u32,
     pub endContextId: u32,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[repr(align(8))]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_ActivityGreenContext {
+    pub kind: CUpti_ActivityKind,
+    pub contextId: u32,
+    pub parentContextId: u32,
+    pub deviceId: u32,
+    pub numTpcs: u32,
+    pub numMultiprocessors: u16,
+    pub logicalTpcMaskSize: u8,
+    pub padding: u8,
+    pub logicalTpcMask: [u32; 32usize],
+}
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityHostLaunch {
@@ -23520,7 +25163,8 @@ pub struct CUpti_ActivityInstructionExecution {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -23544,7 +25188,8 @@ pub struct CUpti_ActivityJit {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -23591,7 +25236,7 @@ pub struct CUpti_ActivityKernel {
     pub name: *const ::core::ffi::c_char,
     pub reserved0: *mut ::core::ffi::c_void,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
 pub struct CUpti_ActivityKernel10 {
@@ -23644,14 +25289,14 @@ pub struct CUpti_ActivityKernel10 {
     pub isDeviceLaunched: u8,
     pub padding3: [u8; 7usize],
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityKernel10__bindgen_ty_1__bindgen_ty_1 {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
 pub struct CUpti_ActivityKernel11 {
@@ -23706,7 +25351,7 @@ pub struct CUpti_ActivityKernel11 {
     pub priority: i32,
     pub padding4: u32,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityKernel11__bindgen_ty_1__bindgen_ty_1 {
@@ -23933,7 +25578,8 @@ pub struct CUpti_ActivityKernel6__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -23992,7 +25638,8 @@ pub struct CUpti_ActivityKernel7 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -24012,7 +25659,8 @@ pub struct CUpti_ActivityKernel7__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -24074,7 +25722,8 @@ pub struct CUpti_ActivityKernel8 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -24093,7 +25742,8 @@ pub struct CUpti_ActivityKernel8__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -24156,7 +25806,8 @@ pub struct CUpti_ActivityKernel9 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -24200,7 +25851,7 @@ pub struct CUpti_ActivityMarkerData {
     pub color: u32,
     pub category: u32,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
 pub struct CUpti_ActivityMarkerData2 {
@@ -24218,7 +25869,8 @@ pub struct CUpti_ActivityMarkerData2 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -24311,7 +25963,8 @@ pub struct CUpti_ActivityMemcpy4 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -24363,7 +26016,7 @@ pub struct CUpti_ActivityMemcpy6 {
     pub pad2: u32,
     pub copyCount: u64,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityMemcpy6 {
@@ -24471,7 +26124,8 @@ pub struct CUpti_ActivityMemcpyPtoP3 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -24559,7 +26213,8 @@ pub struct CUpti_ActivityMemory2__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -24584,7 +26239,8 @@ pub struct CUpti_ActivityMemory2__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -24620,7 +26276,8 @@ pub struct CUpti_ActivityMemory3 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -24637,7 +26294,8 @@ pub struct CUpti_ActivityMemory3__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -24665,7 +26323,8 @@ pub struct CUpti_ActivityMemory4 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -24706,7 +26365,8 @@ pub struct CUpti_ActivityMemoryPool {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -24724,7 +26384,7 @@ pub struct CUpti_ActivityMemoryPool2 {
     pub timestamp: u64,
     pub utilizedSize: u64,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityMemoryPool3 {
@@ -24834,7 +26494,7 @@ pub struct CUpti_ActivityMemset4 {
     pub channelType: CUpti_ChannelType,
     pub pad2: u32,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityMemset4 {
@@ -24957,6 +26617,21 @@ pub struct CUpti_ActivityNvLink2 {
     pub portDev1: [i8; 32usize],
     pub bandwidth: u64,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C, packed(8))]
+pub struct CUpti_ActivityNvLink2 {
+    pub kind: CUpti_ActivityKind,
+    pub nvlinkVersion: u32,
+    pub typeDev0: CUpti_DevType,
+    pub typeDev1: CUpti_DevType,
+    pub idDev0: CUpti_ActivityNvLink2__bindgen_ty_1,
+    pub idDev1: CUpti_ActivityNvLink2__bindgen_ty_2,
+    pub flag: u32,
+    pub physicalNvLinkCount: u32,
+    pub portDev0: [i8; 16usize],
+    pub portDev1: [i8; 16usize],
+    pub bandwidth: u64,
+}
 #[repr(C)]
 pub struct CUpti_ActivityNvLink2__bindgen_ty_1 {
     pub uuidDev: __BindgenUnionField<CUuuid>,
@@ -25031,6 +26706,23 @@ pub struct CUpti_ActivityNvLink3 {
     pub nvswitchConnected: u8,
     pub pad: [u8; 7usize],
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C, packed(8))]
+pub struct CUpti_ActivityNvLink3 {
+    pub kind: CUpti_ActivityKind,
+    pub nvlinkVersion: u32,
+    pub typeDev0: CUpti_DevType,
+    pub typeDev1: CUpti_DevType,
+    pub idDev0: CUpti_ActivityNvLink3__bindgen_ty_1,
+    pub idDev1: CUpti_ActivityNvLink3__bindgen_ty_2,
+    pub flag: u32,
+    pub physicalNvLinkCount: u32,
+    pub portDev0: [i8; 16usize],
+    pub portDev1: [i8; 16usize],
+    pub bandwidth: u64,
+    pub nvswitchConnected: u8,
+    pub pad: [u8; 7usize],
+}
 #[repr(C)]
 pub struct CUpti_ActivityNvLink3__bindgen_ty_1 {
     pub uuidDev: __BindgenUnionField<CUuuid>,
@@ -25070,7 +26762,8 @@ pub struct CUpti_ActivityNvLink3__bindgen_ty_2__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 pub struct CUpti_ActivityNvLink4 {
@@ -25103,7 +26796,8 @@ pub struct CUpti_ActivityNvLink4 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct CUpti_ActivityNvLink4__bindgen_ty_1 {
@@ -25126,7 +26820,8 @@ pub struct CUpti_ActivityNvLink4__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25149,7 +26844,8 @@ pub struct CUpti_ActivityNvLink4__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct CUpti_ActivityNvLink4__bindgen_ty_2 {
@@ -25172,11 +26868,57 @@ pub struct CUpti_ActivityNvLink4__bindgen_ty_2 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivityNvLink4__bindgen_ty_2__bindgen_ty_1 {
+    pub index: u32,
+    pub domainId: u32,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C, packed(8))]
+pub struct CUpti_ActivityNvLink5 {
+    pub kind: CUpti_ActivityKind,
+    pub nvlinkVersion: u32,
+    pub typeDev0: CUpti_DevType,
+    pub typeDev1: CUpti_DevType,
+    pub idDev0: CUpti_ActivityNvLink5__bindgen_ty_1,
+    pub idDev1: CUpti_ActivityNvLink5__bindgen_ty_2,
+    pub flag: u32,
+    pub physicalNvLinkCount: u32,
+    pub portDev0: *mut u32,
+    pub portDev1: *mut u32,
+    pub bandwidth: u64,
+    pub nvswitchConnected: u8,
+    pub pad: [u8; 7usize],
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct CUpti_ActivityNvLink5__bindgen_ty_1 {
+    pub uuidDev: __BindgenUnionField<CUuuid>,
+    pub npu: __BindgenUnionField<CUpti_ActivityNvLink5__bindgen_ty_1__bindgen_ty_1>,
+    pub bindgen_union_field: [u32; 4usize],
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_ActivityNvLink5__bindgen_ty_1__bindgen_ty_1 {
+    pub index: u32,
+    pub domainId: u32,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct CUpti_ActivityNvLink5__bindgen_ty_2 {
+    pub uuidDev: __BindgenUnionField<CUuuid>,
+    pub npu: __BindgenUnionField<CUpti_ActivityNvLink5__bindgen_ty_2__bindgen_ty_1>,
+    pub bindgen_union_field: [u32; 4usize],
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_ActivityNvLink5__bindgen_ty_2__bindgen_ty_1 {
     pub index: u32,
     pub domainId: u32,
 }
@@ -25367,7 +27109,8 @@ pub struct CUpti_ActivityOverhead {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -25388,7 +27131,8 @@ pub struct CUpti_ActivityOverhead2 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Copy, Clone)]
@@ -25410,7 +27154,8 @@ pub struct CUpti_ActivityOverhead3 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25527,6 +27272,15 @@ pub struct CUpti_ActivityPreemption {
     pub blockZ: u32,
     pub pad: u32,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_ActivityRecordLayout {
+    pub structSize: usize,
+    pub pEntries: *mut CUpti_ActivityFieldLayoutEntry,
+    pub numFields: usize,
+    pub recordSize: usize,
+}
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_ActivitySharedAccess {
@@ -25578,7 +27332,8 @@ pub struct CUpti_ActivitySynchronization {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25627,7 +27382,8 @@ pub struct CUpti_ActivityUnifiedMemoryCounter2 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C, packed(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25654,6 +27410,21 @@ pub struct CUpti_ActivityUnifiedMemoryCounterConfig {
     pub kind: CUpti_ActivityUnifiedMemoryCounterKind,
     pub deviceId: u32,
     pub enable: u32,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_BufferCallbackCompleteInfo {
+    pub structSize: usize,
+    pub threadId: u64,
+    pub ppRecordLayouts: *mut *mut CUpti_ActivityRecordLayout,
+    pub numRecordLayouts: usize,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_BufferCallbackRequestInfo {
+    pub structSize: usize,
 }
 #[repr(C)]
 pub struct CUpti_CallbackData {
@@ -25718,7 +27489,8 @@ pub struct CUpti_NvtxData {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25727,7 +27499,7 @@ pub struct CUpti_NvtxData {
     pub functionParams: *const ::core::ffi::c_void,
     pub functionReturnValue: *const ::core::ffi::c_void,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct CUpti_NvtxExtPayloadAttr {
@@ -25755,7 +27527,8 @@ pub struct CUpti_ResourceData__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -25771,7 +27544,8 @@ pub struct CUpti_StateData {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25788,7 +27562,8 @@ pub struct CUpti_StateData__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct CUpti_StreamAttrData {
@@ -25804,6 +27579,17 @@ pub struct CUpti_SubscriberParams {
     pub subscriberName: *const ::core::ffi::c_char,
     pub oldSubscriberName: *mut ::core::ffi::c_char,
     pub oldSubscriberSize: usize,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct CUpti_SubscriberParams {
+    pub structSize: usize,
+    pub subscriberName: *const ::core::ffi::c_char,
+    pub oldSubscriberName: *mut ::core::ffi::c_char,
+    pub oldSubscriberSize: usize,
+    pub allowMultipleSubscribers: u8,
+    pub padding: [u8; 7usize],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -25882,7 +27668,8 @@ pub struct cuArrayGetDescriptor_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuArrayGetMemoryRequirements_params_st {
@@ -25905,7 +27692,8 @@ pub struct cuArrayGetSparseProperties_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25917,7 +27705,8 @@ pub struct cuCheckpointProcessCheckpoint_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25929,7 +27718,8 @@ pub struct cuCheckpointProcessGetRestoreThreadId_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25941,7 +27731,8 @@ pub struct cuCheckpointProcessGetState_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25953,7 +27744,8 @@ pub struct cuCheckpointProcessLock_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -25965,13 +27757,24 @@ pub struct cuCheckpointProcessRestore_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cuCheckpointProcessUnlock_params_st {
     pub pid: ::core::ffi::c_int,
     pub args: *mut CUcheckpointUnlockArgs,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuCoredumpDeregisterCompleteCallback_params_st {
+    pub callback: CUcoredumpCallbackHandle,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuCoredumpDeregisterStartCallback_params_st {
+    pub callback: CUcoredumpCallbackHandle,
 }
 #[cfg(any(
     feature = "cuda-12010",
@@ -25983,7 +27786,8 @@ pub struct cuCheckpointProcessUnlock_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCoredumpGetAttributeGlobal_params_st {
@@ -26001,13 +27805,28 @@ pub struct cuCoredumpGetAttributeGlobal_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCoredumpGetAttribute_params_st {
     pub attrib: CUcoredumpSettings,
     pub value: *mut ::core::ffi::c_void,
     pub size: *mut usize,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuCoredumpRegisterCompleteCallback_params_st {
+    pub callback: CUcoredumpStatusCallback,
+    pub userData: *mut ::core::ffi::c_void,
+    pub callbackOut: *mut CUcoredumpCallbackHandle,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuCoredumpRegisterStartCallback_params_st {
+    pub callback: CUcoredumpStatusCallback,
+    pub userData: *mut ::core::ffi::c_void,
+    pub callbackOut: *mut CUcoredumpCallbackHandle,
 }
 #[cfg(any(
     feature = "cuda-12010",
@@ -26019,7 +27838,8 @@ pub struct cuCoredumpGetAttribute_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCoredumpSetAttributeGlobal_params_st {
@@ -26037,7 +27857,8 @@ pub struct cuCoredumpSetAttributeGlobal_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCoredumpSetAttribute_params_st {
@@ -26077,7 +27898,8 @@ pub struct cuCtxCreate_v3_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCtxCreate_v4_params_st {
@@ -26114,7 +27936,8 @@ pub struct cuCtxEnablePeerAccess_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCtxFromGreenCtx_params_st {
@@ -26143,7 +27966,8 @@ pub struct cuCtxGetCurrent_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCtxGetDevResource_params_st {
@@ -26156,7 +27980,7 @@ pub struct cuCtxGetDevResource_params_st {
 pub struct cuCtxGetDevice_params_st {
     pub device: *mut CUdevice,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuCtxGetDevice_v2_params_st {
     pub device: *mut CUdevice,
@@ -26183,7 +28007,8 @@ pub struct cuCtxGetFlags_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCtxGetId_params_st {
@@ -26230,7 +28055,8 @@ pub struct cuCtxPushCurrent_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCtxRecordEvent_params_st {
@@ -26255,7 +28081,8 @@ pub struct cuCtxSetCurrent_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -26271,7 +28098,7 @@ pub struct cuCtxSetLimit_params_st {
 pub struct cuCtxSetSharedMemConfig_params_st {
     pub config: CUsharedconfig,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuCtxSynchronize_v2_params_st {
     pub ctx: CUcontext,
@@ -26282,7 +28109,8 @@ pub struct cuCtxSynchronize_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuCtxWaitEvent_params_st {
@@ -26304,7 +28132,8 @@ pub struct cuDestroyExternalSemaphore_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -26331,7 +28160,7 @@ pub struct cuDevSmResourceSplitByCount_params_st {
     pub useFlags: ::core::ffi::c_uint,
     pub minCount: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cuDevSmResourceSplitByCount_params_st {
@@ -26342,7 +28171,7 @@ pub struct cuDevSmResourceSplitByCount_params_st {
     pub flags: ::core::ffi::c_uint,
     pub minCount: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cuDevSmResourceSplit_params_st {
@@ -26394,7 +28223,8 @@ pub struct cuDeviceGetDefaultMemPool_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuDeviceGetDevResource_params_st {
@@ -26414,7 +28244,7 @@ pub struct cuDeviceGetGraphMemAttribute_params_st {
     pub attr: CUgraphMem_attribute,
     pub value: *mut ::core::ffi::c_void,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuDeviceGetHostAtomicCapabilities_params_st {
     pub capabilities: *mut ::core::ffi::c_uint,
@@ -26445,7 +28275,7 @@ pub struct cuDeviceGetNvSciSyncAttributes_params_st {
     pub dev: CUdevice,
     pub flags: ::core::ffi::c_int,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuDeviceGetP2PAtomicCapabilities_params_st {
     pub capabilities: *mut ::core::ffi::c_uint,
@@ -26542,7 +28372,8 @@ pub struct cuDevicePrimaryCtxSetFlags_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuDeviceRegisterAsyncNotification_params_st {
@@ -26578,7 +28409,8 @@ pub struct cuDeviceTotalMem_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuDeviceUnregisterAsyncNotification_params_st {
@@ -26614,7 +28446,8 @@ pub struct cuEventElapsedTime_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuEventElapsedTime_v2_params_st {
@@ -26679,7 +28512,8 @@ pub struct cuExternalMemoryGetMappedMipmappedArray_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuFlushGPUDirectRDMAWrites_params_st {
@@ -26705,12 +28539,19 @@ pub struct cuFuncGetModule_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuFuncGetName_params_st {
     pub name: *mut *const ::core::ffi::c_char,
     pub hfunc: CUfunction,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuFuncGetParamCount_params_st {
+    pub func: CUfunction,
+    pub paramCount: *mut usize,
 }
 #[cfg(any(
     feature = "cuda-12040",
@@ -26719,7 +28560,8 @@ pub struct cuFuncGetName_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuFuncGetParamInfo_params_st {
@@ -26735,7 +28577,8 @@ pub struct cuFuncGetParamInfo_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuFuncIsLoaded_params_st {
@@ -26749,7 +28592,8 @@ pub struct cuFuncIsLoaded_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuFuncLoad_params_st {
@@ -26814,7 +28658,8 @@ pub struct cuGetExportTable_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGetProcAddress_params_st {
@@ -26834,7 +28679,8 @@ pub struct cuGetProcAddress_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGetProcAddress_v2_params_st {
@@ -26855,7 +28701,8 @@ pub struct cuGetProcAddress_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphAddBatchMemOpNode_params_st {
@@ -26888,7 +28735,8 @@ pub struct cuGraphAddDependencies_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphAddDependencies_v2_params_st {
@@ -26971,7 +28819,8 @@ pub struct cuGraphAddKernelNode_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphAddKernelNode_params_st {
@@ -26992,7 +28841,8 @@ pub struct cuGraphAddKernelNode_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphAddKernelNode_v2_params_st {
@@ -27045,7 +28895,8 @@ pub struct cuGraphAddMemsetNode_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphAddNode_params_st {
@@ -27063,7 +28914,8 @@ pub struct cuGraphAddNode_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphAddNode_v2_params_st {
@@ -27085,7 +28937,8 @@ pub struct cuGraphAddNode_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphBatchMemOpNodeGetParams_params_st {
@@ -27103,7 +28956,8 @@ pub struct cuGraphBatchMemOpNodeGetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphBatchMemOpNodeSetParams_params_st {
@@ -27128,7 +28982,8 @@ pub struct cuGraphClone_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphConditionalHandleCreate_params_st {
@@ -27189,7 +29044,8 @@ pub struct cuGraphEventWaitNodeSetEvent_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphExecBatchMemOpNodeSetParams_params_st {
@@ -27242,14 +29098,15 @@ pub struct cuGraphExecExternalSemaphoresWaitNodeSetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphExecGetFlags_params_st {
     pub hGraphExec: CUgraphExec,
     pub flags: *mut cuuint64_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuGraphExecGetId_params_st {
     pub hGraphExec: CUgraphExec,
@@ -27285,7 +29142,8 @@ pub struct cuGraphExecKernelNodeSetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphExecKernelNodeSetParams_params_st {
@@ -27304,7 +29162,8 @@ pub struct cuGraphExecKernelNodeSetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphExecKernelNodeSetParams_v2_params_st {
@@ -27335,7 +29194,8 @@ pub struct cuGraphExecMemsetNodeSetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphExecNodeSetParams_params_st {
@@ -27361,7 +29221,8 @@ pub struct cuGraphExecUpdate_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphExecUpdate_v2_params_st {
@@ -27404,7 +29265,8 @@ pub struct cuGraphGetEdges_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphGetEdges_v2_params_st {
@@ -27414,7 +29276,7 @@ pub struct cuGraphGetEdges_v2_params_st {
     pub edgeData: *mut CUgraphEdgeData,
     pub numEdges: *mut usize,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuGraphGetId_params_st {
     pub hGraph: CUgraph,
@@ -27459,7 +29321,8 @@ pub struct cuGraphInstantiateWithFlags_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphInstantiateWithParams_params_st {
@@ -27478,7 +29341,8 @@ pub struct cuGraphInstantiateWithParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphInstantiateWithParams_ptsz_params_st {
@@ -27536,7 +29400,8 @@ pub struct cuGraphKernelNodeGetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphKernelNodeGetParams_params_st {
@@ -27554,7 +29419,8 @@ pub struct cuGraphKernelNodeGetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphKernelNodeGetParams_v2_params_st {
@@ -27590,7 +29456,8 @@ pub struct cuGraphKernelNodeSetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphKernelNodeSetParams_params_st {
@@ -27608,7 +29475,8 @@ pub struct cuGraphKernelNodeSetParams_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphKernelNodeSetParams_v2_params_st {
@@ -27661,7 +29529,7 @@ pub struct cuGraphNodeFindInClone_params_st {
     pub hOriginalNode: CUgraphNode,
     pub hClonedGraph: CUgraph,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuGraphNodeGetContainingGraph_params_st {
     pub hNode: CUgraphNode,
@@ -27681,7 +29549,8 @@ pub struct cuGraphNodeGetDependencies_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphNodeGetDependencies_v2_params_st {
@@ -27704,7 +29573,8 @@ pub struct cuGraphNodeGetDependentNodes_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphNodeGetDependentNodes_v2_params_st {
@@ -27727,7 +29597,8 @@ pub struct cuGraphNodeGetDependentNodes_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphNodeGetEnabled_params_st {
@@ -27735,13 +29606,19 @@ pub struct cuGraphNodeGetEnabled_params_st {
     pub hNode: CUgraphNode,
     pub isEnabled: *mut ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuGraphNodeGetLocalId_params_st {
     pub hNode: CUgraphNode,
     pub nodeId: *mut ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuGraphNodeGetParams_params_st {
+    pub hNode: CUgraphNode,
+    pub nodeParams: *mut CUgraphNodeParams,
+}
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuGraphNodeGetToolsId_params_st {
     pub hNode: CUgraphNode,
@@ -27766,7 +29643,8 @@ pub struct cuGraphNodeGetType_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphNodeSetEnabled_params_st {
@@ -27783,7 +29661,8 @@ pub struct cuGraphNodeSetEnabled_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphNodeSetParams_params_st {
@@ -27811,7 +29690,8 @@ pub struct cuGraphRemoveDependencies_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGraphRemoveDependencies_v2_params_st {
@@ -27907,7 +29787,8 @@ pub struct cuGraphicsUnregisterResource_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGreenCtxCreate_params_st {
@@ -27923,7 +29804,8 @@ pub struct cuGreenCtxCreate_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGreenCtxDestroy_params_st {
@@ -27936,7 +29818,8 @@ pub struct cuGreenCtxDestroy_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGreenCtxGetDevResource_params_st {
@@ -27944,7 +29827,7 @@ pub struct cuGreenCtxGetDevResource_params_st {
     pub resource: *mut CUdevResource,
     pub type_: CUdevResourceType,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuGreenCtxGetId_params_st {
     pub greenCtx: CUgreenCtx,
@@ -27957,7 +29840,8 @@ pub struct cuGreenCtxGetId_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGreenCtxRecordEvent_params_st {
@@ -27970,7 +29854,8 @@ pub struct cuGreenCtxRecordEvent_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGreenCtxStreamCreate_params_st {
@@ -27986,7 +29871,8 @@ pub struct cuGreenCtxStreamCreate_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuGreenCtxWaitEvent_params_st {
@@ -28052,7 +29938,8 @@ pub struct cuIpcOpenMemHandle_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuKernelGetAttribute_params_st {
@@ -28072,7 +29959,8 @@ pub struct cuKernelGetAttribute_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuKernelGetFunction_params_st {
@@ -28085,7 +29973,8 @@ pub struct cuKernelGetFunction_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuKernelGetLibrary_params_st {
@@ -28100,12 +29989,19 @@ pub struct cuKernelGetLibrary_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuKernelGetName_params_st {
     pub name: *mut *const ::core::ffi::c_char,
     pub hfunc: CUkernel,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuKernelGetParamCount_params_st {
+    pub kernel: CUkernel,
+    pub paramCount: *mut usize,
 }
 #[cfg(any(
     feature = "cuda-12040",
@@ -28114,7 +30010,8 @@ pub struct cuKernelGetName_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuKernelGetParamInfo_params_st {
@@ -28134,7 +30031,8 @@ pub struct cuKernelGetParamInfo_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuKernelSetAttribute_params_st {
@@ -28154,7 +30052,8 @@ pub struct cuKernelSetAttribute_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuKernelSetCacheConfig_params_st {
@@ -28220,6 +30119,22 @@ pub struct cuLaunchHostFunc_ptsz_params_st {
     pub fn_: CUhostFn,
     pub userData: *mut ::core::ffi::c_void,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuLaunchHostFunc_v2_params_st {
+    pub hStream: CUstream,
+    pub fn_: CUhostFn,
+    pub userData: *mut ::core::ffi::c_void,
+    pub syncMode: ::core::ffi::c_uint,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuLaunchHostFunc_v2_ptsz_params_st {
+    pub hStream: CUstream,
+    pub fn_: CUhostFn,
+    pub userData: *mut ::core::ffi::c_void,
+    pub syncMode: ::core::ffi::c_uint,
+}
 #[cfg(any(
     feature = "cuda-11080",
     feature = "cuda-12000",
@@ -28232,7 +30147,8 @@ pub struct cuLaunchHostFunc_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLaunchKernelEx_params_st {
@@ -28253,7 +30169,8 @@ pub struct cuLaunchKernelEx_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLaunchKernelEx_ptsz_params_st {
@@ -28301,7 +30218,8 @@ pub struct cuLaunch_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryEnumerateKernels_params_st {
@@ -28320,7 +30238,8 @@ pub struct cuLibraryEnumerateKernels_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryGetGlobal_params_st {
@@ -28336,7 +30255,8 @@ pub struct cuLibraryGetGlobal_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryGetKernelCount_params_st {
@@ -28354,7 +30274,8 @@ pub struct cuLibraryGetKernelCount_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryGetKernel_params_st {
@@ -28373,7 +30294,8 @@ pub struct cuLibraryGetKernel_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryGetManaged_params_st {
@@ -28393,7 +30315,8 @@ pub struct cuLibraryGetManaged_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryGetModule_params_st {
@@ -28411,7 +30334,8 @@ pub struct cuLibraryGetModule_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryGetUnifiedFunction_params_st {
@@ -28430,7 +30354,8 @@ pub struct cuLibraryGetUnifiedFunction_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -28455,7 +30380,8 @@ pub struct cuLibraryLoadData_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -28480,7 +30406,8 @@ pub struct cuLibraryLoadFromFile_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuLibraryUnload_params_st {
@@ -28552,14 +30479,24 @@ pub struct cuLinkCreate_v2_params_st {
 pub struct cuLinkDestroy_params_st {
     pub state: CUlinkState,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cuLogsCurrent_params_st {
     pub iterator_out: *mut CUlogIterator,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cuLogsDumpToFile_params_st {
@@ -28567,7 +30504,12 @@ pub struct cuLogsDumpToFile_params_st {
     pub pathToFile: *const ::core::ffi::c_char,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cuLogsDumpToMemory_params_st {
@@ -28576,14 +30518,24 @@ pub struct cuLogsDumpToMemory_params_st {
     pub size: *mut usize,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cuLogsRegisterCallback_params_st {
     pub callbackFunc: CUlogsCallback,
     pub userData: *mut ::core::ffi::c_void,
     pub callback_out: *mut CUlogsCallbackHandle,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cuLogsUnregisterCallback_params_st {
     pub callback: CUlogsCallbackHandle,
@@ -28617,7 +30569,8 @@ pub struct cuMemAdvise_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemAdvise_v2_params_st {
@@ -28705,7 +30658,8 @@ pub struct cuMemAlloc_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemBatchDecompressAsync_params_st {
@@ -28719,7 +30673,8 @@ pub struct cuMemBatchDecompressAsync_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemBatchDecompressAsync_ptsz_params_st {
@@ -28737,7 +30692,7 @@ pub struct cuMemCreate_params_st {
     pub prop: *const CUmemAllocationProp,
     pub flags: ::core::ffi::c_ulonglong,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemDiscardAndPrefetchBatchAsync_params_st {
     pub dptrs: *mut CUdeviceptr,
@@ -28749,7 +30704,7 @@ pub struct cuMemDiscardAndPrefetchBatchAsync_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemDiscardAndPrefetchBatchAsync_ptsz_params_st {
     pub dptrs: *mut CUdeviceptr,
@@ -28761,7 +30716,7 @@ pub struct cuMemDiscardAndPrefetchBatchAsync_ptsz_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemDiscardBatchAsync_params_st {
     pub dptrs: *mut CUdeviceptr,
@@ -28770,7 +30725,7 @@ pub struct cuMemDiscardBatchAsync_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemDiscardBatchAsync_ptsz_params_st {
     pub dptrs: *mut CUdeviceptr,
@@ -28840,7 +30795,7 @@ pub struct cuMemGetAllocationPropertiesFromHandle_params_st {
     pub prop: *mut CUmemAllocationProp,
     pub handle: CUmemGenericAllocationHandle,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemGetDefaultMemPool_params_st {
     pub pool_out: *mut CUmemoryPool,
@@ -28859,7 +30814,8 @@ pub struct cuMemGetDefaultMemPool_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemGetHandleForAddressRange_params_st {
@@ -28881,7 +30837,7 @@ pub struct cuMemGetInfo_v2_params_st {
     pub free: *mut usize,
     pub total: *mut usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemGetMemPool_params_st {
     pub pool: *mut CUmemoryPool,
@@ -29047,7 +31003,8 @@ pub struct cuMemPrefetchAsync_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemPrefetchAsync_v2_params_st {
@@ -29066,7 +31023,8 @@ pub struct cuMemPrefetchAsync_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemPrefetchAsync_v2_ptsz_params_st {
@@ -29076,7 +31034,7 @@ pub struct cuMemPrefetchAsync_v2_ptsz_params_st {
     pub flags: ::core::ffi::c_uint,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemPrefetchBatchAsync_params_st {
     pub dptrs: *mut CUdeviceptr,
@@ -29088,7 +31046,7 @@ pub struct cuMemPrefetchBatchAsync_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemPrefetchBatchAsync_ptsz_params_st {
     pub dptrs: *mut CUdeviceptr,
@@ -29134,7 +31092,7 @@ pub struct cuMemSetAccess_params_st {
     pub desc: *const CUmemAccessDesc,
     pub count: usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemSetMemPool_params_st {
     pub location: *mut CUmemLocation,
@@ -29210,7 +31168,8 @@ pub struct cuMemcpy3DAsync_v2_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemcpy3DBatchAsync_params_st {
@@ -29224,7 +31183,8 @@ pub struct cuMemcpy3DBatchAsync_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemcpy3DBatchAsync_ptsz_params_st {
@@ -29234,7 +31194,7 @@ pub struct cuMemcpy3DBatchAsync_ptsz_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemcpy3DBatchAsync_v2_params_st {
     pub numOps: usize,
@@ -29242,7 +31202,7 @@ pub struct cuMemcpy3DBatchAsync_v2_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemcpy3DBatchAsync_v2_ptsz_params_st {
     pub numOps: usize,
@@ -29269,6 +31229,20 @@ pub struct cuMemcpy3DPeer_params_st {
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cuMemcpy3DPeer_ptds_params_st {
     pub pCopy: *const CUDA_MEMCPY3D_PEER,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuMemcpy3DWithAttributesAsync_params_st {
+    pub op: *mut CUDA_MEMCPY3D_BATCH_OP,
+    pub flags: ::core::ffi::c_ulonglong,
+    pub hStream: CUstream,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuMemcpy3DWithAttributesAsync_ptsz_params_st {
+    pub op: *mut CUDA_MEMCPY3D_BATCH_OP,
+    pub flags: ::core::ffi::c_ulonglong,
+    pub hStream: CUstream,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -29393,7 +31367,8 @@ pub struct cuMemcpyAtoH_v2_ptds_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemcpyBatchAsync_params_st {
@@ -29411,7 +31386,8 @@ pub struct cuMemcpyBatchAsync_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMemcpyBatchAsync_ptsz_params_st {
@@ -29425,7 +31401,7 @@ pub struct cuMemcpyBatchAsync_ptsz_params_st {
     pub failIdx: *mut usize,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemcpyBatchAsync_v2_params_st {
     pub dsts: *mut CUdeviceptr,
@@ -29437,7 +31413,7 @@ pub struct cuMemcpyBatchAsync_v2_params_st {
     pub numAttrs: usize,
     pub hStream: CUstream,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuMemcpyBatchAsync_v2_ptsz_params_st {
     pub dsts: *mut CUdeviceptr,
@@ -29668,6 +31644,24 @@ pub struct cuMemcpyPeer_ptds_params_st {
     pub srcDevice: CUdeviceptr,
     pub srcContext: CUcontext,
     pub ByteCount: usize,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuMemcpyWithAttributesAsync_params_st {
+    pub dst: CUdeviceptr,
+    pub src: CUdeviceptr,
+    pub size: usize,
+    pub attr: *mut CUmemcpyAttributes,
+    pub hStream: CUstream,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuMemcpyWithAttributesAsync_ptsz_params_st {
+    pub dst: CUdeviceptr,
+    pub src: CUdeviceptr,
+    pub size: usize,
+    pub attr: *mut CUmemcpyAttributes,
+    pub hStream: CUstream,
 }
 #[repr(C)]
 pub struct cuMemcpy_params_st {
@@ -29938,7 +31932,8 @@ pub struct cuMipmappedArrayGetLevel_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMipmappedArrayGetMemoryRequirements_params_st {
@@ -29958,7 +31953,8 @@ pub struct cuMipmappedArrayGetSparseProperties_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuModuleEnumerateFunctions_params_st {
@@ -29973,7 +31969,8 @@ pub struct cuModuleEnumerateFunctions_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuModuleGetFunctionCount_params_st {
@@ -30012,7 +32009,8 @@ pub struct cuModuleGetGlobal_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -30072,7 +32070,8 @@ pub struct cuModuleUnload_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMulticastAddDevice_params_st {
@@ -30089,11 +32088,22 @@ pub struct cuMulticastAddDevice_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMulticastBindAddr_params_st {
     pub mcHandle: CUmemGenericAllocationHandle,
+    pub mcOffset: usize,
+    pub memptr: CUdeviceptr,
+    pub size: usize,
+    pub flags: ::core::ffi::c_ulonglong,
+}
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuMulticastBindAddr_v2_params_st {
+    pub mcHandle: CUmemGenericAllocationHandle,
+    pub dev: CUdevice,
     pub mcOffset: usize,
     pub memptr: CUdeviceptr,
     pub size: usize,
@@ -30109,11 +32119,23 @@ pub struct cuMulticastBindAddr_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMulticastBindMem_params_st {
     pub mcHandle: CUmemGenericAllocationHandle,
+    pub mcOffset: usize,
+    pub memHandle: CUmemGenericAllocationHandle,
+    pub memOffset: usize,
+    pub size: usize,
+    pub flags: ::core::ffi::c_ulonglong,
+}
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuMulticastBindMem_v2_params_st {
+    pub mcHandle: CUmemGenericAllocationHandle,
+    pub dev: CUdevice,
     pub mcOffset: usize,
     pub memHandle: CUmemGenericAllocationHandle,
     pub memOffset: usize,
@@ -30130,7 +32152,8 @@ pub struct cuMulticastBindMem_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -30148,7 +32171,8 @@ pub struct cuMulticastCreate_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMulticastGetGranularity_params_st {
@@ -30166,7 +32190,8 @@ pub struct cuMulticastGetGranularity_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuMulticastUnbind_params_st {
@@ -30209,7 +32234,8 @@ pub struct cuOccupancyMaxActiveBlocksPerMultiprocessor_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuOccupancyMaxActiveClusters_params_st {
@@ -30248,7 +32274,8 @@ pub struct cuOccupancyMaxPotentialBlockSize_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuOccupancyMaxPotentialClusterSize_params_st {
@@ -30372,7 +32399,8 @@ pub struct cuStreamBatchMemOp_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamBatchMemOp_v2_params_st {
@@ -30392,7 +32420,8 @@ pub struct cuStreamBatchMemOp_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamBatchMemOp_v2_ptsz_params_st {
@@ -30400,6 +32429,18 @@ pub struct cuStreamBatchMemOp_v2_ptsz_params_st {
     pub count: ::core::ffi::c_uint,
     pub paramArray: *mut CUstreamBatchMemOpParams,
     pub flags: ::core::ffi::c_uint,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuStreamBeginCaptureToCig_params_st {
+    pub hStream: CUstream,
+    pub streamCigCaptureParams: *mut CUstreamCigCaptureParams,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuStreamBeginCaptureToCig_ptsz_params_st {
+    pub hStream: CUstream,
+    pub streamCigCaptureParams: *mut CUstreamCigCaptureParams,
 }
 #[cfg(any(
     feature = "cuda-12030",
@@ -30409,7 +32450,8 @@ pub struct cuStreamBatchMemOp_v2_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamBeginCaptureToGraph_params_st {
@@ -30428,7 +32470,8 @@ pub struct cuStreamBeginCaptureToGraph_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamBeginCaptureToGraph_ptsz_params_st {
@@ -30486,6 +32529,16 @@ pub struct cuStreamDestroy_params_st {
 }
 #[repr(C)]
 pub struct cuStreamDestroy_v2_params_st {
+    pub hStream: CUstream,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuStreamEndCaptureToCig_params_st {
+    pub hStream: CUstream,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cuStreamEndCaptureToCig_ptsz_params_st {
     pub hStream: CUstream,
 }
 #[repr(C)]
@@ -30548,7 +32601,8 @@ pub struct cuStreamGetCaptureInfo_v2_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetCaptureInfo_v3_params_st {
@@ -30568,7 +32622,8 @@ pub struct cuStreamGetCaptureInfo_v3_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetCaptureInfo_v3_ptsz_params_st {
@@ -30596,7 +32651,8 @@ pub struct cuStreamGetCtx_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetCtx_v2_params_st {
@@ -30610,7 +32666,8 @@ pub struct cuStreamGetCtx_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetCtx_v2_ptsz_params_st {
@@ -30618,14 +32675,14 @@ pub struct cuStreamGetCtx_v2_ptsz_params_st {
     pub pCtx: *mut CUcontext,
     pub pGreenCtx: *mut CUgreenCtx,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuStreamGetDevResource_params_st {
     pub hStream: CUstream,
     pub resource: *mut CUdevResource,
     pub type_: CUdevResourceType,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cuStreamGetDevResource_ptsz_params_st {
     pub hStream: CUstream,
@@ -30636,7 +32693,8 @@ pub struct cuStreamGetDevResource_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetDevice_params_st {
@@ -30647,7 +32705,8 @@ pub struct cuStreamGetDevice_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetDevice_ptsz_params_st {
@@ -30671,7 +32730,8 @@ pub struct cuStreamGetFlags_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetGreenCtx_params_st {
@@ -30689,7 +32749,8 @@ pub struct cuStreamGetGreenCtx_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetId_params_st {
@@ -30707,7 +32768,8 @@ pub struct cuStreamGetId_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamGetId_ptsz_params_st {
@@ -30784,7 +32846,8 @@ pub struct cuStreamUpdateCaptureDependencies_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamUpdateCaptureDependencies_v2_params_st {
@@ -30802,7 +32865,8 @@ pub struct cuStreamUpdateCaptureDependencies_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamUpdateCaptureDependencies_v2_ptsz_params_st {
@@ -30849,7 +32913,8 @@ pub struct cuStreamWaitValue32_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWaitValue32_v2_params_st {
@@ -30869,7 +32934,8 @@ pub struct cuStreamWaitValue32_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWaitValue32_v2_ptsz_params_st {
@@ -30903,7 +32969,8 @@ pub struct cuStreamWaitValue64_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWaitValue64_v2_params_st {
@@ -30923,7 +32990,8 @@ pub struct cuStreamWaitValue64_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWaitValue64_v2_ptsz_params_st {
@@ -30957,7 +33025,8 @@ pub struct cuStreamWriteValue32_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWriteValue32_v2_params_st {
@@ -30977,7 +33046,8 @@ pub struct cuStreamWriteValue32_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWriteValue32_v2_ptsz_params_st {
@@ -31011,7 +33081,8 @@ pub struct cuStreamWriteValue64_ptsz_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWriteValue64_v2_params_st {
@@ -31031,7 +33102,8 @@ pub struct cuStreamWriteValue64_v2_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuStreamWriteValue64_v2_ptsz_params_st {
@@ -31066,7 +33138,12 @@ pub struct cuSurfRefSetArray_params_st {
     pub hArray: CUarray,
     pub Flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cuTensorMapEncodeIm2colWide_params_st {
     pub tensorMap: *mut CUtensorMap,
@@ -31097,7 +33174,8 @@ pub struct cuTensorMapEncodeIm2colWide_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuTensorMapEncodeIm2col_params_st {
@@ -31128,7 +33206,8 @@ pub struct cuTensorMapEncodeIm2col_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cuTensorMapEncodeTiled_params_st {
@@ -31156,7 +33235,8 @@ pub struct cuTensorMapEncodeTiled_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -31421,7 +33501,8 @@ pub struct cudaArrayGetInfo_v4010_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaArrayGetMemoryRequirements_v11060_params_st {
@@ -31557,7 +33638,7 @@ pub struct cudaDestroySurfaceObject_v5000_params_st {
 pub struct cudaDestroyTextureObject_v5000_params_st {
     pub texObject: cudaTextureObject_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaDevResourceGenerateDesc_v13010_params_st {
@@ -31576,7 +33657,18 @@ pub struct cudaDevSmResourceSplitByCount_v13010_params_st {
     pub useFlags: ::core::ffi::c_uint,
     pub minCount: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct cudaDevSmResourceSplitByCount_v13010_params_st {
+    pub result: *mut cudaDevResource,
+    pub nbGroups: *mut ::core::ffi::c_uint,
+    pub input: *const cudaDevResource,
+    pub remaining: *mut cudaDevResource,
+    pub flags: ::core::ffi::c_uint,
+    pub minCount: ::core::ffi::c_uint,
+}
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaDevSmResourceSplit_v13010_params_st {
@@ -31633,14 +33725,14 @@ pub struct cudaDeviceGetDefaultMemPool_v11020_params_st {
     pub memPool: *mut cudaMemPool_t,
     pub device: ::core::ffi::c_int,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaDeviceGetDevResource_v13010_params_st {
     pub device: ::core::ffi::c_int,
     pub resource: *mut cudaDevResource,
     pub type_: cudaDevResourceType,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaDeviceGetExecutionCtx_v13010_params_st {
@@ -31653,7 +33745,7 @@ pub struct cudaDeviceGetGraphMemAttribute_v11040_params_st {
     pub attr: cudaGraphMemAttributeType,
     pub value: *mut ::core::ffi::c_void,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaDeviceGetHostAtomicCapabilities_v13000_params_st {
@@ -31680,7 +33772,7 @@ pub struct cudaDeviceGetNvSciSyncAttributes_v10020_params_st {
     pub device: ::core::ffi::c_int,
     pub flags: ::core::ffi::c_int,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaDeviceGetP2PAtomicCapabilities_v13000_params_st {
@@ -31733,7 +33825,8 @@ pub struct cudaDeviceGraphMemTrim_v11040_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaDeviceRegisterAsyncNotification_v12040_params_st {
@@ -31772,7 +33865,8 @@ pub struct cudaDeviceSetSharedMemConfig_v4020_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaDeviceUnregisterAsyncNotification_v12040_params_st {
@@ -31799,7 +33893,7 @@ pub struct cudaEventCreate_v3020_params_st {
 pub struct cudaEventDestroy_v3020_params_st {
     pub event: cudaEvent_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaEventElapsedTime_v12080_params_st {
     pub ms: *mut f32,
@@ -31865,37 +33959,37 @@ pub struct cudaEventRecord_v3020_params_st {
 pub struct cudaEventSynchronize_v3020_params_st {
     pub event: cudaEvent_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxDestroy_v13010_params_st {
     pub ctx: cudaExecutionContext_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxGetDevResource_v13010_params_st {
     pub ctx: cudaExecutionContext_t,
     pub resource: *mut cudaDevResource,
     pub type_: cudaDevResourceType,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxGetDevice_v13010_params_st {
     pub device: *mut ::core::ffi::c_int,
     pub ctx: cudaExecutionContext_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxGetId_v13010_params_st {
     pub ctx: cudaExecutionContext_t,
     pub ctxId: *mut ::core::ffi::c_ulonglong,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxRecordEvent_v13010_params_st {
     pub ctx: cudaExecutionContext_t,
     pub event: cudaEvent_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxStreamCreate_v13010_params_st {
     pub phStream: *mut cudaStream_t,
@@ -31903,12 +33997,12 @@ pub struct cudaExecutionCtxStreamCreate_v13010_params_st {
     pub flags: ::core::ffi::c_uint,
     pub priority: ::core::ffi::c_int,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxSynchronize_v13010_params_st {
     pub ctx: cudaExecutionContext_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaExecutionCtxWaitEvent_v13010_params_st {
     pub ctx: cudaExecutionContext_t,
@@ -31968,13 +34062,21 @@ pub struct cudaFuncGetAttributes_v3020_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaFuncGetName_v12030_params_st {
     pub name: *mut *const ::core::ffi::c_char,
     pub func: *const ::core::ffi::c_void,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct cudaFuncGetParamCount_v13020_params_st {
+    pub func: *const ::core::ffi::c_void,
+    pub paramCount: *mut usize,
 }
 #[cfg(any(
     feature = "cuda-12040",
@@ -31983,7 +34085,8 @@ pub struct cudaFuncGetName_v12030_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -32024,7 +34127,7 @@ pub struct cudaGetDeviceCount_v3020_params_st {
 pub struct cudaGetDeviceFlags_v7000_params_st {
     pub flags: *mut ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaGetDeviceProperties_v12000_params_st {
@@ -32081,7 +34184,8 @@ pub struct cudaGetDevice_v3020_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -32098,7 +34202,8 @@ pub struct cudaGetDriverEntryPointByVersion_ptsz_v12050_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -32134,7 +34239,8 @@ pub struct cudaGetDriverEntryPoint_ptsz_v11030_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -32169,7 +34275,8 @@ pub struct cudaGetDriverEntryPoint_v11030_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -32203,7 +34310,8 @@ pub struct cudaGetFuncBySymbol_v11000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -32319,7 +34427,7 @@ pub struct cudaGraphAddDependencies_v10000_params_st {
     pub to: *const cudaGraphNode_t,
     pub numDependencies: usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphAddDependencies_v12030_params_st {
     pub graph: cudaGraph_t,
@@ -32483,7 +34591,7 @@ pub struct cudaGraphAddNode_v12020_params_st {
     pub numDependencies: usize,
     pub nodeParams: *mut cudaGraphNodeParams,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphAddNode_v12030_params_st {
     pub pGraphNode: *mut cudaGraphNode_t,
@@ -32528,7 +34636,8 @@ pub struct cudaGraphClone_v10000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphConditionalHandleCreate_v12030_params_st {
@@ -32537,7 +34646,7 @@ pub struct cudaGraphConditionalHandleCreate_v12030_params_st {
     pub defaultLaunchValue: ::core::ffi::c_uint,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphConditionalHandleCreate_v2_v13010_params_st {
     pub pHandle_out: *mut cudaGraphConditionalHandle,
@@ -32631,14 +34740,15 @@ pub struct cudaGraphExecExternalSemaphoresWaitNodeSetParams_v11020_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphExecGetFlags_v12000_params_st {
     pub graphExec: cudaGraphExec_t,
     pub flags: *mut ::core::ffi::c_ulonglong,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphExecGetId_v13010_params_st {
     pub hGraphExec: cudaGraphExec_t,
@@ -32706,7 +34816,8 @@ pub struct cudaGraphExecMemsetNodeSetParams_v10020_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphExecNodeSetParams_v12020_params_st {
@@ -32739,7 +34850,8 @@ pub struct cudaGraphExecUpdate_v10020_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphExecUpdate_v10020_params_st {
@@ -32790,7 +34902,7 @@ pub struct cudaGraphGetEdges_v10000_params_st {
     pub to: *mut cudaGraphNode_t,
     pub numEdges: *mut usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphGetEdges_v12030_params_st {
     pub graph: cudaGraph_t,
@@ -32815,7 +34927,7 @@ pub struct cudaGraphGetEdges_v2_v12030_params_st {
     pub edgeData: *mut cudaGraphEdgeData,
     pub numEdges: *mut usize,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphGetId_v13010_params_st {
     pub hGraph: cudaGraph_t,
@@ -32860,7 +34972,8 @@ pub struct cudaGraphInstantiateWithFlags_v11040_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphInstantiateWithParams_ptsz_v12000_params_st {
@@ -32879,7 +34992,8 @@ pub struct cudaGraphInstantiateWithParams_ptsz_v12000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphInstantiateWithParams_v12000_params_st {
@@ -32913,7 +35027,8 @@ pub struct cudaGraphInstantiate_v10000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphInstantiate_v12000_params_st {
@@ -32942,7 +35057,7 @@ pub struct cudaGraphKernelNodeCopyAttributes_v11000_params_st {
     pub hSrc: cudaGraphNode_t,
     pub hDst: cudaGraphNode_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphKernelNodeCopyAttributes_v11000_params_st {
     pub hDst: cudaGraphNode_t,
@@ -32972,7 +35087,8 @@ pub struct cudaGraphKernelNodeGetAttribute_v11000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphKernelNodeGetAttribute_v11000_params_st {
@@ -33009,7 +35125,8 @@ pub struct cudaGraphKernelNodeSetAttribute_v11000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphKernelNodeSetAttribute_v11000_params_st {
@@ -33037,10 +35154,34 @@ pub struct cudaGraphMemAllocNodeGetParams_v11040_params_st {
     pub node: cudaGraphNode_t,
     pub params_out: *mut cudaMemAllocNodeParams,
 }
+#[cfg(any(
+    feature = "cuda-11040",
+    feature = "cuda-11050",
+    feature = "cuda-11060",
+    feature = "cuda-11070",
+    feature = "cuda-11080",
+    feature = "cuda-12000",
+    feature = "cuda-12010",
+    feature = "cuda-12020",
+    feature = "cuda-12030",
+    feature = "cuda-12040",
+    feature = "cuda-12050",
+    feature = "cuda-12060",
+    feature = "cuda-12080",
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010"
+))]
 #[repr(C)]
 pub struct cudaGraphMemFreeNodeGetParams_v11040_params_st {
     pub node: cudaGraphNode_t,
     pub dptr_out: *mut ::core::ffi::c_void,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaGraphMemFreeNodeGetParams_v11040_params_st {
+    pub node: cudaGraphNode_t,
+    pub dptr_out: *mut *mut ::core::ffi::c_void,
 }
 #[repr(C)]
 pub struct cudaGraphMemcpyNodeGetParams_v10000_params_st {
@@ -33094,7 +35235,7 @@ pub struct cudaGraphNodeFindInClone_v10000_params_st {
     pub originalNode: cudaGraphNode_t,
     pub clonedGraph: cudaGraph_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphNodeGetContainingGraph_v13010_params_st {
     pub hNode: cudaGraphNode_t,
@@ -33122,7 +35263,7 @@ pub struct cudaGraphNodeGetDependencies_v10000_params_st {
     pub pDependencies: *mut cudaGraphNode_t,
     pub pNumDependencies: *mut usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphNodeGetDependencies_v12030_params_st {
     pub node: cudaGraphNode_t,
@@ -33167,7 +35308,7 @@ pub struct cudaGraphNodeGetDependentNodes_v10000_params_st {
     pub pDependentNodes: *mut cudaGraphNode_t,
     pub pNumDependentNodes: *mut usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphNodeGetDependentNodes_v12030_params_st {
     pub node: cudaGraphNode_t,
@@ -33204,7 +35345,8 @@ pub struct cudaGraphNodeGetDependentNodes_v2_v12030_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphNodeGetEnabled_v11060_params_st {
@@ -33212,13 +35354,19 @@ pub struct cudaGraphNodeGetEnabled_v11060_params_st {
     pub hNode: cudaGraphNode_t,
     pub isEnabled: *mut ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphNodeGetLocalId_v13010_params_st {
     pub hNode: cudaGraphNode_t,
     pub nodeId: *mut ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaGraphNodeGetParams_v13020_params_st {
+    pub node: cudaGraphNode_t,
+    pub nodeParams: *mut cudaGraphNodeParams,
+}
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphNodeGetToolsId_v13010_params_st {
     pub hNode: cudaGraphNode_t,
@@ -33243,7 +35391,8 @@ pub struct cudaGraphNodeGetType_v10000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphNodeSetEnabled_v11060_params_st {
@@ -33260,7 +35409,8 @@ pub struct cudaGraphNodeSetEnabled_v11060_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaGraphNodeSetParams_v12020_params_st {
@@ -33296,7 +35446,7 @@ pub struct cudaGraphRemoveDependencies_v10000_params_st {
     pub to: *const cudaGraphNode_t,
     pub numDependencies: usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGraphRemoveDependencies_v12030_params_st {
     pub graph: cudaGraph_t,
@@ -33377,7 +35527,7 @@ pub struct cudaGraphicsUnmapResources_v3020_params_st {
 pub struct cudaGraphicsUnregisterResource_v3020_params_st {
     pub resource: cudaGraphicsResource_t,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaGreenCtxCreate_v13010_params_st {
     pub phCtx: *mut cudaExecutionContext_t,
@@ -33439,7 +35589,8 @@ pub struct cudaImportExternalSemaphore_v10000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -33475,7 +35626,12 @@ pub struct cudaIpcOpenMemHandle_v4010_params_st {
     pub handle: cudaIpcMemHandle_t,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaKernelSetAttributeForDevice_v12060_params_st {
     pub kernel: cudaKernel_t,
@@ -33536,6 +35692,22 @@ pub struct cudaLaunchHostFunc_v10000_params_st {
     pub fn_: cudaHostFn_t,
     pub userData: *mut ::core::ffi::c_void,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaLaunchHostFunc_v2_ptsz_v13020_params_st {
+    pub stream: cudaStream_t,
+    pub fn_: cudaHostFn_t,
+    pub userData: *mut ::core::ffi::c_void,
+    pub syncMode: ::core::ffi::c_uint,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaLaunchHostFunc_v2_v13020_params_st {
+    pub stream: cudaStream_t,
+    pub fn_: cudaHostFn_t,
+    pub userData: *mut ::core::ffi::c_void,
+    pub syncMode: ::core::ffi::c_uint,
+}
 #[cfg(any(
     feature = "cuda-11080",
     feature = "cuda-12000",
@@ -33548,7 +35720,8 @@ pub struct cudaLaunchHostFunc_v10000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -33569,7 +35742,8 @@ pub struct cudaLaunchKernelExC_ptsz_v11060_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -33596,14 +35770,24 @@ pub struct cudaLaunchKernel_v7000_params_st {
     pub sharedMem: usize,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaLibraryEnumerateKernels_v12060_params_st {
     pub kernels: *mut cudaKernel_t,
     pub numKernels: ::core::ffi::c_uint,
     pub lib: cudaLibrary_t,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaLibraryGetGlobal_v12060_params_st {
     pub dptr: *mut *mut ::core::ffi::c_void,
@@ -33611,20 +35795,35 @@ pub struct cudaLibraryGetGlobal_v12060_params_st {
     pub library: cudaLibrary_t,
     pub name: *const ::core::ffi::c_char,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaLibraryGetKernelCount_v12060_params_st {
     pub count: *mut ::core::ffi::c_uint,
     pub lib: cudaLibrary_t,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaLibraryGetKernel_v12060_params_st {
     pub pKernel: *mut cudaKernel_t,
     pub library: cudaLibrary_t,
     pub name: *const ::core::ffi::c_char,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaLibraryGetManaged_v12060_params_st {
     pub dptr: *mut *mut ::core::ffi::c_void,
@@ -33632,14 +35831,24 @@ pub struct cudaLibraryGetManaged_v12060_params_st {
     pub library: cudaLibrary_t,
     pub name: *const ::core::ffi::c_char,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaLibraryGetUnifiedFunction_v12060_params_st {
     pub fptr: *mut *mut ::core::ffi::c_void,
     pub library: cudaLibrary_t,
     pub symbol: *const ::core::ffi::c_char,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaLibraryLoadData_v12060_params_st {
@@ -33652,7 +35861,12 @@ pub struct cudaLibraryLoadData_v12060_params_st {
     pub libraryOptionValues: *mut *mut ::core::ffi::c_void,
     pub numLibraryOptions: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaLibraryLoadFromFile_v12060_params_st {
@@ -33665,19 +35879,24 @@ pub struct cudaLibraryLoadFromFile_v12060_params_st {
     pub libraryOptionValues: *mut *mut ::core::ffi::c_void,
     pub numLibraryOptions: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-12090", feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
 #[repr(C)]
 pub struct cudaLibraryUnload_v12060_params_st {
     pub library: cudaLibrary_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaLogsCurrent_v13000_params_st {
     pub iterator_out: *mut cudaLogIterator,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaLogsDumpToFile_v13000_params_st {
@@ -33685,7 +35904,7 @@ pub struct cudaLogsDumpToFile_v13000_params_st {
     pub pathToFile: *const ::core::ffi::c_char,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaLogsDumpToMemory_v13000_params_st {
@@ -33694,14 +35913,14 @@ pub struct cudaLogsDumpToMemory_v13000_params_st {
     pub size: *mut usize,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaLogsRegisterCallback_v13000_params_st {
     pub callbackFunc: cudaLogsCallback_t,
     pub userData: *mut ::core::ffi::c_void,
     pub callback_out: *mut cudaLogsCallbackHandle,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaLogsUnregisterCallback_v13000_params_st {
     pub callback: cudaLogsCallbackHandle,
@@ -33788,7 +36007,7 @@ pub struct cudaMalloc_v3020_params_st {
     pub devPtr: *mut *mut ::core::ffi::c_void,
     pub size: usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemAdvise_v12020_params_st {
     pub devPtr: *const ::core::ffi::c_void,
@@ -33835,7 +36054,7 @@ pub struct cudaMemAdvise_v8000_params_st {
     pub advice: cudaMemoryAdvise,
     pub device: ::core::ffi::c_int,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemDiscardAndPrefetchBatchAsync_ptsz_v13000_params_st {
     pub dptrs: *mut *mut ::core::ffi::c_void,
@@ -33847,7 +36066,7 @@ pub struct cudaMemDiscardAndPrefetchBatchAsync_ptsz_v13000_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemDiscardAndPrefetchBatchAsync_v13000_params_st {
     pub dptrs: *mut *mut ::core::ffi::c_void,
@@ -33859,7 +36078,7 @@ pub struct cudaMemDiscardAndPrefetchBatchAsync_v13000_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemDiscardBatchAsync_ptsz_v13000_params_st {
     pub dptrs: *mut *mut ::core::ffi::c_void,
@@ -33868,7 +36087,7 @@ pub struct cudaMemDiscardBatchAsync_ptsz_v13000_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemDiscardBatchAsync_v13000_params_st {
     pub dptrs: *mut *mut ::core::ffi::c_void,
@@ -33877,7 +36096,7 @@ pub struct cudaMemDiscardBatchAsync_v13000_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemGetDefaultMemPool_v13000_params_st {
     pub memPool: *mut cudaMemPool_t,
@@ -33890,7 +36109,7 @@ pub struct cudaMemGetInfo_v3020_params_st {
     pub free: *mut usize,
     pub total: *mut usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemGetMemPool_v13000_params_st {
     pub memPool: *mut cudaMemPool_t,
@@ -33962,7 +36181,7 @@ pub struct cudaMemPoolTrimTo_v11020_params_st {
     pub memPool: cudaMemPool_t,
     pub minBytesToKeep: usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemPrefetchAsync_ptsz_v12020_params_st {
     pub devPtr: *const ::core::ffi::c_void,
@@ -33994,7 +36213,7 @@ pub struct cudaMemPrefetchAsync_ptsz_v8000_params_st {
     pub dstDevice: ::core::ffi::c_int,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemPrefetchAsync_v12020_params_st {
     pub devPtr: *const ::core::ffi::c_void,
@@ -34060,7 +36279,7 @@ pub struct cudaMemPrefetchAsync_v8000_params_st {
     pub dstDevice: ::core::ffi::c_int,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemPrefetchBatchAsync_ptsz_v13000_params_st {
     pub dptrs: *mut *mut ::core::ffi::c_void,
@@ -34072,7 +36291,7 @@ pub struct cudaMemPrefetchBatchAsync_ptsz_v13000_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemPrefetchBatchAsync_v13000_params_st {
     pub dptrs: *mut *mut ::core::ffi::c_void,
@@ -34102,7 +36321,7 @@ pub struct cudaMemRangeGetAttributes_v8000_params_st {
     pub devPtr: *const ::core::ffi::c_void,
     pub count: usize,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemSetMemPool_v13000_params_st {
     pub location: *mut cudaMemLocation,
@@ -34286,7 +36505,7 @@ pub struct cudaMemcpy3DBatchAsync_ptsz_v12080_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemcpy3DBatchAsync_ptsz_v13000_params_st {
     pub numOps: usize,
@@ -34303,7 +36522,7 @@ pub struct cudaMemcpy3DBatchAsync_v12080_params_st {
     pub flags: ::core::ffi::c_ulonglong,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemcpy3DBatchAsync_v13000_params_st {
     pub numOps: usize,
@@ -34330,6 +36549,20 @@ pub struct cudaMemcpy3DPeer_ptds_v7000_params_st {
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cudaMemcpy3DPeer_v4000_params_st {
     pub p: *const cudaMemcpy3DPeerParms,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaMemcpy3DWithAttributesAsync_ptsz_v13020_params_st {
+    pub op: *mut cudaMemcpy3DBatchOp,
+    pub flags: ::core::ffi::c_ulonglong,
+    pub stream: cudaStream_t,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaMemcpy3DWithAttributesAsync_v13020_params_st {
+    pub op: *mut cudaMemcpy3DBatchOp,
+    pub flags: ::core::ffi::c_ulonglong,
+    pub stream: cudaStream_t,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -34392,7 +36625,7 @@ pub struct cudaMemcpyBatchAsync_ptsz_v12080_params_st {
     pub failIdx: *mut usize,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemcpyBatchAsync_ptsz_v13000_params_st {
     pub dsts: *const *mut ::core::ffi::c_void,
@@ -34417,7 +36650,7 @@ pub struct cudaMemcpyBatchAsync_v12080_params_st {
     pub failIdx: *mut usize,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaMemcpyBatchAsync_v13000_params_st {
     pub dsts: *const *mut ::core::ffi::c_void,
@@ -34591,6 +36824,24 @@ pub struct cudaMemcpyToSymbol_v3020_params_st {
     pub offset: usize,
     pub kind: cudaMemcpyKind,
 }
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaMemcpyWithAttributesAsync_ptsz_v13020_params_st {
+    pub dst: *mut ::core::ffi::c_void,
+    pub src: *const ::core::ffi::c_void,
+    pub size: usize,
+    pub attr: *mut cudaMemcpyAttributes,
+    pub stream: cudaStream_t,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(C)]
+pub struct cudaMemcpyWithAttributesAsync_v13020_params_st {
+    pub dst: *mut ::core::ffi::c_void,
+    pub src: *const ::core::ffi::c_void,
+    pub size: usize,
+    pub attr: *mut cudaMemcpyAttributes,
+    pub stream: cudaStream_t,
+}
 #[repr(C)]
 pub struct cudaMemcpy_ptds_v7000_params_st {
     pub dst: *mut ::core::ffi::c_void,
@@ -34709,7 +36960,8 @@ pub struct cudaMemset_v3020_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaMipmappedArrayGetMemoryRequirements_v11060_params_st {
@@ -34759,7 +37011,8 @@ pub struct cudaOccupancyMaxActiveBlocksPerMultiprocessor_v6050_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -34780,7 +37033,8 @@ pub struct cudaOccupancyMaxActiveClusters_v11070_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -34838,7 +37092,7 @@ pub struct cudaSetValidDevices_v3020_params_st {
     pub device_arr: *mut ::core::ffi::c_int,
     pub len: ::core::ffi::c_int,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaSignalExternalSemaphoresAsync_ptsz_v11020_params_st {
     pub extSemArray: *const cudaExternalSemaphore_t,
@@ -34846,7 +37100,7 @@ pub struct cudaSignalExternalSemaphoresAsync_ptsz_v11020_params_st {
     pub numExtSems: ::core::ffi::c_uint,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaSignalExternalSemaphoresAsync_v11020_params_st {
     pub extSemArray: *const cudaExternalSemaphore_t,
@@ -34936,7 +37190,8 @@ pub struct cudaStreamAttachMemAsync_v6000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamBeginCaptureToGraph_ptsz_v12030_params_st {
@@ -34955,7 +37210,8 @@ pub struct cudaStreamBeginCaptureToGraph_ptsz_v12030_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamBeginCaptureToGraph_v12030_params_st {
@@ -35042,7 +37298,8 @@ pub struct cudaStreamGetAttribute_ptsz_v11000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamGetAttribute_ptsz_v11000_params_st {
@@ -35074,7 +37331,8 @@ pub struct cudaStreamGetAttribute_v11000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamGetAttribute_v11000_params_st {
@@ -35112,7 +37370,7 @@ pub struct cudaStreamGetCaptureInfo_ptsz_v10010_params_st {
     pub captureStatus_out: *mut cudaStreamCaptureStatus,
     pub id_out: *mut ::core::ffi::c_ulonglong,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaStreamGetCaptureInfo_ptsz_v12030_params_st {
     pub stream: cudaStream_t,
@@ -35145,7 +37403,7 @@ pub struct cudaStreamGetCaptureInfo_v10010_params_st {
     pub captureStatus_out: *mut cudaStreamCaptureStatus,
     pub id_out: *mut ::core::ffi::c_ulonglong,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaStreamGetCaptureInfo_v12030_params_st {
     pub stream: cudaStream_t,
@@ -35242,14 +37500,14 @@ pub struct cudaStreamGetCaptureInfo_v3_v12030_params_st {
     pub edgeData_out: *mut *const cudaGraphEdgeData,
     pub numDependencies_out: *mut usize,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaStreamGetDevResource_ptsz_v13010_params_st {
     pub hStream: cudaStream_t,
     pub resource: *mut cudaDevResource,
     pub type_: cudaDevResourceType,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaStreamGetDevResource_v13010_params_st {
     pub hStream: cudaStream_t,
@@ -35260,7 +37518,8 @@ pub struct cudaStreamGetDevResource_v13010_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamGetDevice_ptsz_v12080_params_st {
@@ -35271,7 +37530,8 @@ pub struct cudaStreamGetDevice_ptsz_v12080_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamGetDevice_v12080_params_st {
@@ -35299,7 +37559,8 @@ pub struct cudaStreamGetFlags_v5050_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamGetId_ptsz_v12000_params_st {
@@ -35317,7 +37578,8 @@ pub struct cudaStreamGetId_ptsz_v12000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamGetId_v12000_params_st {
@@ -35376,7 +37638,8 @@ pub struct cudaStreamSetAttribute_ptsz_v11000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamSetAttribute_ptsz_v11000_params_st {
@@ -35408,7 +37671,8 @@ pub struct cudaStreamSetAttribute_v11000_params_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 pub struct cudaStreamSetAttribute_v11000_params_st {
@@ -35447,7 +37711,7 @@ pub struct cudaStreamUpdateCaptureDependencies_ptsz_v11030_params_st {
     pub numDependencies: usize,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaStreamUpdateCaptureDependencies_ptsz_v12030_params_st {
     pub stream: cudaStream_t,
@@ -35479,7 +37743,7 @@ pub struct cudaStreamUpdateCaptureDependencies_v11030_params_st {
     pub numDependencies: usize,
     pub flags: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaStreamUpdateCaptureDependencies_v12030_params_st {
     pub stream: cudaStream_t,
@@ -35610,7 +37874,7 @@ pub struct cudaUserObjectRetain_v11030_params_st {
     pub object: cudaUserObject_t,
     pub count: ::core::ffi::c_uint,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaWaitExternalSemaphoresAsync_ptsz_v11020_params_st {
     pub extSemArray: *const cudaExternalSemaphore_t,
@@ -35618,7 +37882,7 @@ pub struct cudaWaitExternalSemaphoresAsync_ptsz_v11020_params_st {
     pub numExtSems: ::core::ffi::c_uint,
     pub stream: cudaStream_t,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 pub struct cudaWaitExternalSemaphoresAsync_v11020_params_st {
     pub extSemArray: *const cudaExternalSemaphore_t,
@@ -35809,7 +38073,7 @@ impl CUpti_ActivityFlag {
     pub const CUPTI_ACTIVITY_FLAG_THROTTLING_IN_CPU: CUpti_ActivityFlag =
         CUpti_ActivityFlag::CUPTI_ACTIVITY_FLAG_DEVICE_CONCURRENT_KERNELS;
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 impl CUpti_ActivityKernel10__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
     pub fn requested(&self) -> u8 {
@@ -35891,7 +38155,7 @@ impl CUpti_ActivityKernel10__bindgen_ty_1__bindgen_ty_1 {
         __bindgen_bitfield_unit
     }
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 impl CUpti_ActivityKernel11__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
     pub fn requested(&self) -> u8 {
@@ -36392,7 +38656,8 @@ impl CUpti_ActivityKernel6__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 impl CUpti_ActivityKernel7__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
@@ -36487,7 +38752,8 @@ impl CUpti_ActivityKernel7__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 impl CUpti_ActivityKernel8__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
@@ -36581,7 +38847,8 @@ impl CUpti_ActivityKernel8__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 impl CUpti_ActivityKernel9__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
@@ -36860,14 +39127,14 @@ pub union CUpti_ActivityEnvironment__bindgen_ty_1 {
     pub power: CUpti_ActivityEnvironment__bindgen_ty_1__bindgen_ty_3,
     pub cooling: CUpti_ActivityEnvironment__bindgen_ty_1__bindgen_ty_4,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union CUpti_ActivityKernel10__bindgen_ty_1 {
     pub both: u8,
     pub config: CUpti_ActivityKernel10__bindgen_ty_1__bindgen_ty_1,
 }
-#[cfg(any(feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union CUpti_ActivityKernel11__bindgen_ty_1 {
@@ -36918,7 +39185,8 @@ pub union CUpti_ActivityKernel6__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -36938,7 +39206,8 @@ pub union CUpti_ActivityKernel7__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -36957,7 +39226,8 @@ pub union CUpti_ActivityKernel8__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -36985,7 +39255,8 @@ pub union CUpti_ActivityMemory2__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -36998,7 +39269,8 @@ pub union CUpti_ActivityMemory3__bindgen_ty_1__bindgen_ty_1 {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -37038,7 +39310,7 @@ pub union CUpti_MetricValue {
     pub metricValueThroughput: u64,
     pub metricValueUtilizationLevel: CUpti_MetricValueUtilizationLevel,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union CUpti_MetricValue {
@@ -37059,7 +39331,8 @@ pub union CUpti_MetricValue {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -37079,12 +39352,19 @@ extern "C" {
     pub fn cuptiActivityDisable(kind: CUpti_ActivityKind) -> CUptiResult;
     pub fn cuptiActivityDisableContext(context: CUcontext, kind: CUpti_ActivityKind)
         -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivityDisable_v2(
+        subscriber: CUpti_SubscriberHandle,
+        kind: CUpti_ActivityKind,
+        pActivityConfig: *mut CUpti_ActivityConfig,
+    ) -> CUptiResult;
     pub fn cuptiActivityEnable(kind: CUpti_ActivityKind) -> CUptiResult;
     #[cfg(any(
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityEnableAllSyncRecords(enable: u8) -> CUptiResult;
     #[cfg(any(
@@ -37092,7 +39372,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityEnableAllocationSource(enable: u8) -> CUptiResult;
     #[cfg(any(
@@ -37108,11 +39389,18 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityEnableAndDump(kind: CUpti_ActivityKind) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivityEnableAndDump_v2(
+        subscriber: CUpti_SubscriberHandle,
+        kind: CUpti_ActivityKind,
+        activityConfig: *mut CUpti_ActivityConfig,
+    ) -> CUptiResult;
     pub fn cuptiActivityEnableContext(context: CUcontext, kind: CUpti_ActivityKind) -> CUptiResult;
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub fn cuptiActivityEnableCudaEventDeviceTimestamps(enable: u8) -> CUptiResult;
     #[cfg(any(
         feature = "cuda-12030",
@@ -37122,7 +39410,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityEnableDeviceGraph(enable: u8) -> CUptiResult;
     #[cfg(any(
@@ -37131,14 +39420,16 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityEnableDriverApi(cbid: CUpti_CallbackId, enable: u8) -> CUptiResult;
     #[cfg(any(
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityEnableHWTrace(enable: u8) -> CUptiResult;
     pub fn cuptiActivityEnableLatencyTimestamps(enable: u8) -> CUptiResult;
@@ -37149,9 +39440,16 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityEnableRuntimeApi(cbid: CUpti_CallbackId, enable: u8) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivityEnable_v2(
+        subscriber: CUpti_SubscriberHandle,
+        kind: CUpti_ActivityKind,
+        pActivityConfig: *mut CUpti_ActivityConfig,
+    ) -> CUptiResult;
     pub fn cuptiActivityFlush(context: CUcontext, streamId: u32, flag: u32) -> CUptiResult;
     pub fn cuptiActivityFlushAll(flag: u32) -> CUptiResult;
     pub fn cuptiActivityFlushPeriod(time: u32) -> CUptiResult;
@@ -37159,6 +39457,20 @@ extern "C" {
         attr: CUpti_ActivityAttribute,
         valueSize: *mut usize,
         value: *mut ::core::ffi::c_void,
+    ) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivityGetAttribute_v2(
+        subscriber: CUpti_SubscriberHandle,
+        attr: CUpti_ActivityAttribute,
+        valueSize: *mut usize,
+        value: *mut ::core::ffi::c_void,
+    ) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivityGetEnabledKinds(
+        subscriber: CUpti_SubscriberHandle,
+        buffer: *mut CUpti_ActivityKind,
+        bufferSize: *mut u32,
+        enabledKindsCount: *mut u32,
     ) -> CUptiResult;
     pub fn cuptiActivityGetNextRecord(
         buffer: *mut u8,
@@ -37169,6 +39481,12 @@ extern "C" {
         context: CUcontext,
         streamId: u32,
         dropped: *mut usize,
+    ) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivityGetStructSize(
+        activityKind: CUpti_ActivityKind,
+        version: u32,
+        activityStructSize: *mut usize,
     ) -> CUptiResult;
     pub fn cuptiActivityPopExternalCorrelationId(
         kind: CUpti_ExternalCorrelationKind,
@@ -37181,6 +39499,12 @@ extern "C" {
     pub fn cuptiActivityRegisterCallbacks(
         funcBufferRequested: CUpti_BuffersCallbackRequestFunc,
         funcBufferCompleted: CUpti_BuffersCallbackCompleteFunc,
+    ) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivityRegisterCallbacks_v2(
+        subscriber: CUpti_SubscriberHandle,
+        funcBufferRequested: CUpti_BuffersCallbackRequestFunc_v2,
+        funcBufferCompleted: CUpti_BuffersCallbackCompleteFunc_v2,
     ) -> CUptiResult;
     #[cfg(any(
         feature = "cuda-11060",
@@ -37196,12 +39520,20 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiActivityRegisterTimestampCallback(
         funcTimestamp: CUpti_TimestampCallbackFunc,
     ) -> CUptiResult;
     pub fn cuptiActivitySetAttribute(
+        attr: CUpti_ActivityAttribute,
+        valueSize: *mut usize,
+        value: *mut ::core::ffi::c_void,
+    ) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiActivitySetAttribute_v2(
+        subscriber: CUpti_SubscriberHandle,
         attr: CUpti_ActivityAttribute,
         valueSize: *mut usize,
         value: *mut ::core::ffi::c_void,
@@ -37372,6 +39704,14 @@ extern "C" {
     ) -> CUptiResult;
     pub fn cuptiGetContextId(context: CUcontext, contextId: *mut u32) -> CUptiResult;
     pub fn cuptiGetDeviceId(context: CUcontext, deviceId: *mut u32) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiGetEnabledCallbacks(
+        subscriber: CUpti_SubscriberHandle,
+        domain: CUpti_CallbackDomain,
+        buffer: *mut CUpti_CallbackId,
+        bufferSize: *mut u32,
+        enabledCallbacksCount: *mut u32,
+    ) -> CUptiResult;
     #[cfg(any(
         feature = "cuda-12020",
         feature = "cuda-12030",
@@ -37381,7 +39721,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiGetErrorMessage(
         result: CUptiResult,
@@ -37395,7 +39736,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuptiGetGraphExecId(graphExec: CUgraphExec, pId: *mut u32) -> CUptiResult;
     pub fn cuptiGetGraphId(graph: CUgraph, pId: *mut u32) -> CUptiResult;
@@ -37421,6 +39763,8 @@ extern "C" {
     pub fn cuptiGetThreadIdType(type_: *mut CUpti_ActivityThreadIdType) -> CUptiResult;
     pub fn cuptiGetTimestamp(timestamp: *mut u64) -> CUptiResult;
     pub fn cuptiGetVersion(version: *mut u32) -> CUptiResult;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cuptiIsTracingSessionRunning(isRunning: *mut u8) -> CUptiResult;
     pub fn cuptiKernelReplaySubscribeUpdate(
         updateFunc: CUpti_KernelReplayUpdateFunc,
         customData: *mut ::core::ffi::c_void,
@@ -37491,7 +39835,7 @@ extern "C" {
         callback: CUpti_CallbackFunc,
         userdata: *mut ::core::ffi::c_void,
     ) -> CUptiResult;
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub fn cuptiSubscribe_v2(
         subscriber: *mut CUpti_SubscriberHandle,
         callback: CUpti_CallbackFunc,
@@ -37528,6 +39872,14 @@ mod loaded {
     ) -> CUptiResult {
         (culib().cuptiActivityDisableContext)(context, kind)
     }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivityDisable_v2(
+        subscriber: CUpti_SubscriberHandle,
+        kind: CUpti_ActivityKind,
+        pActivityConfig: *mut CUpti_ActivityConfig,
+    ) -> CUptiResult {
+        (culib().cuptiActivityDisable_v2)(subscriber, kind, pActivityConfig)
+    }
     pub unsafe fn cuptiActivityEnable(kind: CUpti_ActivityKind) -> CUptiResult {
         (culib().cuptiActivityEnable)(kind)
     }
@@ -37535,7 +39887,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityEnableAllSyncRecords(enable: u8) -> CUptiResult {
         (culib().cuptiActivityEnableAllSyncRecords)(enable)
@@ -37545,7 +39898,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityEnableAllocationSource(enable: u8) -> CUptiResult {
         (culib().cuptiActivityEnableAllocationSource)(enable)
@@ -37563,10 +39917,19 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityEnableAndDump(kind: CUpti_ActivityKind) -> CUptiResult {
         (culib().cuptiActivityEnableAndDump)(kind)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivityEnableAndDump_v2(
+        subscriber: CUpti_SubscriberHandle,
+        kind: CUpti_ActivityKind,
+        activityConfig: *mut CUpti_ActivityConfig,
+    ) -> CUptiResult {
+        (culib().cuptiActivityEnableAndDump_v2)(subscriber, kind, activityConfig)
     }
     pub unsafe fn cuptiActivityEnableContext(
         context: CUcontext,
@@ -37574,7 +39937,7 @@ mod loaded {
     ) -> CUptiResult {
         (culib().cuptiActivityEnableContext)(context, kind)
     }
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub unsafe fn cuptiActivityEnableCudaEventDeviceTimestamps(enable: u8) -> CUptiResult {
         (culib().cuptiActivityEnableCudaEventDeviceTimestamps)(enable)
     }
@@ -37586,7 +39949,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityEnableDeviceGraph(enable: u8) -> CUptiResult {
         (culib().cuptiActivityEnableDeviceGraph)(enable)
@@ -37597,7 +39961,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityEnableDriverApi(cbid: CUpti_CallbackId, enable: u8) -> CUptiResult {
         (culib().cuptiActivityEnableDriverApi)(cbid, enable)
@@ -37606,7 +39971,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityEnableHWTrace(enable: u8) -> CUptiResult {
         (culib().cuptiActivityEnableHWTrace)(enable)
@@ -37623,10 +39989,19 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityEnableRuntimeApi(cbid: CUpti_CallbackId, enable: u8) -> CUptiResult {
         (culib().cuptiActivityEnableRuntimeApi)(cbid, enable)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivityEnable_v2(
+        subscriber: CUpti_SubscriberHandle,
+        kind: CUpti_ActivityKind,
+        pActivityConfig: *mut CUpti_ActivityConfig,
+    ) -> CUptiResult {
+        (culib().cuptiActivityEnable_v2)(subscriber, kind, pActivityConfig)
     }
     pub unsafe fn cuptiActivityFlush(context: CUcontext, streamId: u32, flag: u32) -> CUptiResult {
         (culib().cuptiActivityFlush)(context, streamId, flag)
@@ -37644,6 +40019,24 @@ mod loaded {
     ) -> CUptiResult {
         (culib().cuptiActivityGetAttribute)(attr, valueSize, value)
     }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivityGetAttribute_v2(
+        subscriber: CUpti_SubscriberHandle,
+        attr: CUpti_ActivityAttribute,
+        valueSize: *mut usize,
+        value: *mut ::core::ffi::c_void,
+    ) -> CUptiResult {
+        (culib().cuptiActivityGetAttribute_v2)(subscriber, attr, valueSize, value)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivityGetEnabledKinds(
+        subscriber: CUpti_SubscriberHandle,
+        buffer: *mut CUpti_ActivityKind,
+        bufferSize: *mut u32,
+        enabledKindsCount: *mut u32,
+    ) -> CUptiResult {
+        (culib().cuptiActivityGetEnabledKinds)(subscriber, buffer, bufferSize, enabledKindsCount)
+    }
     pub unsafe fn cuptiActivityGetNextRecord(
         buffer: *mut u8,
         validBufferSizeBytes: usize,
@@ -37657,6 +40050,14 @@ mod loaded {
         dropped: *mut usize,
     ) -> CUptiResult {
         (culib().cuptiActivityGetNumDroppedRecords)(context, streamId, dropped)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivityGetStructSize(
+        activityKind: CUpti_ActivityKind,
+        version: u32,
+        activityStructSize: *mut usize,
+    ) -> CUptiResult {
+        (culib().cuptiActivityGetStructSize)(activityKind, version, activityStructSize)
     }
     pub unsafe fn cuptiActivityPopExternalCorrelationId(
         kind: CUpti_ExternalCorrelationKind,
@@ -37676,6 +40077,18 @@ mod loaded {
     ) -> CUptiResult {
         (culib().cuptiActivityRegisterCallbacks)(funcBufferRequested, funcBufferCompleted)
     }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivityRegisterCallbacks_v2(
+        subscriber: CUpti_SubscriberHandle,
+        funcBufferRequested: CUpti_BuffersCallbackRequestFunc_v2,
+        funcBufferCompleted: CUpti_BuffersCallbackCompleteFunc_v2,
+    ) -> CUptiResult {
+        (culib().cuptiActivityRegisterCallbacks_v2)(
+            subscriber,
+            funcBufferRequested,
+            funcBufferCompleted,
+        )
+    }
     #[cfg(any(
         feature = "cuda-11060",
         feature = "cuda-11070",
@@ -37690,7 +40103,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiActivityRegisterTimestampCallback(
         funcTimestamp: CUpti_TimestampCallbackFunc,
@@ -37703,6 +40117,15 @@ mod loaded {
         value: *mut ::core::ffi::c_void,
     ) -> CUptiResult {
         (culib().cuptiActivitySetAttribute)(attr, valueSize, value)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiActivitySetAttribute_v2(
+        subscriber: CUpti_SubscriberHandle,
+        attr: CUpti_ActivityAttribute,
+        valueSize: *mut usize,
+        value: *mut ::core::ffi::c_void,
+    ) -> CUptiResult {
+        (culib().cuptiActivitySetAttribute_v2)(subscriber, attr, valueSize, value)
     }
     pub unsafe fn cuptiComputeCapabilitySupported(
         major: ::core::ffi::c_int,
@@ -37990,6 +40413,22 @@ mod loaded {
     pub unsafe fn cuptiGetDeviceId(context: CUcontext, deviceId: *mut u32) -> CUptiResult {
         (culib().cuptiGetDeviceId)(context, deviceId)
     }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiGetEnabledCallbacks(
+        subscriber: CUpti_SubscriberHandle,
+        domain: CUpti_CallbackDomain,
+        buffer: *mut CUpti_CallbackId,
+        bufferSize: *mut u32,
+        enabledCallbacksCount: *mut u32,
+    ) -> CUptiResult {
+        (culib().cuptiGetEnabledCallbacks)(
+            subscriber,
+            domain,
+            buffer,
+            bufferSize,
+            enabledCallbacksCount,
+        )
+    }
     #[cfg(any(
         feature = "cuda-12020",
         feature = "cuda-12030",
@@ -37999,7 +40438,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiGetErrorMessage(
         result: CUptiResult,
@@ -38015,7 +40455,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuptiGetGraphExecId(graphExec: CUgraphExec, pId: *mut u32) -> CUptiResult {
         (culib().cuptiGetGraphExecId)(graphExec, pId)
@@ -38064,6 +40505,10 @@ mod loaded {
     }
     pub unsafe fn cuptiGetVersion(version: *mut u32) -> CUptiResult {
         (culib().cuptiGetVersion)(version)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cuptiIsTracingSessionRunning(isRunning: *mut u8) -> CUptiResult {
+        (culib().cuptiIsTracingSessionRunning)(isRunning)
     }
     pub unsafe fn cuptiKernelReplaySubscribeUpdate(
         updateFunc: CUpti_KernelReplayUpdateFunc,
@@ -38194,7 +40639,7 @@ mod loaded {
     ) -> CUptiResult {
         (culib().cuptiSubscribe)(subscriber, callback, userdata)
     }
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub unsafe fn cuptiSubscribe_v2(
         subscriber: *mut CUpti_SubscriberHandle,
         callback: CUpti_CallbackFunc,
@@ -38226,12 +40671,19 @@ mod loaded {
         pub cuptiActivityDisable: unsafe extern "C" fn(kind: CUpti_ActivityKind) -> CUptiResult,
         pub cuptiActivityDisableContext:
             unsafe extern "C" fn(context: CUcontext, kind: CUpti_ActivityKind) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivityDisable_v2: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
+            kind: CUpti_ActivityKind,
+            pActivityConfig: *mut CUpti_ActivityConfig,
+        ) -> CUptiResult,
         pub cuptiActivityEnable: unsafe extern "C" fn(kind: CUpti_ActivityKind) -> CUptiResult,
         #[cfg(any(
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityEnableAllSyncRecords: unsafe extern "C" fn(enable: u8) -> CUptiResult,
         #[cfg(any(
@@ -38239,7 +40691,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityEnableAllocationSource: unsafe extern "C" fn(enable: u8) -> CUptiResult,
         #[cfg(any(
@@ -38255,13 +40708,20 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityEnableAndDump:
             unsafe extern "C" fn(kind: CUpti_ActivityKind) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivityEnableAndDump_v2: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
+            kind: CUpti_ActivityKind,
+            activityConfig: *mut CUpti_ActivityConfig,
+        ) -> CUptiResult,
         pub cuptiActivityEnableContext:
             unsafe extern "C" fn(context: CUcontext, kind: CUpti_ActivityKind) -> CUptiResult,
-        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
         pub cuptiActivityEnableCudaEventDeviceTimestamps:
             unsafe extern "C" fn(enable: u8) -> CUptiResult,
         #[cfg(any(
@@ -38272,7 +40732,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityEnableDeviceGraph: unsafe extern "C" fn(enable: u8) -> CUptiResult,
         #[cfg(any(
@@ -38281,7 +40742,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityEnableDriverApi:
             unsafe extern "C" fn(cbid: CUpti_CallbackId, enable: u8) -> CUptiResult,
@@ -38289,7 +40751,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityEnableHWTrace: unsafe extern "C" fn(enable: u8) -> CUptiResult,
         pub cuptiActivityEnableLatencyTimestamps: unsafe extern "C" fn(enable: u8) -> CUptiResult,
@@ -38300,10 +40763,17 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityEnableRuntimeApi:
             unsafe extern "C" fn(cbid: CUpti_CallbackId, enable: u8) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivityEnable_v2: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
+            kind: CUpti_ActivityKind,
+            pActivityConfig: *mut CUpti_ActivityConfig,
+        ) -> CUptiResult,
         pub cuptiActivityFlush:
             unsafe extern "C" fn(context: CUcontext, streamId: u32, flag: u32) -> CUptiResult,
         pub cuptiActivityFlushAll: unsafe extern "C" fn(flag: u32) -> CUptiResult,
@@ -38312,6 +40782,20 @@ mod loaded {
             attr: CUpti_ActivityAttribute,
             valueSize: *mut usize,
             value: *mut ::core::ffi::c_void,
+        ) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivityGetAttribute_v2: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
+            attr: CUpti_ActivityAttribute,
+            valueSize: *mut usize,
+            value: *mut ::core::ffi::c_void,
+        ) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivityGetEnabledKinds: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
+            buffer: *mut CUpti_ActivityKind,
+            bufferSize: *mut u32,
+            enabledKindsCount: *mut u32,
         ) -> CUptiResult,
         pub cuptiActivityGetNextRecord: unsafe extern "C" fn(
             buffer: *mut u8,
@@ -38323,6 +40807,12 @@ mod loaded {
             streamId: u32,
             dropped: *mut usize,
         ) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivityGetStructSize: unsafe extern "C" fn(
+            activityKind: CUpti_ActivityKind,
+            version: u32,
+            activityStructSize: *mut usize,
+        ) -> CUptiResult,
         pub cuptiActivityPopExternalCorrelationId: unsafe extern "C" fn(
             kind: CUpti_ExternalCorrelationKind,
             lastId: *mut u64,
@@ -38332,6 +40822,12 @@ mod loaded {
         pub cuptiActivityRegisterCallbacks: unsafe extern "C" fn(
             funcBufferRequested: CUpti_BuffersCallbackRequestFunc,
             funcBufferCompleted: CUpti_BuffersCallbackCompleteFunc,
+        ) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivityRegisterCallbacks_v2: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
+            funcBufferRequested: CUpti_BuffersCallbackRequestFunc_v2,
+            funcBufferCompleted: CUpti_BuffersCallbackCompleteFunc_v2,
         ) -> CUptiResult,
         #[cfg(any(
             feature = "cuda-11060",
@@ -38347,11 +40843,19 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiActivityRegisterTimestampCallback:
             unsafe extern "C" fn(funcTimestamp: CUpti_TimestampCallbackFunc) -> CUptiResult,
         pub cuptiActivitySetAttribute: unsafe extern "C" fn(
+            attr: CUpti_ActivityAttribute,
+            valueSize: *mut usize,
+            value: *mut ::core::ffi::c_void,
+        ) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiActivitySetAttribute_v2: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
             attr: CUpti_ActivityAttribute,
             valueSize: *mut usize,
             value: *mut ::core::ffi::c_void,
@@ -38533,6 +41037,14 @@ mod loaded {
             unsafe extern "C" fn(context: CUcontext, contextId: *mut u32) -> CUptiResult,
         pub cuptiGetDeviceId:
             unsafe extern "C" fn(context: CUcontext, deviceId: *mut u32) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiGetEnabledCallbacks: unsafe extern "C" fn(
+            subscriber: CUpti_SubscriberHandle,
+            domain: CUpti_CallbackDomain,
+            buffer: *mut CUpti_CallbackId,
+            bufferSize: *mut u32,
+            enabledCallbacksCount: *mut u32,
+        ) -> CUptiResult,
         #[cfg(any(
             feature = "cuda-12020",
             feature = "cuda-12030",
@@ -38542,7 +41054,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiGetErrorMessage: unsafe extern "C" fn(
             result: CUptiResult,
@@ -38556,7 +41069,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuptiGetGraphExecId:
             unsafe extern "C" fn(graphExec: CUgraphExec, pId: *mut u32) -> CUptiResult,
@@ -38585,6 +41099,8 @@ mod loaded {
             unsafe extern "C" fn(type_: *mut CUpti_ActivityThreadIdType) -> CUptiResult,
         pub cuptiGetTimestamp: unsafe extern "C" fn(timestamp: *mut u64) -> CUptiResult,
         pub cuptiGetVersion: unsafe extern "C" fn(version: *mut u32) -> CUptiResult,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cuptiIsTracingSessionRunning: unsafe extern "C" fn(isRunning: *mut u8) -> CUptiResult,
         pub cuptiKernelReplaySubscribeUpdate: unsafe extern "C" fn(
             updateFunc: CUpti_KernelReplayUpdateFunc,
             customData: *mut ::core::ffi::c_void,
@@ -38658,7 +41174,7 @@ mod loaded {
             callback: CUpti_CallbackFunc,
             userdata: *mut ::core::ffi::c_void,
         ) -> CUptiResult,
-        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
         pub cuptiSubscribe_v2: unsafe extern "C" fn(
             subscriber: *mut CUpti_SubscriberHandle,
             callback: CUpti_CallbackFunc,
@@ -38701,6 +41217,11 @@ mod loaded {
                 .get(b"cuptiActivityDisableContext\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivityDisable_v2 = __library
+                .get(b"cuptiActivityDisable_v2\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
             let cuptiActivityEnable = __library
                 .get(b"cuptiActivityEnable\0")
                 .map(|sym| *sym)
@@ -38709,7 +41230,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityEnableAllSyncRecords = __library
                 .get(b"cuptiActivityEnableAllSyncRecords\0")
@@ -38720,7 +41242,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityEnableAllocationSource = __library
                 .get(b"cuptiActivityEnableAllocationSource\0")
@@ -38739,17 +41262,23 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityEnableAndDump = __library
                 .get(b"cuptiActivityEnableAndDump\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivityEnableAndDump_v2 = __library
+                .get(b"cuptiActivityEnableAndDump_v2\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             let cuptiActivityEnableContext = __library
                 .get(b"cuptiActivityEnableContext\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             let cuptiActivityEnableCudaEventDeviceTimestamps = __library
                 .get(b"cuptiActivityEnableCudaEventDeviceTimestamps\0")
                 .map(|sym| *sym)
@@ -38762,7 +41291,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityEnableDeviceGraph = __library
                 .get(b"cuptiActivityEnableDeviceGraph\0")
@@ -38774,7 +41304,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityEnableDriverApi = __library
                 .get(b"cuptiActivityEnableDriverApi\0")
@@ -38784,7 +41315,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityEnableHWTrace = __library
                 .get(b"cuptiActivityEnableHWTrace\0")
@@ -38804,10 +41336,16 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityEnableRuntimeApi = __library
                 .get(b"cuptiActivityEnableRuntimeApi\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivityEnable_v2 = __library
+                .get(b"cuptiActivityEnable_v2\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             let cuptiActivityFlush = __library
@@ -38826,12 +41364,27 @@ mod loaded {
                 .get(b"cuptiActivityGetAttribute\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivityGetAttribute_v2 = __library
+                .get(b"cuptiActivityGetAttribute_v2\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivityGetEnabledKinds = __library
+                .get(b"cuptiActivityGetEnabledKinds\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
             let cuptiActivityGetNextRecord = __library
                 .get(b"cuptiActivityGetNextRecord\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             let cuptiActivityGetNumDroppedRecords = __library
                 .get(b"cuptiActivityGetNumDroppedRecords\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivityGetStructSize = __library
+                .get(b"cuptiActivityGetStructSize\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             let cuptiActivityPopExternalCorrelationId = __library
@@ -38844,6 +41397,11 @@ mod loaded {
                 .expect("Expected symbol in library");
             let cuptiActivityRegisterCallbacks = __library
                 .get(b"cuptiActivityRegisterCallbacks\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivityRegisterCallbacks_v2 = __library
+                .get(b"cuptiActivityRegisterCallbacks_v2\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             #[cfg(any(
@@ -38860,7 +41418,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiActivityRegisterTimestampCallback = __library
                 .get(b"cuptiActivityRegisterTimestampCallback\0")
@@ -38868,6 +41427,11 @@ mod loaded {
                 .expect("Expected symbol in library");
             let cuptiActivitySetAttribute = __library
                 .get(b"cuptiActivitySetAttribute\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiActivitySetAttribute_v2 = __library
+                .get(b"cuptiActivitySetAttribute_v2\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             let cuptiComputeCapabilitySupported = __library
@@ -39055,6 +41619,11 @@ mod loaded {
                 .get(b"cuptiGetDeviceId\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiGetEnabledCallbacks = __library
+                .get(b"cuptiGetEnabledCallbacks\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
             #[cfg(any(
                 feature = "cuda-12020",
                 feature = "cuda-12030",
@@ -39064,7 +41633,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiGetErrorMessage = __library
                 .get(b"cuptiGetErrorMessage\0")
@@ -39078,7 +41648,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuptiGetGraphExecId = __library
                 .get(b"cuptiGetGraphExecId\0")
@@ -39126,6 +41697,11 @@ mod loaded {
                 .expect("Expected symbol in library");
             let cuptiGetVersion = __library
                 .get(b"cuptiGetVersion\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cuptiIsTracingSessionRunning = __library
+                .get(b"cuptiIsTracingSessionRunning\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             let cuptiKernelReplaySubscribeUpdate = __library
@@ -39184,7 +41760,7 @@ mod loaded {
                 .get(b"cuptiSubscribe\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             let cuptiSubscribe_v2 = __library
                 .get(b"cuptiSubscribe_v2\0")
                 .map(|sym| *sym)
@@ -39203,12 +41779,15 @@ mod loaded {
                 cuptiActivityConfigureUnifiedMemoryCounter,
                 cuptiActivityDisable,
                 cuptiActivityDisableContext,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivityDisable_v2,
                 cuptiActivityEnable,
                 #[cfg(any(
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityEnableAllSyncRecords,
                 #[cfg(any(
@@ -39216,7 +41795,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityEnableAllocationSource,
                 #[cfg(any(
@@ -39232,11 +41812,18 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityEnableAndDump,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivityEnableAndDump_v2,
                 cuptiActivityEnableContext,
-                #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+                #[cfg(any(
+                    feature = "cuda-13000",
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
+                ))]
                 cuptiActivityEnableCudaEventDeviceTimestamps,
                 #[cfg(any(
                     feature = "cuda-12030",
@@ -39246,7 +41833,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityEnableDeviceGraph,
                 #[cfg(any(
@@ -39255,14 +41843,16 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityEnableDriverApi,
                 #[cfg(any(
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityEnableHWTrace,
                 cuptiActivityEnableLatencyTimestamps,
@@ -39273,18 +41863,29 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityEnableRuntimeApi,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivityEnable_v2,
                 cuptiActivityFlush,
                 cuptiActivityFlushAll,
                 cuptiActivityFlushPeriod,
                 cuptiActivityGetAttribute,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivityGetAttribute_v2,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivityGetEnabledKinds,
                 cuptiActivityGetNextRecord,
                 cuptiActivityGetNumDroppedRecords,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivityGetStructSize,
                 cuptiActivityPopExternalCorrelationId,
                 cuptiActivityPushExternalCorrelationId,
                 cuptiActivityRegisterCallbacks,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivityRegisterCallbacks_v2,
                 #[cfg(any(
                     feature = "cuda-11060",
                     feature = "cuda-11070",
@@ -39299,10 +41900,13 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiActivityRegisterTimestampCallback,
                 cuptiActivitySetAttribute,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiActivitySetAttribute_v2,
                 cuptiComputeCapabilitySupported,
                 cuptiDeviceEnumEventDomains,
                 cuptiDeviceEnumMetrics,
@@ -39356,6 +41960,8 @@ mod loaded {
                 cuptiGetCallbackState,
                 cuptiGetContextId,
                 cuptiGetDeviceId,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiGetEnabledCallbacks,
                 #[cfg(any(
                     feature = "cuda-12020",
                     feature = "cuda-12030",
@@ -39365,7 +41971,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiGetErrorMessage,
                 #[cfg(any(
@@ -39376,7 +41983,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuptiGetGraphExecId,
                 cuptiGetGraphId,
@@ -39390,6 +41998,8 @@ mod loaded {
                 cuptiGetThreadIdType,
                 cuptiGetTimestamp,
                 cuptiGetVersion,
+                #[cfg(any(feature = "cuda-13020"))]
+                cuptiIsTracingSessionRunning,
                 cuptiKernelReplaySubscribeUpdate,
                 cuptiMetricCreateEventGroupSets,
                 cuptiMetricEnumEvents,
@@ -39404,7 +42014,11 @@ mod loaded {
                 cuptiSetEventCollectionMode,
                 cuptiSetThreadIdType,
                 cuptiSubscribe,
-                #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+                #[cfg(any(
+                    feature = "cuda-13000",
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
+                ))]
                 cuptiSubscribe_v2,
                 cuptiSupportedDomains,
                 cuptiUnsubscribe,

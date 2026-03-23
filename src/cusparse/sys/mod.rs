@@ -23,7 +23,8 @@ pub use self::libraryPropertyType_t as libraryPropertyType;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type FILE = _IO_FILE;
 #[cfg(any(
@@ -41,7 +42,8 @@ pub type FILE = _IO_FILE;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type _IO_lock_t = ::core::ffi::c_void;
 #[cfg(any(
@@ -59,7 +61,8 @@ pub type _IO_lock_t = ::core::ffi::c_void;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type __off64_t = ::core::ffi::c_long;
 #[cfg(any(
@@ -77,7 +80,8 @@ pub type __off64_t = ::core::ffi::c_long;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type __off_t = ::core::ffi::c_long;
 pub type bsric02Info_t = *mut bsric02Info;
@@ -127,7 +131,8 @@ pub type cusparseColorInfo_t = *mut cusparseColorInfo;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cusparseConstDnMatDescr_t = *const cusparseDnMatDescr;
 #[cfg(any(
@@ -141,7 +146,8 @@ pub type cusparseConstDnMatDescr_t = *const cusparseDnMatDescr;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cusparseConstDnVecDescr_t = *const cusparseDnVecDescr;
 #[cfg(any(
@@ -155,7 +161,8 @@ pub type cusparseConstDnVecDescr_t = *const cusparseDnVecDescr;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cusparseConstSpMatDescr_t = *const cusparseSpMatDescr;
 #[cfg(any(
@@ -169,7 +176,8 @@ pub type cusparseConstSpMatDescr_t = *const cusparseSpMatDescr;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cusparseConstSpVecDescr_t = *const cusparseSpVecDescr;
 pub type cusparseDnMatDescr_t = *mut cusparseDnMatDescr;
@@ -190,7 +198,8 @@ pub type cusparseHandle_t = *mut cusparseContext;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cusparseLoggerCallback_t = ::core::option::Option<
     unsafe extern "C" fn(
@@ -216,7 +225,8 @@ pub type cusparseSpGEMMDescr_t = *mut cusparseSpGEMMDescr;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cusparseSpMMOpPlan_t = *mut cusparseSpMMOpPlan;
 pub type cusparseSpMatDescr_t = *mut cusparseSpMatDescr;
@@ -310,7 +320,8 @@ pub enum cudaDataType_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -398,7 +409,8 @@ pub enum cusparseCsr2CscAlg_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -463,7 +475,8 @@ pub enum cusparseFormat_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -558,7 +571,8 @@ pub enum cusparseSpGEMMAlg_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -616,7 +630,8 @@ pub enum cusparseSpMMAlg_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -647,7 +662,8 @@ pub enum cusparseSpMMAlg_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -700,7 +716,7 @@ pub enum cusparseSpMVAlg_t {
     CUSPARSE_SPMV_COO_ALG2 = 4,
     CUSPARSE_SPMV_SELL_ALG1 = 5,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum cusparseSpMVAlg_t {
@@ -730,7 +746,8 @@ pub enum cusparseSpSMAlg_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -753,7 +770,8 @@ pub enum cusparseSpSVAlg_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -809,7 +827,8 @@ pub struct CUstream_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -859,7 +878,8 @@ pub struct _IO_FILE {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -881,7 +901,8 @@ pub struct _IO_codecvt {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -903,7 +924,8 @@ pub struct _IO_marker {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -1026,7 +1048,8 @@ pub struct cusparseSpGEMMDescr {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -1076,7 +1099,8 @@ pub struct pruneInfo {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 impl cudaDataType_t {
     pub const CUDA_R_8F_UE4M3: cudaDataType_t = cudaDataType_t::CUDA_R_8F_E4M3;
@@ -1092,7 +1116,8 @@ impl cudaDataType_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 impl cusparseCsr2CscAlg_t {
     pub const CUSPARSE_CSR2CSC_ALG1: cusparseCsr2CscAlg_t =
@@ -1217,7 +1242,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseAxpby(
         handle: cusparseHandle_t,
@@ -1255,7 +1281,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseBsrSetStridedBatch(
         spMatDescr: cusparseSpMatDescr_t,
@@ -2376,7 +2403,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstBlockedEllGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -2401,7 +2429,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstCooGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -2426,7 +2455,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstCscGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -2452,7 +2482,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstCsrGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -2478,7 +2509,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstDnMatGet(
         dnMatDescr: cusparseConstDnMatDescr_t,
@@ -2500,7 +2532,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstDnMatGetValues(
         dnMatDescr: cusparseConstDnMatDescr_t,
@@ -2517,7 +2550,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstDnVecGet(
         dnVecDescr: cusparseConstDnVecDescr_t,
@@ -2536,7 +2570,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstDnVecGetValues(
         dnVecDescr: cusparseConstDnVecDescr_t,
@@ -2553,7 +2588,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstSpMatGetValues(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -2570,7 +2606,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstSpVecGet(
         spVecDescr: cusparseConstSpVecDescr_t,
@@ -2593,7 +2630,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseConstSpVecGetValues(
         spVecDescr: cusparseConstSpVecDescr_t,
@@ -2728,7 +2766,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateBsr(
         spMatDescr: *mut cusparseSpMatDescr_t,
@@ -2762,7 +2801,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstBlockedEll(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -2786,7 +2826,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstBsr(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -2815,7 +2856,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstCoo(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -2840,7 +2882,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstCsc(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -2866,7 +2909,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstCsr(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -2892,7 +2936,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstDnMat(
         dnMatDescr: *mut cusparseConstDnMatDescr_t,
@@ -2914,7 +2959,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstDnVec(
         dnVecDescr: *mut cusparseConstDnVecDescr_t,
@@ -2932,7 +2978,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstSlicedEll(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -2960,7 +3007,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateConstSpVec(
         spVecDescr: *mut cusparseConstSpVecDescr_t,
@@ -3087,7 +3135,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCreateSlicedEll(
         spMatDescr: *mut cusparseSpMatDescr_t,
@@ -3127,7 +3176,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseCscGet(
         spMatDescr: cusparseSpMatDescr_t,
@@ -4122,7 +4172,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDenseToSparse_analysis(
         handle: cusparseHandle_t,
@@ -4156,7 +4207,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDenseToSparse_bufferSize(
         handle: cusparseHandle_t,
@@ -4197,7 +4249,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDenseToSparse_convert(
         handle: cusparseHandle_t,
@@ -4258,7 +4311,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDestroyDnMat(dnMatDescr: cusparseConstDnMatDescr_t) -> cusparseStatus_t;
     #[cfg(any(
@@ -4280,7 +4334,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDestroyDnVec(dnVecDescr: cusparseConstDnVecDescr_t) -> cusparseStatus_t;
     pub fn cusparseDestroyMatDescr(descrA: cusparseMatDescr_t) -> cusparseStatus_t;
@@ -4304,7 +4359,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDestroySpMat(spMatDescr: cusparseConstSpMatDescr_t) -> cusparseStatus_t;
     #[cfg(any(
@@ -4326,7 +4382,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDestroySpVec(spVecDescr: cusparseConstSpVecDescr_t) -> cusparseStatus_t;
     pub fn cusparseDgebsr2csr(
@@ -4633,7 +4690,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseDnMatGetStridedBatch(
         dnMatDescr: cusparseConstDnMatDescr_t,
@@ -4919,7 +4977,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseGather(
         handle: cusparseHandle_t,
@@ -4975,7 +5034,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseLoggerForceDisable() -> cusparseStatus_t;
     #[cfg(any(
@@ -4993,7 +5053,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseLoggerOpenFile(logFile: *const ::core::ffi::c_char) -> cusparseStatus_t;
     #[cfg(any(
@@ -5011,7 +5072,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseLoggerSetCallback(callback: cusparseLoggerCallback_t) -> cusparseStatus_t;
     #[cfg(any(
@@ -5029,7 +5091,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseLoggerSetFile(file: *mut FILE) -> cusparseStatus_t;
     #[cfg(any(
@@ -5047,7 +5110,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseLoggerSetLevel(level: ::core::ffi::c_int) -> cusparseStatus_t;
     #[cfg(any(
@@ -5065,7 +5129,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseLoggerSetMask(mask: ::core::ffi::c_int) -> cusparseStatus_t;
     pub fn cusparseRot(
@@ -5106,7 +5171,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSDDMM(
         handle: cusparseHandle_t,
@@ -5152,7 +5218,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSDDMM_bufferSize(
         handle: cusparseHandle_t,
@@ -5198,7 +5265,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSDDMM_preprocess(
         handle: cusparseHandle_t,
@@ -5516,7 +5584,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseScatter(
         handle: cusparseHandle_t,
@@ -6410,7 +6479,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMM_compute(
         handle: cusparseHandle_t,
@@ -6458,7 +6528,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMM_copy(
         handle: cusparseHandle_t,
@@ -6486,7 +6557,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMM_estimateMemory(
         handle: cusparseHandle_t,
@@ -6516,7 +6588,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMM_getNumProducts(
         spgemmDescr: cusparseSpGEMMDescr_t,
@@ -6555,7 +6628,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMM_workEstimation(
         handle: cusparseHandle_t,
@@ -6603,7 +6677,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMMreuse_compute(
         handle: cusparseHandle_t,
@@ -6648,7 +6723,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMMreuse_copy(
         handle: cusparseHandle_t,
@@ -6696,7 +6772,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMMreuse_nnz(
         handle: cusparseHandle_t,
@@ -6744,7 +6821,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpGEMMreuse_workEstimation(
         handle: cusparseHandle_t,
@@ -6789,7 +6867,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMM(
         handle: cusparseHandle_t,
@@ -6819,7 +6898,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMMOp(
         plan: cusparseSpMMOpPlan_t,
@@ -6879,7 +6959,7 @@ extern "C" {
         epilogueBufferSize: usize,
         SpMMWorkspaceSize: *mut usize,
     ) -> cusparseStatus_t;
-    #[cfg(any(feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
     pub fn cusparseSpMMOp_createPlan(
         handle: cusparseHandle_t,
         plan: *mut cusparseSpMMOpPlan_t,
@@ -6913,7 +6993,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMMOp_destroyPlan(plan: cusparseSpMMOpPlan_t) -> cusparseStatus_t;
     #[cfg(any(
@@ -6947,7 +7028,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMM_bufferSize(
         handle: cusparseHandle_t,
@@ -6993,7 +7075,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMM_preprocess(
         handle: cusparseHandle_t,
@@ -7038,7 +7121,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMV(
         handle: cusparseHandle_t,
@@ -7082,7 +7166,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMV_bufferSize(
         handle: cusparseHandle_t,
@@ -7103,7 +7188,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMV_preprocess(
         handle: cusparseHandle_t,
@@ -7141,7 +7227,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMatGetAttribute(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -7171,7 +7258,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMatGetFormat(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -7199,7 +7287,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMatGetIndexBase(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -7229,7 +7318,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMatGetSize(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -7259,7 +7349,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpMatGetStridedBatch(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -7321,7 +7412,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSM_analysis(
         handle: cusparseHandle_t,
@@ -7367,7 +7459,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSM_bufferSize(
         handle: cusparseHandle_t,
@@ -7414,7 +7507,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSM_solve(
         handle: cusparseHandle_t,
@@ -7435,7 +7529,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSM_updateMatrix(
         handle: cusparseHandle_t,
@@ -7473,7 +7568,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSV_analysis(
         handle: cusparseHandle_t,
@@ -7517,7 +7613,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSV_bufferSize(
         handle: cusparseHandle_t,
@@ -7562,7 +7659,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSV_solve(
         handle: cusparseHandle_t,
@@ -7585,7 +7683,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpSV_updateMatrix(
         handle: cusparseHandle_t,
@@ -7620,7 +7719,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpVV(
         handle: cusparseHandle_t,
@@ -7658,7 +7758,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpVV_bufferSize(
         handle: cusparseHandle_t,
@@ -7701,7 +7802,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSpVecGetIndexBase(
         spVecDescr: cusparseConstSpVecDescr_t,
@@ -7747,7 +7849,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSparseToDense(
         handle: cusparseHandle_t,
@@ -7781,7 +7884,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusparseSparseToDense_bufferSize(
         handle: cusparseHandle_t,
@@ -9377,7 +9481,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseAxpby(
         handle: cusparseHandle_t,
@@ -9438,7 +9543,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseBsrSetStridedBatch(
         spMatDescr: cusparseSpMatDescr_t,
@@ -11484,7 +11590,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstBlockedEllGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -11522,7 +11629,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstCooGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -11552,7 +11660,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstCscGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -11592,7 +11701,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstCsrGet(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -11632,7 +11742,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstDnMatGet(
         dnMatDescr: cusparseConstDnMatDescr_t,
@@ -11656,7 +11767,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstDnMatGetValues(
         dnMatDescr: cusparseConstDnMatDescr_t,
@@ -11675,7 +11787,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstDnVecGet(
         dnVecDescr: cusparseConstDnVecDescr_t,
@@ -11696,7 +11809,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstDnVecGetValues(
         dnVecDescr: cusparseConstDnVecDescr_t,
@@ -11715,7 +11829,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstSpMatGetValues(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -11734,7 +11849,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstSpVecGet(
         spVecDescr: cusparseConstSpVecDescr_t,
@@ -11761,7 +11877,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseConstSpVecGetValues(
         spVecDescr: cusparseConstSpVecDescr_t,
@@ -11971,7 +12088,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateBsr(
         spMatDescr: *mut cusparseSpMatDescr_t,
@@ -12032,7 +12150,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstBlockedEll(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -12069,7 +12188,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstBsr(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -12115,7 +12235,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstCoo(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -12145,7 +12266,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstCsc(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -12185,7 +12307,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstCsr(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -12225,7 +12348,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstDnMat(
         dnMatDescr: *mut cusparseConstDnMatDescr_t,
@@ -12249,7 +12373,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstDnVec(
         dnVecDescr: *mut cusparseConstDnVecDescr_t,
@@ -12269,7 +12394,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstSlicedEll(
         spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -12313,7 +12439,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateConstSpVec(
         spVecDescr: *mut cusparseConstSpVecDescr_t,
@@ -12503,7 +12630,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCreateSlicedEll(
         spMatDescr: *mut cusparseSpMatDescr_t,
@@ -12563,7 +12691,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseCscGet(
         spMatDescr: cusparseSpMatDescr_t,
@@ -14381,7 +14510,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDenseToSparse_analysis(
         handle: cusparseHandle_t,
@@ -14419,7 +14549,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDenseToSparse_bufferSize(
         handle: cusparseHandle_t,
@@ -14466,7 +14597,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDenseToSparse_convert(
         handle: cusparseHandle_t,
@@ -14555,7 +14687,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDestroyDnMat(dnMatDescr: cusparseConstDnMatDescr_t) -> cusparseStatus_t {
         (culib().cusparseDestroyDnMat)(dnMatDescr)
@@ -14581,7 +14714,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDestroyDnVec(dnVecDescr: cusparseConstDnVecDescr_t) -> cusparseStatus_t {
         (culib().cusparseDestroyDnVec)(dnVecDescr)
@@ -14613,7 +14747,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDestroySpMat(spMatDescr: cusparseConstSpMatDescr_t) -> cusparseStatus_t {
         (culib().cusparseDestroySpMat)(spMatDescr)
@@ -14639,7 +14774,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDestroySpVec(spVecDescr: cusparseConstSpVecDescr_t) -> cusparseStatus_t {
         (culib().cusparseDestroySpVec)(spVecDescr)
@@ -15126,7 +15262,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseDnMatGetStridedBatch(
         dnMatDescr: cusparseConstDnMatDescr_t,
@@ -15643,7 +15780,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseGather(
         handle: cusparseHandle_t,
@@ -15723,7 +15861,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseLoggerForceDisable() -> cusparseStatus_t {
         (culib().cusparseLoggerForceDisable)()
@@ -15743,7 +15882,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseLoggerOpenFile(logFile: *const ::core::ffi::c_char) -> cusparseStatus_t {
         (culib().cusparseLoggerOpenFile)(logFile)
@@ -15763,7 +15903,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseLoggerSetCallback(
         callback: cusparseLoggerCallback_t,
@@ -15785,7 +15926,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseLoggerSetFile(file: *mut FILE) -> cusparseStatus_t {
         (culib().cusparseLoggerSetFile)(file)
@@ -15805,7 +15947,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseLoggerSetLevel(level: ::core::ffi::c_int) -> cusparseStatus_t {
         (culib().cusparseLoggerSetLevel)(level)
@@ -15825,7 +15968,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseLoggerSetMask(mask: ::core::ffi::c_int) -> cusparseStatus_t {
         (culib().cusparseLoggerSetMask)(mask)
@@ -15884,7 +16028,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSDDMM(
         handle: cusparseHandle_t,
@@ -15958,7 +16103,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSDDMM_bufferSize(
         handle: cusparseHandle_t,
@@ -16032,7 +16178,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSDDMM_preprocess(
         handle: cusparseHandle_t,
@@ -16643,7 +16790,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseScatter(
         handle: cusparseHandle_t,
@@ -18212,7 +18360,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMM_compute(
         handle: cusparseHandle_t,
@@ -18290,7 +18439,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMM_copy(
         handle: cusparseHandle_t,
@@ -18338,7 +18488,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMM_estimateMemory(
         handle: cusparseHandle_t,
@@ -18386,7 +18537,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMM_getNumProducts(
         spgemmDescr: cusparseSpGEMMDescr_t,
@@ -18443,7 +18595,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMM_workEstimation(
         handle: cusparseHandle_t,
@@ -18521,7 +18674,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMMreuse_compute(
         handle: cusparseHandle_t,
@@ -18593,7 +18747,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMMreuse_copy(
         handle: cusparseHandle_t,
@@ -18671,7 +18826,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMMreuse_nnz(
         handle: cusparseHandle_t,
@@ -18749,7 +18905,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpGEMMreuse_workEstimation(
         handle: cusparseHandle_t,
@@ -18821,7 +18978,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMM(
         handle: cusparseHandle_t,
@@ -18865,7 +19023,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMMOp(
         plan: cusparseSpMMOpPlan_t,
@@ -18965,7 +19124,7 @@ mod loaded {
             SpMMWorkspaceSize,
         )
     }
-    #[cfg(any(feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
     pub unsafe fn cusparseSpMMOp_createPlan(
         handle: cusparseHandle_t,
         plan: *mut cusparseSpMMOpPlan_t,
@@ -19018,7 +19177,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMMOp_destroyPlan(plan: cusparseSpMMOpPlan_t) -> cusparseStatus_t {
         (culib().cusparseSpMMOp_destroyPlan)(plan)
@@ -19068,7 +19228,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMM_bufferSize(
         handle: cusparseHandle_t,
@@ -19142,7 +19303,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMM_preprocess(
         handle: cusparseHandle_t,
@@ -19214,7 +19376,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMV(
         handle: cusparseHandle_t,
@@ -19284,7 +19447,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMV_bufferSize(
         handle: cusparseHandle_t,
@@ -19318,7 +19482,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMV_preprocess(
         handle: cusparseHandle_t,
@@ -19371,7 +19536,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMatGetAttribute(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -19405,7 +19571,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMatGetFormat(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -19437,7 +19604,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMatGetIndexBase(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -19471,7 +19639,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMatGetSize(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -19505,7 +19674,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpMatGetStridedBatch(
         spMatDescr: cusparseConstSpMatDescr_t,
@@ -19591,7 +19761,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSM_analysis(
         handle: cusparseHandle_t,
@@ -19665,7 +19836,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSM_bufferSize(
         handle: cusparseHandle_t,
@@ -19743,7 +19915,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSM_solve(
         handle: cusparseHandle_t,
@@ -19777,7 +19950,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSM_updateMatrix(
         handle: cusparseHandle_t,
@@ -19830,7 +20004,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSV_analysis(
         handle: cusparseHandle_t,
@@ -19900,7 +20075,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSV_bufferSize(
         handle: cusparseHandle_t,
@@ -19974,7 +20150,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSV_solve(
         handle: cusparseHandle_t,
@@ -20009,7 +20186,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpSV_updateMatrix(
         handle: cusparseHandle_t,
@@ -20048,7 +20226,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpVV(
         handle: cusparseHandle_t,
@@ -20090,7 +20269,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpVV_bufferSize(
         handle: cusparseHandle_t,
@@ -20141,7 +20321,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSpVecGetIndexBase(
         spVecDescr: cusparseConstSpVecDescr_t,
@@ -20197,7 +20378,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSparseToDense(
         handle: cusparseHandle_t,
@@ -20235,7 +20417,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusparseSparseToDense_bufferSize(
         handle: cusparseHandle_t,
@@ -23093,7 +23276,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseAxpby: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -23131,7 +23315,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseBsrSetStridedBatch: unsafe extern "C" fn(
             spMatDescr: cusparseSpMatDescr_t,
@@ -24255,7 +24440,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstBlockedEllGet: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -24280,7 +24466,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstCooGet: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -24305,7 +24492,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstCscGet: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -24331,7 +24519,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstCsrGet: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -24357,7 +24546,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstDnMatGet: unsafe extern "C" fn(
             dnMatDescr: cusparseConstDnMatDescr_t,
@@ -24379,7 +24569,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstDnMatGetValues: unsafe extern "C" fn(
             dnMatDescr: cusparseConstDnMatDescr_t,
@@ -24396,7 +24587,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstDnVecGet: unsafe extern "C" fn(
             dnVecDescr: cusparseConstDnVecDescr_t,
@@ -24415,7 +24607,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstDnVecGetValues: unsafe extern "C" fn(
             dnVecDescr: cusparseConstDnVecDescr_t,
@@ -24432,7 +24625,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstSpMatGetValues: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -24449,7 +24643,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstSpVecGet: unsafe extern "C" fn(
             spVecDescr: cusparseConstSpVecDescr_t,
@@ -24472,7 +24667,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseConstSpVecGetValues: unsafe extern "C" fn(
             spVecDescr: cusparseConstSpVecDescr_t,
@@ -24607,7 +24803,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateBsr: unsafe extern "C" fn(
             spMatDescr: *mut cusparseSpMatDescr_t,
@@ -24646,7 +24843,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstBlockedEll: unsafe extern "C" fn(
             spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -24670,7 +24868,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstBsr: unsafe extern "C" fn(
             spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -24699,7 +24898,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstCoo: unsafe extern "C" fn(
             spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -24724,7 +24924,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstCsc: unsafe extern "C" fn(
             spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -24750,7 +24951,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstCsr: unsafe extern "C" fn(
             spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -24776,7 +24978,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstDnMat: unsafe extern "C" fn(
             dnMatDescr: *mut cusparseConstDnMatDescr_t,
@@ -24798,7 +25001,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstDnVec: unsafe extern "C" fn(
             dnVecDescr: *mut cusparseConstDnVecDescr_t,
@@ -24816,7 +25020,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstSlicedEll: unsafe extern "C" fn(
             spMatDescr: *mut cusparseConstSpMatDescr_t,
@@ -24844,7 +25049,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateConstSpVec: unsafe extern "C" fn(
             spVecDescr: *mut cusparseConstSpVecDescr_t,
@@ -24979,7 +25185,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCreateSlicedEll: unsafe extern "C" fn(
             spMatDescr: *mut cusparseSpMatDescr_t,
@@ -25019,7 +25226,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseCscGet: unsafe extern "C" fn(
             spMatDescr: cusparseSpMatDescr_t,
@@ -26014,7 +26222,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDenseToSparse_analysis: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -26048,7 +26257,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDenseToSparse_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -26089,7 +26299,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDenseToSparse_convert: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -26158,7 +26369,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDestroyDnMat:
             unsafe extern "C" fn(dnMatDescr: cusparseConstDnMatDescr_t) -> cusparseStatus_t,
@@ -26182,7 +26394,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDestroyDnVec:
             unsafe extern "C" fn(dnVecDescr: cusparseConstDnVecDescr_t) -> cusparseStatus_t,
@@ -26209,7 +26422,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDestroySpMat:
             unsafe extern "C" fn(spMatDescr: cusparseConstSpMatDescr_t) -> cusparseStatus_t,
@@ -26233,7 +26447,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDestroySpVec:
             unsafe extern "C" fn(spVecDescr: cusparseConstSpVecDescr_t) -> cusparseStatus_t,
@@ -26544,7 +26759,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseDnMatGetStridedBatch: unsafe extern "C" fn(
             dnMatDescr: cusparseConstDnMatDescr_t,
@@ -26834,7 +27050,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseGather: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -26896,7 +27113,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseLoggerForceDisable: unsafe extern "C" fn() -> cusparseStatus_t,
         #[cfg(any(
@@ -26914,7 +27132,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseLoggerOpenFile:
             unsafe extern "C" fn(logFile: *const ::core::ffi::c_char) -> cusparseStatus_t,
@@ -26933,7 +27152,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseLoggerSetCallback:
             unsafe extern "C" fn(callback: cusparseLoggerCallback_t) -> cusparseStatus_t,
@@ -26952,7 +27172,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseLoggerSetFile: unsafe extern "C" fn(file: *mut FILE) -> cusparseStatus_t,
         #[cfg(any(
@@ -26970,7 +27191,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseLoggerSetLevel:
             unsafe extern "C" fn(level: ::core::ffi::c_int) -> cusparseStatus_t,
@@ -26989,7 +27211,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseLoggerSetMask:
             unsafe extern "C" fn(mask: ::core::ffi::c_int) -> cusparseStatus_t,
@@ -27031,7 +27254,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSDDMM: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -27077,7 +27301,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSDDMM_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -27123,7 +27348,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSDDMM_preprocess: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -27441,7 +27667,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseScatter: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28341,7 +28568,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMM_compute: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28389,7 +28617,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMM_copy: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28419,7 +28648,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMM_estimateMemory: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28449,7 +28679,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMM_getNumProducts: unsafe extern "C" fn(
             spgemmDescr: cusparseSpGEMMDescr_t,
@@ -28488,7 +28719,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMM_workEstimation: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28536,7 +28768,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMMreuse_compute: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28581,7 +28814,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMMreuse_copy: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28629,7 +28863,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMMreuse_nnz: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28677,7 +28912,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpGEMMreuse_workEstimation: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28722,7 +28958,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMM: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28752,7 +28989,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMMOp: unsafe extern "C" fn(
             plan: cusparseSpMMOpPlan_t,
@@ -28812,7 +29050,7 @@ mod loaded {
             epilogueBufferSize: usize,
             SpMMWorkspaceSize: *mut usize,
         ) -> cusparseStatus_t,
-        #[cfg(any(feature = "cuda-13010"))]
+        #[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
         pub cusparseSpMMOp_createPlan: unsafe extern "C" fn(
             handle: cusparseHandle_t,
             plan: *mut cusparseSpMMOpPlan_t,
@@ -28846,7 +29084,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMMOp_destroyPlan:
             unsafe extern "C" fn(plan: cusparseSpMMOpPlan_t) -> cusparseStatus_t,
@@ -28881,7 +29120,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMM_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28927,7 +29167,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMM_preprocess: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -28972,7 +29213,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMV: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29016,7 +29258,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMV_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29037,7 +29280,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMV_preprocess: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29075,7 +29319,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMatGetAttribute: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -29105,7 +29350,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMatGetFormat: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -29133,7 +29379,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMatGetIndexBase: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -29163,7 +29410,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMatGetSize: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -29193,7 +29441,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpMatGetStridedBatch: unsafe extern "C" fn(
             spMatDescr: cusparseConstSpMatDescr_t,
@@ -29255,7 +29504,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSM_analysis: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29301,7 +29551,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSM_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29350,7 +29601,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSM_solve: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29371,7 +29623,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSM_updateMatrix: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29409,7 +29662,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSV_analysis: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29453,7 +29707,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSV_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29500,7 +29755,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSV_solve: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29523,7 +29779,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpSV_updateMatrix: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29558,7 +29815,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpVV: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29596,7 +29854,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpVV_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29639,7 +29898,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSpVecGetIndexBase: unsafe extern "C" fn(
             spVecDescr: cusparseConstSpVecDescr_t,
@@ -29685,7 +29945,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSparseToDense: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -29719,7 +29980,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusparseSparseToDense_bufferSize: unsafe extern "C" fn(
             handle: cusparseHandle_t,
@@ -31327,7 +31589,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseAxpby = __library
                 .get(b"cusparseAxpby\0")
@@ -31351,7 +31614,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseBsrSetStridedBatch = __library
                 .get(b"cusparseBsrSetStridedBatch\0")
@@ -31767,7 +32031,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstBlockedEllGet = __library
                 .get(b"cusparseConstBlockedEllGet\0")
@@ -31784,7 +32049,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstCooGet = __library
                 .get(b"cusparseConstCooGet\0")
@@ -31801,7 +32067,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstCscGet = __library
                 .get(b"cusparseConstCscGet\0")
@@ -31818,7 +32085,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstCsrGet = __library
                 .get(b"cusparseConstCsrGet\0")
@@ -31835,7 +32103,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstDnMatGet = __library
                 .get(b"cusparseConstDnMatGet\0")
@@ -31852,7 +32121,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstDnMatGetValues = __library
                 .get(b"cusparseConstDnMatGetValues\0")
@@ -31869,7 +32139,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstDnVecGet = __library
                 .get(b"cusparseConstDnVecGet\0")
@@ -31886,7 +32157,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstDnVecGetValues = __library
                 .get(b"cusparseConstDnVecGetValues\0")
@@ -31903,7 +32175,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstSpMatGetValues = __library
                 .get(b"cusparseConstSpMatGetValues\0")
@@ -31920,7 +32193,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstSpVecGet = __library
                 .get(b"cusparseConstSpVecGet\0")
@@ -31937,7 +32211,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseConstSpVecGetValues = __library
                 .get(b"cusparseConstSpVecGetValues\0")
@@ -32021,7 +32296,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateBsr = __library
                 .get(b"cusparseCreateBsr\0")
@@ -32058,7 +32334,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstBlockedEll = __library
                 .get(b"cusparseCreateConstBlockedEll\0")
@@ -32074,7 +32351,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstBsr = __library
                 .get(b"cusparseCreateConstBsr\0")
@@ -32091,7 +32369,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstCoo = __library
                 .get(b"cusparseCreateConstCoo\0")
@@ -32108,7 +32387,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstCsc = __library
                 .get(b"cusparseCreateConstCsc\0")
@@ -32125,7 +32405,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstCsr = __library
                 .get(b"cusparseCreateConstCsr\0")
@@ -32142,7 +32423,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstDnMat = __library
                 .get(b"cusparseCreateConstDnMat\0")
@@ -32159,7 +32441,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstDnVec = __library
                 .get(b"cusparseCreateConstDnVec\0")
@@ -32175,7 +32458,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstSlicedEll = __library
                 .get(b"cusparseCreateConstSlicedEll\0")
@@ -32192,7 +32476,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateConstSpVec = __library
                 .get(b"cusparseCreateConstSpVec\0")
@@ -32296,7 +32581,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCreateSlicedEll = __library
                 .get(b"cusparseCreateSlicedEll\0")
@@ -32319,7 +32605,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseCscGet = __library
                 .get(b"cusparseCscGet\0")
@@ -32698,7 +32985,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDenseToSparse_analysis = __library
                 .get(b"cusparseDenseToSparse_analysis\0")
@@ -32726,7 +33014,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDenseToSparse_bufferSize = __library
                 .get(b"cusparseDenseToSparse_bufferSize\0")
@@ -32758,7 +33047,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDenseToSparse_convert = __library
                 .get(b"cusparseDenseToSparse_convert\0")
@@ -32855,7 +33145,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDestroyDnMat = __library
                 .get(b"cusparseDestroyDnMat\0")
@@ -32883,7 +33174,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDestroyDnVec = __library
                 .get(b"cusparseDestroyDnVec\0")
@@ -32919,7 +33211,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDestroySpMat = __library
                 .get(b"cusparseDestroySpMat\0")
@@ -32947,7 +33240,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDestroySpVec = __library
                 .get(b"cusparseDestroySpVec\0")
@@ -33080,7 +33374,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseDnMatGetStridedBatch = __library
                 .get(b"cusparseDnMatGetStridedBatch\0")
@@ -33210,7 +33505,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseGather = __library
                 .get(b"cusparseGather\0")
@@ -33283,7 +33579,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseLoggerForceDisable = __library
                 .get(b"cusparseLoggerForceDisable\0")
@@ -33304,7 +33601,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseLoggerOpenFile = __library
                 .get(b"cusparseLoggerOpenFile\0")
@@ -33325,7 +33623,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseLoggerSetCallback = __library
                 .get(b"cusparseLoggerSetCallback\0")
@@ -33346,7 +33645,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseLoggerSetFile = __library
                 .get(b"cusparseLoggerSetFile\0")
@@ -33367,7 +33667,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseLoggerSetLevel = __library
                 .get(b"cusparseLoggerSetLevel\0")
@@ -33388,7 +33689,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseLoggerSetMask = __library
                 .get(b"cusparseLoggerSetMask\0")
@@ -33420,7 +33722,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSDDMM = __library
                 .get(b"cusparseSDDMM\0")
@@ -33448,7 +33751,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSDDMM_bufferSize = __library
                 .get(b"cusparseSDDMM_bufferSize\0")
@@ -33476,7 +33780,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSDDMM_preprocess = __library
                 .get(b"cusparseSDDMM_preprocess\0")
@@ -33583,7 +33888,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseScatter = __library
                 .get(b"cusparseScatter\0")
@@ -33967,7 +34273,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMM_compute = __library
                 .get(b"cusparseSpGEMM_compute\0")
@@ -33995,7 +34302,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMM_copy = __library
                 .get(b"cusparseSpGEMM_copy\0")
@@ -34020,7 +34328,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMM_estimateMemory = __library
                 .get(b"cusparseSpGEMM_estimateMemory\0")
@@ -34037,7 +34346,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMM_getNumProducts = __library
                 .get(b"cusparseSpGEMM_getNumProducts\0")
@@ -34065,7 +34375,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMM_workEstimation = __library
                 .get(b"cusparseSpGEMM_workEstimation\0")
@@ -34093,7 +34404,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMMreuse_compute = __library
                 .get(b"cusparseSpGEMMreuse_compute\0")
@@ -34121,7 +34433,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMMreuse_copy = __library
                 .get(b"cusparseSpGEMMreuse_copy\0")
@@ -34149,7 +34462,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMMreuse_nnz = __library
                 .get(b"cusparseSpGEMMreuse_nnz\0")
@@ -34177,7 +34491,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpGEMMreuse_workEstimation = __library
                 .get(b"cusparseSpGEMMreuse_workEstimation\0")
@@ -34205,7 +34520,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMM = __library
                 .get(b"cusparseSpMM\0")
@@ -34226,7 +34542,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMMOp = __library
                 .get(b"cusparseSpMMOp\0")
@@ -34258,7 +34575,7 @@ mod loaded {
                 .get(b"cusparseSpMMOp_createPlan\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
-            #[cfg(any(feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
             let cusparseSpMMOp_createPlan = __library
                 .get(b"cusparseSpMMOp_createPlan\0")
                 .map(|sym| *sym)
@@ -34278,7 +34595,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMMOp_destroyPlan = __library
                 .get(b"cusparseSpMMOp_destroyPlan\0")
@@ -34306,7 +34624,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMM_bufferSize = __library
                 .get(b"cusparseSpMM_bufferSize\0")
@@ -34334,7 +34653,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMM_preprocess = __library
                 .get(b"cusparseSpMM_preprocess\0")
@@ -34362,7 +34682,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMV = __library
                 .get(b"cusparseSpMV\0")
@@ -34390,7 +34711,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMV_bufferSize = __library
                 .get(b"cusparseSpMV_bufferSize\0")
@@ -34403,7 +34725,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMV_preprocess = __library
                 .get(b"cusparseSpMV_preprocess\0")
@@ -34431,7 +34754,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMatGetAttribute = __library
                 .get(b"cusparseSpMatGetAttribute\0")
@@ -34459,7 +34783,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMatGetFormat = __library
                 .get(b"cusparseSpMatGetFormat\0")
@@ -34487,7 +34812,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMatGetIndexBase = __library
                 .get(b"cusparseSpMatGetIndexBase\0")
@@ -34515,7 +34841,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMatGetSize = __library
                 .get(b"cusparseSpMatGetSize\0")
@@ -34543,7 +34870,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpMatGetStridedBatch = __library
                 .get(b"cusparseSpMatGetStridedBatch\0")
@@ -34594,7 +34922,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSM_analysis = __library
                 .get(b"cusparseSpSM_analysis\0")
@@ -34622,7 +34951,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSM_bufferSize = __library
                 .get(b"cusparseSpSM_bufferSize\0")
@@ -34658,7 +34988,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSM_solve = __library
                 .get(b"cusparseSpSM_solve\0")
@@ -34671,7 +35002,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSM_updateMatrix = __library
                 .get(b"cusparseSpSM_updateMatrix\0")
@@ -34699,7 +35031,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSV_analysis = __library
                 .get(b"cusparseSpSV_analysis\0")
@@ -34727,7 +35060,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSV_bufferSize = __library
                 .get(b"cusparseSpSV_bufferSize\0")
@@ -34763,7 +35097,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSV_solve = __library
                 .get(b"cusparseSpSV_solve\0")
@@ -34779,7 +35114,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpSV_updateMatrix = __library
                 .get(b"cusparseSpSV_updateMatrix\0")
@@ -34807,7 +35143,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpVV = __library
                 .get(b"cusparseSpVV\0")
@@ -34835,7 +35172,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpVV_bufferSize = __library
                 .get(b"cusparseSpVV_bufferSize\0")
@@ -34867,7 +35205,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSpVecGetIndexBase = __library
                 .get(b"cusparseSpVecGetIndexBase\0")
@@ -34907,7 +35246,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSparseToDense = __library
                 .get(b"cusparseSparseToDense\0")
@@ -34935,7 +35275,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusparseSparseToDense_bufferSize = __library
                 .get(b"cusparseSparseToDense_bufferSize\0")
@@ -35551,7 +35892,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseAxpby,
                 cusparseBlockedEllGet,
@@ -35566,7 +35908,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseBsrSetStridedBatch,
                 #[cfg(any(
@@ -35769,7 +36112,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstBlockedEllGet,
                 #[cfg(any(
@@ -35783,7 +36127,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstCooGet,
                 #[cfg(any(
@@ -35797,7 +36142,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstCscGet,
                 #[cfg(any(
@@ -35811,7 +36157,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstCsrGet,
                 #[cfg(any(
@@ -35825,7 +36172,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstDnMatGet,
                 #[cfg(any(
@@ -35839,7 +36187,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstDnMatGetValues,
                 #[cfg(any(
@@ -35853,7 +36202,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstDnVecGet,
                 #[cfg(any(
@@ -35867,7 +36217,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstDnVecGetValues,
                 #[cfg(any(
@@ -35881,7 +36232,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstSpMatGetValues,
                 #[cfg(any(
@@ -35895,7 +36247,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstSpVecGet,
                 #[cfg(any(
@@ -35909,7 +36262,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseConstSpVecGetValues,
                 #[cfg(any(
@@ -35960,7 +36314,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateBsr,
                 cusparseCreateBsric02Info,
@@ -35979,7 +36334,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstBlockedEll,
                 #[cfg(any(
@@ -35992,7 +36348,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstBsr,
                 #[cfg(any(
@@ -36006,7 +36363,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstCoo,
                 #[cfg(any(
@@ -36020,7 +36378,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstCsc,
                 #[cfg(any(
@@ -36034,7 +36393,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstCsr,
                 #[cfg(any(
@@ -36048,7 +36408,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstDnMat,
                 #[cfg(any(
@@ -36062,7 +36423,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstDnVec,
                 #[cfg(any(
@@ -36075,7 +36437,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstSlicedEll,
                 #[cfg(any(
@@ -36089,7 +36452,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateConstSpVec,
                 cusparseCreateCoo,
@@ -36145,7 +36509,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCreateSlicedEll,
                 cusparseCreateSpVec,
@@ -36162,7 +36527,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseCscGet,
                 cusparseCscSetPointers,
@@ -36361,7 +36727,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDenseToSparse_analysis,
                 #[cfg(any(
@@ -36383,7 +36750,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDenseToSparse_bufferSize,
                 #[cfg(any(feature = "cuda-11040"))]
@@ -36406,7 +36774,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDenseToSparse_convert,
                 cusparseDestroy,
@@ -36461,7 +36830,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDestroyDnMat,
                 #[cfg(any(
@@ -36483,7 +36853,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDestroyDnVec,
                 cusparseDestroyMatDescr,
@@ -36507,7 +36878,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDestroySpMat,
                 #[cfg(any(
@@ -36529,7 +36901,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDestroySpVec,
                 cusparseDgebsr2csr,
@@ -36593,7 +36966,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseDnMatGetStridedBatch,
                 cusparseDnMatGetValues,
@@ -36651,7 +37025,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseGather,
                 #[cfg(any(
@@ -36688,7 +37063,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseLoggerForceDisable,
                 #[cfg(any(
@@ -36706,7 +37082,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseLoggerOpenFile,
                 #[cfg(any(
@@ -36724,7 +37101,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseLoggerSetCallback,
                 #[cfg(any(
@@ -36742,7 +37120,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseLoggerSetFile,
                 #[cfg(any(
@@ -36760,7 +37139,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseLoggerSetLevel,
                 #[cfg(any(
@@ -36778,7 +37158,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseLoggerSetMask,
                 cusparseRot,
@@ -36801,7 +37182,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSDDMM,
                 #[cfg(any(
@@ -36823,7 +37205,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSDDMM_bufferSize,
                 #[cfg(any(
@@ -36845,7 +37228,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSDDMM_preprocess,
                 #[cfg(any(
@@ -36892,7 +37276,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseScatter,
                 #[cfg(any(
@@ -37093,7 +37478,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMM_compute,
                 #[cfg(any(
@@ -37115,7 +37501,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMM_copy,
                 cusparseSpGEMM_createDescr,
@@ -37131,7 +37518,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMM_estimateMemory,
                 #[cfg(any(
@@ -37145,7 +37533,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMM_getNumProducts,
                 #[cfg(any(
@@ -37167,7 +37556,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMM_workEstimation,
                 #[cfg(any(
@@ -37189,7 +37579,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMMreuse_compute,
                 #[cfg(any(
@@ -37211,7 +37602,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMMreuse_copy,
                 #[cfg(any(
@@ -37233,7 +37625,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMMreuse_nnz,
                 #[cfg(any(
@@ -37255,7 +37648,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpGEMMreuse_workEstimation,
                 #[cfg(any(
@@ -37277,7 +37671,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMM,
                 #[cfg(any(
@@ -37295,7 +37690,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMMOp,
                 #[cfg(any(
@@ -37318,7 +37714,7 @@ mod loaded {
                     feature = "cuda-13000"
                 ))]
                 cusparseSpMMOp_createPlan,
-                #[cfg(any(feature = "cuda-13010"))]
+                #[cfg(any(feature = "cuda-13010", feature = "cuda-13020"))]
                 cusparseSpMMOp_createPlan,
                 #[cfg(any(
                     feature = "cuda-11050",
@@ -37335,7 +37731,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMMOp_destroyPlan,
                 #[cfg(any(
@@ -37357,7 +37754,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMM_bufferSize,
                 #[cfg(any(
@@ -37379,7 +37777,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMM_preprocess,
                 #[cfg(any(
@@ -37401,7 +37800,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMV,
                 #[cfg(any(
@@ -37423,7 +37823,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMV_bufferSize,
                 #[cfg(any(
@@ -37433,7 +37834,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMV_preprocess,
                 #[cfg(any(
@@ -37455,7 +37857,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMatGetAttribute,
                 #[cfg(any(
@@ -37477,7 +37880,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMatGetFormat,
                 #[cfg(any(
@@ -37499,7 +37903,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMatGetIndexBase,
                 #[cfg(any(
@@ -37521,7 +37926,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMatGetSize,
                 #[cfg(any(
@@ -37543,7 +37949,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpMatGetStridedBatch,
                 cusparseSpMatGetValues,
@@ -37576,7 +37983,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSM_analysis,
                 #[cfg(any(
@@ -37598,7 +38006,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSM_bufferSize,
                 cusparseSpSM_createDescr,
@@ -37622,7 +38031,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSM_solve,
                 #[cfg(any(
@@ -37632,7 +38042,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSM_updateMatrix,
                 #[cfg(any(
@@ -37654,7 +38065,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSV_analysis,
                 #[cfg(any(
@@ -37676,7 +38088,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSV_bufferSize,
                 cusparseSpSV_createDescr,
@@ -37700,7 +38113,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSV_solve,
                 #[cfg(any(
@@ -37713,7 +38127,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpSV_updateMatrix,
                 #[cfg(any(
@@ -37735,7 +38150,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpVV,
                 #[cfg(any(
@@ -37757,7 +38173,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpVV_bufferSize,
                 cusparseSpVecGet,
@@ -37780,7 +38197,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSpVecGetIndexBase,
                 cusparseSpVecGetValues,
@@ -37805,7 +38223,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSparseToDense,
                 #[cfg(any(
@@ -37827,7 +38246,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusparseSparseToDense_bufferSize,
                 cusparseSpruneCsr2csr,

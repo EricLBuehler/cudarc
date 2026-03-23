@@ -625,7 +625,9 @@ fn create_bindings(modules: &[ModuleConfig], cuda_versions: &[&str]) -> Result<(
             let archive = match module.cudarc_name {
                 "cudnn" => generate_cudnn(cuda_version, module, &primary_archives, &multi_progress),
                 "nccl" => generate_nccl(cuda_version, module, &primary_archives, &multi_progress),
-                "cutensor" => generate_cutensor(cuda_version, module, &primary_archives, &multi_progress),
+                "cutensor" => {
+                    generate_cutensor(cuda_version, module, &primary_archives, &multi_progress)
+                }
                 _ => generate_sys(cuda_version, module, &primary_archives, &multi_progress),
             };
             let archive = archive.context(format!(
@@ -873,7 +875,12 @@ fn generate_cutensor(
     let lib = match cuda_major {
         12 => &lib["cuda12"],
         13 => &lib["cuda13"],
-        _ => return Err(anyhow::anyhow!("cuTENSOR only supports CUDA 12 and 13, got {}", cuda_major)),
+        _ => {
+            return Err(anyhow::anyhow!(
+                "cuTENSOR only supports CUDA 12 and 13, got {}",
+                cuda_major
+            ))
+        }
     };
 
     let path = lib["relative_path"].as_str().context(format!(
@@ -961,6 +968,7 @@ fn main() -> Result<()> {
         "cuda-12090",
         "cuda-13000",
         "cuda-13010",
+        "cuda-13020",
     ];
     if let Some(version) = args.cuda_version {
         cuda_versions.retain(|&v| v == version);

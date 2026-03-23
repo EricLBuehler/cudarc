@@ -21,7 +21,8 @@ pub use self::libraryPropertyType_t as libraryPropertyType;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type FILE = _IO_FILE;
 #[cfg(any(
@@ -37,7 +38,8 @@ pub type FILE = _IO_FILE;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type _IO_lock_t = ::core::ffi::c_void;
 #[cfg(any(
@@ -53,7 +55,8 @@ pub type _IO_lock_t = ::core::ffi::c_void;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type __off64_t = ::core::ffi::c_long;
 #[cfg(any(
@@ -69,7 +72,8 @@ pub type __off64_t = ::core::ffi::c_long;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type __off_t = ::core::ffi::c_long;
 pub type csrqrInfo_t = *mut csrqrInfo;
@@ -95,7 +99,8 @@ pub type cusolverDnIRSParams_t = *mut cusolverDnIRSParams;
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 pub type cusolverDnLoggerCallback_t = ::core::option::Option<
     unsafe extern "C" fn(
@@ -224,7 +229,8 @@ pub enum cudaDataType_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -264,7 +270,23 @@ pub enum cudaDataType_t {
     CUDA_R_6F_E3M2 = 32,
     CUDA_R_4F_E2M1 = 33,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum cudaEmulationMantissaControl_t {
+    CUDA_EMULATION_MANTISSA_CONTROL_DYNAMIC = 0,
+    CUDA_EMULATION_MANTISSA_CONTROL_FIXED = 1,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum cudaEmulationSpecialValuesSupport_t {
+    CUDA_EMULATION_SPECIAL_VALUES_SUPPORT_DEFAULT = 65535,
+    CUDA_EMULATION_SPECIAL_VALUES_SUPPORT_NONE = 0,
+    CUDA_EMULATION_SPECIAL_VALUES_SUPPORT_INFINITY = 1,
+    CUDA_EMULATION_SPECIAL_VALUES_SUPPORT_NAN = 2,
+}
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum cudaEmulationStrategy_t {
@@ -294,7 +316,8 @@ pub enum cusolverAlgMode_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -312,7 +335,8 @@ pub enum cusolverAlgMode_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -353,7 +377,7 @@ pub enum cusolverDnFunction_t {
     CUSOLVERDN_GETRF = 0,
     CUSOLVERDN_POTRF = 1,
 }
-#[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+#[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum cusolverDnFunction_t {
@@ -401,6 +425,15 @@ pub enum cusolverIRSRefinement_t {
 pub enum cusolverMathMode_t {
     CUSOLVER_DEFAULT_MATH = 1,
     CUSOLVER_FP32_EMULATED_BF16X9_MATH = 2,
+}
+#[cfg(any(feature = "cuda-13020"))]
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub enum cusolverMathMode_t {
+    CUSOLVER_DEFAULT_MATH = 1,
+    CUSOLVER_FP32_EMULATED_BF16X9_MATH = 2,
+    CUSOLVER_FP64_EMULATED_FIXEDPOINT_MATH = 4,
+    CUSOLVER_FP32_FP64_EMULATED_MATH = 6,
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -530,7 +563,8 @@ pub struct CUstream_st {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
@@ -578,7 +612,8 @@ pub struct _IO_FILE {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -598,7 +633,8 @@ pub struct _IO_codecvt {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -618,7 +654,8 @@ pub struct _IO_marker {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -696,7 +733,8 @@ impl cublasOperation_t {
     feature = "cuda-12080",
     feature = "cuda-12090",
     feature = "cuda-13000",
-    feature = "cuda-13010"
+    feature = "cuda-13010",
+    feature = "cuda-13020"
 ))]
 impl cudaDataType_t {
     pub const CUDA_R_8F_UE4M3: cudaDataType_t = cudaDataType_t::CUDA_R_8F_E4M3;
@@ -2780,18 +2818,39 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnGetDeterministicMode(
         handle: cusolverDnHandle_t,
         mode: *mut cusolverDeterministicMode_t,
     ) -> cusolverStatus_t;
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnGetEmulationSpecialValuesSupport(
+        handle: cusolverDnHandle_t,
+        mask: *mut cudaEmulationSpecialValuesSupport_t,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub fn cusolverDnGetEmulationStrategy(
         handle: cusolverDnHandle_t,
         strategy: *mut cudaEmulationStrategy_t,
     ) -> cusolverStatus_t;
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnGetFixedPointEmulationMantissaBitOffset(
+        handle: cusolverDnHandle_t,
+        mantissaBitOffset: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnGetFixedPointEmulationMantissaControl(
+        handle: cusolverDnHandle_t,
+        control: *mut cudaEmulationMantissaControl_t,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnGetFixedPointEmulationMaxMantissaBitCount(
+        handle: cusolverDnHandle_t,
+        mantissaBitCount: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub fn cusolverDnGetMathMode(
         handle: cusolverDnHandle_t,
         mode: *mut cusolverMathMode_t,
@@ -3335,18 +3394,39 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnSetDeterministicMode(
         handle: cusolverDnHandle_t,
         mode: cusolverDeterministicMode_t,
     ) -> cusolverStatus_t;
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnSetEmulationSpecialValuesSupport(
+        handle: cusolverDnHandle_t,
+        mask: cudaEmulationSpecialValuesSupport_t,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub fn cusolverDnSetEmulationStrategy(
         handle: cusolverDnHandle_t,
         strategy: cudaEmulationStrategy_t,
     ) -> cusolverStatus_t;
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnSetFixedPointEmulationMantissaBitOffset(
+        handle: cusolverDnHandle_t,
+        mantissaBitOffset: ::core::ffi::c_int,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnSetFixedPointEmulationMantissaControl(
+        handle: cusolverDnHandle_t,
+        control: cudaEmulationMantissaControl_t,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnSetFixedPointEmulationMaxMantissaBitCount(
+        handle: cusolverDnHandle_t,
+        mantissaBitCount: ::core::ffi::c_int,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub fn cusolverDnSetMathMode(
         handle: cusolverDnHandle_t,
         mode: cusolverMathMode_t,
@@ -4188,7 +4268,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnXgeev(
         handle: cusolverDnHandle_t,
@@ -4219,7 +4300,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnXgeev_bufferSize(
         handle: cusolverDnHandle_t,
@@ -4511,7 +4593,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnXlarft(
         handle: cusolverDnHandle_t,
@@ -4560,7 +4643,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnXlarft_bufferSize(
         handle: cusolverDnHandle_t,
@@ -4627,7 +4711,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnXsyevBatched(
         handle: cusolverDnHandle_t,
@@ -4653,7 +4738,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cusolverDnXsyevBatched_bufferSize(
         handle: cusolverDnHandle_t,
@@ -4768,6 +4854,103 @@ extern "C" {
         sort_eig: ::core::ffi::c_int,
     ) -> cusolverStatus_t;
     pub fn cusolverDnXsyevjSetTolerance(info: syevjInfo_t, tolerance: f64) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnXsygvd(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *mut ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *mut ::core::ffi::c_void,
+        ldb: i64,
+        dataTypeW: cudaDataType,
+        d_W: *mut ::core::ffi::c_void,
+        computeType: cudaDataType,
+        bufferOnDevice: *mut ::core::ffi::c_void,
+        workspaceInBytesOnDevice: usize,
+        bufferOnHost: *mut ::core::ffi::c_void,
+        workspaceInBytesOnHost: usize,
+        d_info: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnXsygvd_bufferSize(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *const ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *const ::core::ffi::c_void,
+        ldb: i64,
+        dataTypeW: cudaDataType,
+        d_W: *const ::core::ffi::c_void,
+        computeType: cudaDataType,
+        workspaceInBytesOnDevice: *mut usize,
+        workspaceInBytesOnHost: *mut usize,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnXsygvdx(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        range: cusolverEigRange_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *mut ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *mut ::core::ffi::c_void,
+        ldb: i64,
+        vl: *mut ::core::ffi::c_void,
+        vu: *mut ::core::ffi::c_void,
+        il: i64,
+        iu: i64,
+        meig: *mut i64,
+        dataTypeW: cudaDataType,
+        d_W: *mut ::core::ffi::c_void,
+        computeType: cudaDataType,
+        bufferOnDevice: *mut ::core::ffi::c_void,
+        workspaceInBytesOnDevice: usize,
+        bufferOnHost: *mut ::core::ffi::c_void,
+        workspaceInBytesOnHost: usize,
+        d_info: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t;
+    #[cfg(any(feature = "cuda-13020"))]
+    pub fn cusolverDnXsygvdx_bufferSize(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *const ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *const ::core::ffi::c_void,
+        ldb: i64,
+        vl: *mut ::core::ffi::c_void,
+        vu: *mut ::core::ffi::c_void,
+        il: i64,
+        iu: i64,
+        meig: *mut i64,
+        dataTypeW: cudaDataType,
+        d_W: *const ::core::ffi::c_void,
+        computeType: cudaDataType,
+        workspaceInBytesOnDevice: *mut usize,
+        workspaceInBytesOnHost: *mut usize,
+    ) -> cusolverStatus_t;
     pub fn cusolverDnXsytrs(
         handle: cusolverDnHandle_t,
         uplo: cublasFillMode_t,
@@ -9821,7 +10004,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnGetDeterministicMode(
         handle: cusolverDnHandle_t,
@@ -9829,14 +10013,42 @@ mod loaded {
     ) -> cusolverStatus_t {
         (culib().cusolverDnGetDeterministicMode)(handle, mode)
     }
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnGetEmulationSpecialValuesSupport(
+        handle: cusolverDnHandle_t,
+        mask: *mut cudaEmulationSpecialValuesSupport_t,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnGetEmulationSpecialValuesSupport)(handle, mask)
+    }
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub unsafe fn cusolverDnGetEmulationStrategy(
         handle: cusolverDnHandle_t,
         strategy: *mut cudaEmulationStrategy_t,
     ) -> cusolverStatus_t {
         (culib().cusolverDnGetEmulationStrategy)(handle, strategy)
     }
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnGetFixedPointEmulationMantissaBitOffset(
+        handle: cusolverDnHandle_t,
+        mantissaBitOffset: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnGetFixedPointEmulationMantissaBitOffset)(handle, mantissaBitOffset)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnGetFixedPointEmulationMantissaControl(
+        handle: cusolverDnHandle_t,
+        control: *mut cudaEmulationMantissaControl_t,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnGetFixedPointEmulationMantissaControl)(handle, control)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnGetFixedPointEmulationMaxMantissaBitCount(
+        handle: cusolverDnHandle_t,
+        mantissaBitCount: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnGetFixedPointEmulationMaxMantissaBitCount)(handle, mantissaBitCount)
+    }
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub unsafe fn cusolverDnGetMathMode(
         handle: cusolverDnHandle_t,
         mode: *mut cusolverMathMode_t,
@@ -10801,7 +11013,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnSetDeterministicMode(
         handle: cusolverDnHandle_t,
@@ -10809,14 +11022,42 @@ mod loaded {
     ) -> cusolverStatus_t {
         (culib().cusolverDnSetDeterministicMode)(handle, mode)
     }
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnSetEmulationSpecialValuesSupport(
+        handle: cusolverDnHandle_t,
+        mask: cudaEmulationSpecialValuesSupport_t,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnSetEmulationSpecialValuesSupport)(handle, mask)
+    }
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub unsafe fn cusolverDnSetEmulationStrategy(
         handle: cusolverDnHandle_t,
         strategy: cudaEmulationStrategy_t,
     ) -> cusolverStatus_t {
         (culib().cusolverDnSetEmulationStrategy)(handle, strategy)
     }
-    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnSetFixedPointEmulationMantissaBitOffset(
+        handle: cusolverDnHandle_t,
+        mantissaBitOffset: ::core::ffi::c_int,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnSetFixedPointEmulationMantissaBitOffset)(handle, mantissaBitOffset)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnSetFixedPointEmulationMantissaControl(
+        handle: cusolverDnHandle_t,
+        control: cudaEmulationMantissaControl_t,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnSetFixedPointEmulationMantissaControl)(handle, control)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnSetFixedPointEmulationMaxMantissaBitCount(
+        handle: cusolverDnHandle_t,
+        mantissaBitCount: ::core::ffi::c_int,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnSetFixedPointEmulationMaxMantissaBitCount)(handle, mantissaBitCount)
+    }
+    #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
     pub unsafe fn cusolverDnSetMathMode(
         handle: cusolverDnHandle_t,
         mode: cusolverMathMode_t,
@@ -11893,7 +12134,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnXgeev(
         handle: cusolverDnHandle_t,
@@ -11949,7 +12191,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnXgeev_bufferSize(
         handle: cusolverDnHandle_t,
@@ -12519,7 +12762,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnXlarft(
         handle: cusolverDnHandle_t,
@@ -12610,7 +12854,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnXlarft_bufferSize(
         handle: cusolverDnHandle_t,
@@ -12730,7 +12975,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnXsyevBatched(
         handle: cusolverDnHandle_t,
@@ -12776,7 +13022,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cusolverDnXsyevBatched_bufferSize(
         handle: cusolverDnHandle_t,
@@ -13002,6 +13249,200 @@ mod loaded {
         tolerance: f64,
     ) -> cusolverStatus_t {
         (culib().cusolverDnXsyevjSetTolerance)(info, tolerance)
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnXsygvd(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *mut ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *mut ::core::ffi::c_void,
+        ldb: i64,
+        dataTypeW: cudaDataType,
+        d_W: *mut ::core::ffi::c_void,
+        computeType: cudaDataType,
+        bufferOnDevice: *mut ::core::ffi::c_void,
+        workspaceInBytesOnDevice: usize,
+        bufferOnHost: *mut ::core::ffi::c_void,
+        workspaceInBytesOnHost: usize,
+        d_info: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnXsygvd)(
+            handle,
+            params,
+            itype,
+            jobz,
+            uplo,
+            n,
+            dataTypeA,
+            d_A,
+            lda,
+            dataTypeB,
+            d_B,
+            ldb,
+            dataTypeW,
+            d_W,
+            computeType,
+            bufferOnDevice,
+            workspaceInBytesOnDevice,
+            bufferOnHost,
+            workspaceInBytesOnHost,
+            d_info,
+        )
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnXsygvd_bufferSize(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *const ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *const ::core::ffi::c_void,
+        ldb: i64,
+        dataTypeW: cudaDataType,
+        d_W: *const ::core::ffi::c_void,
+        computeType: cudaDataType,
+        workspaceInBytesOnDevice: *mut usize,
+        workspaceInBytesOnHost: *mut usize,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnXsygvd_bufferSize)(
+            handle,
+            params,
+            itype,
+            jobz,
+            uplo,
+            n,
+            dataTypeA,
+            d_A,
+            lda,
+            dataTypeB,
+            d_B,
+            ldb,
+            dataTypeW,
+            d_W,
+            computeType,
+            workspaceInBytesOnDevice,
+            workspaceInBytesOnHost,
+        )
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnXsygvdx(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        range: cusolverEigRange_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *mut ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *mut ::core::ffi::c_void,
+        ldb: i64,
+        vl: *mut ::core::ffi::c_void,
+        vu: *mut ::core::ffi::c_void,
+        il: i64,
+        iu: i64,
+        meig: *mut i64,
+        dataTypeW: cudaDataType,
+        d_W: *mut ::core::ffi::c_void,
+        computeType: cudaDataType,
+        bufferOnDevice: *mut ::core::ffi::c_void,
+        workspaceInBytesOnDevice: usize,
+        bufferOnHost: *mut ::core::ffi::c_void,
+        workspaceInBytesOnHost: usize,
+        d_info: *mut ::core::ffi::c_int,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnXsygvdx)(
+            handle,
+            params,
+            itype,
+            jobz,
+            range,
+            uplo,
+            n,
+            dataTypeA,
+            d_A,
+            lda,
+            dataTypeB,
+            d_B,
+            ldb,
+            vl,
+            vu,
+            il,
+            iu,
+            meig,
+            dataTypeW,
+            d_W,
+            computeType,
+            bufferOnDevice,
+            workspaceInBytesOnDevice,
+            bufferOnHost,
+            workspaceInBytesOnHost,
+            d_info,
+        )
+    }
+    #[cfg(any(feature = "cuda-13020"))]
+    pub unsafe fn cusolverDnXsygvdx_bufferSize(
+        handle: cusolverDnHandle_t,
+        params: cusolverDnParams_t,
+        itype: cusolverEigType_t,
+        jobz: cusolverEigMode_t,
+        uplo: cublasFillMode_t,
+        n: i64,
+        dataTypeA: cudaDataType,
+        d_A: *const ::core::ffi::c_void,
+        lda: i64,
+        dataTypeB: cudaDataType,
+        d_B: *const ::core::ffi::c_void,
+        ldb: i64,
+        vl: *mut ::core::ffi::c_void,
+        vu: *mut ::core::ffi::c_void,
+        il: i64,
+        iu: i64,
+        meig: *mut i64,
+        dataTypeW: cudaDataType,
+        d_W: *const ::core::ffi::c_void,
+        computeType: cudaDataType,
+        workspaceInBytesOnDevice: *mut usize,
+        workspaceInBytesOnHost: *mut usize,
+    ) -> cusolverStatus_t {
+        (culib().cusolverDnXsygvdx_bufferSize)(
+            handle,
+            params,
+            itype,
+            jobz,
+            uplo,
+            n,
+            dataTypeA,
+            d_A,
+            lda,
+            dataTypeB,
+            d_B,
+            ldb,
+            vl,
+            vu,
+            il,
+            iu,
+            meig,
+            dataTypeW,
+            d_W,
+            computeType,
+            workspaceInBytesOnDevice,
+            workspaceInBytesOnHost,
+        )
     }
     pub unsafe fn cusolverDnXsytrs(
         handle: cusolverDnHandle_t,
@@ -18282,18 +18723,43 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnGetDeterministicMode: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
             mode: *mut cusolverDeterministicMode_t,
         ) -> cusolverStatus_t,
-        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnGetEmulationSpecialValuesSupport: unsafe extern "C" fn(
+            handle: cusolverDnHandle_t,
+            mask: *mut cudaEmulationSpecialValuesSupport_t,
+        )
+            -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
         pub cusolverDnGetEmulationStrategy: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
             strategy: *mut cudaEmulationStrategy_t,
         ) -> cusolverStatus_t,
-        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnGetFixedPointEmulationMantissaBitOffset:
+            unsafe extern "C" fn(
+                handle: cusolverDnHandle_t,
+                mantissaBitOffset: *mut ::core::ffi::c_int,
+            ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnGetFixedPointEmulationMantissaControl:
+            unsafe extern "C" fn(
+                handle: cusolverDnHandle_t,
+                control: *mut cudaEmulationMantissaControl_t,
+            ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnGetFixedPointEmulationMaxMantissaBitCount:
+            unsafe extern "C" fn(
+                handle: cusolverDnHandle_t,
+                mantissaBitCount: *mut ::core::ffi::c_int,
+            ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
         pub cusolverDnGetMathMode: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
             mode: *mut cusolverMathMode_t,
@@ -18847,18 +19313,43 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnSetDeterministicMode: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
             mode: cusolverDeterministicMode_t,
         ) -> cusolverStatus_t,
-        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnSetEmulationSpecialValuesSupport: unsafe extern "C" fn(
+            handle: cusolverDnHandle_t,
+            mask: cudaEmulationSpecialValuesSupport_t,
+        )
+            -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
         pub cusolverDnSetEmulationStrategy: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
             strategy: cudaEmulationStrategy_t,
         ) -> cusolverStatus_t,
-        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnSetFixedPointEmulationMantissaBitOffset:
+            unsafe extern "C" fn(
+                handle: cusolverDnHandle_t,
+                mantissaBitOffset: ::core::ffi::c_int,
+            ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnSetFixedPointEmulationMantissaControl:
+            unsafe extern "C" fn(
+                handle: cusolverDnHandle_t,
+                control: cudaEmulationMantissaControl_t,
+            ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnSetFixedPointEmulationMaxMantissaBitCount:
+            unsafe extern "C" fn(
+                handle: cusolverDnHandle_t,
+                mantissaBitCount: ::core::ffi::c_int,
+            ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
         pub cusolverDnSetMathMode: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
             mode: cusolverMathMode_t,
@@ -19701,7 +20192,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnXgeev: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
@@ -19732,7 +20224,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnXgeev_bufferSize: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
@@ -20025,7 +20518,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnXlarft: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
@@ -20074,7 +20568,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnXlarft_bufferSize: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
@@ -20141,7 +20636,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnXsyevBatched: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
@@ -20167,7 +20663,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cusolverDnXsyevBatched_bufferSize: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
@@ -20283,6 +20780,103 @@ mod loaded {
         ) -> cusolverStatus_t,
         pub cusolverDnXsyevjSetTolerance:
             unsafe extern "C" fn(info: syevjInfo_t, tolerance: f64) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnXsygvd: unsafe extern "C" fn(
+            handle: cusolverDnHandle_t,
+            params: cusolverDnParams_t,
+            itype: cusolverEigType_t,
+            jobz: cusolverEigMode_t,
+            uplo: cublasFillMode_t,
+            n: i64,
+            dataTypeA: cudaDataType,
+            d_A: *mut ::core::ffi::c_void,
+            lda: i64,
+            dataTypeB: cudaDataType,
+            d_B: *mut ::core::ffi::c_void,
+            ldb: i64,
+            dataTypeW: cudaDataType,
+            d_W: *mut ::core::ffi::c_void,
+            computeType: cudaDataType,
+            bufferOnDevice: *mut ::core::ffi::c_void,
+            workspaceInBytesOnDevice: usize,
+            bufferOnHost: *mut ::core::ffi::c_void,
+            workspaceInBytesOnHost: usize,
+            d_info: *mut ::core::ffi::c_int,
+        ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnXsygvd_bufferSize: unsafe extern "C" fn(
+            handle: cusolverDnHandle_t,
+            params: cusolverDnParams_t,
+            itype: cusolverEigType_t,
+            jobz: cusolverEigMode_t,
+            uplo: cublasFillMode_t,
+            n: i64,
+            dataTypeA: cudaDataType,
+            d_A: *const ::core::ffi::c_void,
+            lda: i64,
+            dataTypeB: cudaDataType,
+            d_B: *const ::core::ffi::c_void,
+            ldb: i64,
+            dataTypeW: cudaDataType,
+            d_W: *const ::core::ffi::c_void,
+            computeType: cudaDataType,
+            workspaceInBytesOnDevice: *mut usize,
+            workspaceInBytesOnHost: *mut usize,
+        ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnXsygvdx: unsafe extern "C" fn(
+            handle: cusolverDnHandle_t,
+            params: cusolverDnParams_t,
+            itype: cusolverEigType_t,
+            jobz: cusolverEigMode_t,
+            range: cusolverEigRange_t,
+            uplo: cublasFillMode_t,
+            n: i64,
+            dataTypeA: cudaDataType,
+            d_A: *mut ::core::ffi::c_void,
+            lda: i64,
+            dataTypeB: cudaDataType,
+            d_B: *mut ::core::ffi::c_void,
+            ldb: i64,
+            vl: *mut ::core::ffi::c_void,
+            vu: *mut ::core::ffi::c_void,
+            il: i64,
+            iu: i64,
+            meig: *mut i64,
+            dataTypeW: cudaDataType,
+            d_W: *mut ::core::ffi::c_void,
+            computeType: cudaDataType,
+            bufferOnDevice: *mut ::core::ffi::c_void,
+            workspaceInBytesOnDevice: usize,
+            bufferOnHost: *mut ::core::ffi::c_void,
+            workspaceInBytesOnHost: usize,
+            d_info: *mut ::core::ffi::c_int,
+        ) -> cusolverStatus_t,
+        #[cfg(any(feature = "cuda-13020"))]
+        pub cusolverDnXsygvdx_bufferSize: unsafe extern "C" fn(
+            handle: cusolverDnHandle_t,
+            params: cusolverDnParams_t,
+            itype: cusolverEigType_t,
+            jobz: cusolverEigMode_t,
+            uplo: cublasFillMode_t,
+            n: i64,
+            dataTypeA: cudaDataType,
+            d_A: *const ::core::ffi::c_void,
+            lda: i64,
+            dataTypeB: cudaDataType,
+            d_B: *const ::core::ffi::c_void,
+            ldb: i64,
+            vl: *mut ::core::ffi::c_void,
+            vu: *mut ::core::ffi::c_void,
+            il: i64,
+            iu: i64,
+            meig: *mut i64,
+            dataTypeW: cudaDataType,
+            d_W: *const ::core::ffi::c_void,
+            computeType: cudaDataType,
+            workspaceInBytesOnDevice: *mut usize,
+            workspaceInBytesOnHost: *mut usize,
+        ) -> cusolverStatus_t,
         pub cusolverDnXsytrs: unsafe extern "C" fn(
             handle: cusolverDnHandle_t,
             uplo: cublasFillMode_t,
@@ -23004,18 +23598,39 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnGetDeterministicMode = __library
                 .get(b"cusolverDnGetDeterministicMode\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnGetEmulationSpecialValuesSupport = __library
+                .get(b"cusolverDnGetEmulationSpecialValuesSupport\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             let cusolverDnGetEmulationStrategy = __library
                 .get(b"cusolverDnGetEmulationStrategy\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnGetFixedPointEmulationMantissaBitOffset = __library
+                .get(b"cusolverDnGetFixedPointEmulationMantissaBitOffset\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnGetFixedPointEmulationMantissaControl = __library
+                .get(b"cusolverDnGetFixedPointEmulationMantissaControl\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnGetFixedPointEmulationMaxMantissaBitCount = __library
+                .get(b"cusolverDnGetFixedPointEmulationMaxMantissaBitCount\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             let cusolverDnGetMathMode = __library
                 .get(b"cusolverDnGetMathMode\0")
                 .map(|sym| *sym)
@@ -23317,18 +23932,39 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnSetDeterministicMode = __library
                 .get(b"cusolverDnSetDeterministicMode\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnSetEmulationSpecialValuesSupport = __library
+                .get(b"cusolverDnSetEmulationSpecialValuesSupport\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             let cusolverDnSetEmulationStrategy = __library
                 .get(b"cusolverDnSetEmulationStrategy\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnSetFixedPointEmulationMantissaBitOffset = __library
+                .get(b"cusolverDnSetFixedPointEmulationMantissaBitOffset\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnSetFixedPointEmulationMantissaControl = __library
+                .get(b"cusolverDnSetFixedPointEmulationMantissaControl\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnSetFixedPointEmulationMaxMantissaBitCount = __library
+                .get(b"cusolverDnSetFixedPointEmulationMaxMantissaBitCount\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             let cusolverDnSetMathMode = __library
                 .get(b"cusolverDnSetMathMode\0")
                 .map(|sym| *sym)
@@ -23642,7 +24278,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnXgeev = __library
                 .get(b"cusolverDnXgeev\0")
@@ -23653,7 +24290,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnXgeev_bufferSize = __library
                 .get(b"cusolverDnXgeev_bufferSize\0")
@@ -23734,7 +24372,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnXlarft = __library
                 .get(b"cusolverDnXlarft\0")
@@ -23751,7 +24390,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnXlarft_bufferSize = __library
                 .get(b"cusolverDnXlarft_bufferSize\0")
@@ -23774,7 +24414,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnXsyevBatched = __library
                 .get(b"cusolverDnXsyevBatched\0")
@@ -23785,7 +24426,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cusolverDnXsyevBatched_bufferSize = __library
                 .get(b"cusolverDnXsyevBatched_bufferSize\0")
@@ -23825,6 +24467,26 @@ mod loaded {
                 .expect("Expected symbol in library");
             let cusolverDnXsyevjSetTolerance = __library
                 .get(b"cusolverDnXsyevjSetTolerance\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnXsygvd = __library
+                .get(b"cusolverDnXsygvd\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnXsygvd_bufferSize = __library
+                .get(b"cusolverDnXsygvd_bufferSize\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnXsygvdx = __library
+                .get(b"cusolverDnXsygvdx\0")
+                .map(|sym| *sym)
+                .expect("Expected symbol in library");
+            #[cfg(any(feature = "cuda-13020"))]
+            let cusolverDnXsygvdx_bufferSize = __library
+                .get(b"cusolverDnXsygvdx_bufferSize\0")
                 .map(|sym| *sym)
                 .expect("Expected symbol in library");
             let cusolverDnXsytrs = __library
@@ -24736,12 +25398,29 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnGetDeterministicMode,
-                #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnGetEmulationSpecialValuesSupport,
+                #[cfg(any(
+                    feature = "cuda-13000",
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
+                ))]
                 cusolverDnGetEmulationStrategy,
-                #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnGetFixedPointEmulationMantissaBitOffset,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnGetFixedPointEmulationMantissaControl,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnGetFixedPointEmulationMaxMantissaBitCount,
+                #[cfg(any(
+                    feature = "cuda-13000",
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
+                ))]
                 cusolverDnGetMathMode,
                 cusolverDnGetStream,
                 #[cfg(any(
@@ -24896,12 +25575,29 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnSetDeterministicMode,
-                #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnSetEmulationSpecialValuesSupport,
+                #[cfg(any(
+                    feature = "cuda-13000",
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
+                ))]
                 cusolverDnSetEmulationStrategy,
-                #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnSetFixedPointEmulationMantissaBitOffset,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnSetFixedPointEmulationMantissaControl,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnSetFixedPointEmulationMaxMantissaBitCount,
+                #[cfg(any(
+                    feature = "cuda-13000",
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
+                ))]
                 cusolverDnSetMathMode,
                 cusolverDnSetStream,
                 cusolverDnSgebrd,
@@ -25032,7 +25728,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnXgeev,
                 #[cfg(any(
@@ -25040,7 +25737,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnXgeev_bufferSize,
                 cusolverDnXgeqrf,
@@ -25067,7 +25765,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnXlarft,
                 #[cfg(any(feature = "cuda-12040"))]
@@ -25078,7 +25777,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnXlarft_bufferSize,
                 cusolverDnXpotrf,
@@ -25089,7 +25789,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnXsyevBatched,
                 #[cfg(any(
@@ -25097,7 +25798,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cusolverDnXsyevBatched_bufferSize,
                 cusolverDnXsyevd,
@@ -25109,6 +25811,14 @@ mod loaded {
                 cusolverDnXsyevjSetMaxSweeps,
                 cusolverDnXsyevjSetSortEig,
                 cusolverDnXsyevjSetTolerance,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnXsygvd,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnXsygvd_bufferSize,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnXsygvdx,
+                #[cfg(any(feature = "cuda-13020"))]
+                cusolverDnXsygvdx_bufferSize,
                 cusolverDnXsytrs,
                 cusolverDnXsytrs_bufferSize,
                 cusolverDnXtrtri,
