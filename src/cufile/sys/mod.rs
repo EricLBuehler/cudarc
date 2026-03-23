@@ -147,13 +147,49 @@ pub type CUfileStatsLevel3_t = CUfileStatsLevel3;
     feature = "cuda-13020"
 ))]
 pub type CUstream = *mut CUstream_st;
-pub type __darwin_off_t = __int64_t;
-pub type __int64_t = ::core::ffi::c_longlong;
-pub type __uint8_t = ::core::ffi::c_uchar;
+pub type __loff_t = __off64_t;
+pub type __off64_t = ::core::ffi::c_long;
+pub type __off_t = ::core::ffi::c_long;
+#[cfg(any(
+    feature = "cuda-11060",
+    feature = "cuda-11070",
+    feature = "cuda-11080",
+    feature = "cuda-12000",
+    feature = "cuda-12010",
+    feature = "cuda-12020",
+    feature = "cuda-12030",
+    feature = "cuda-12040",
+    feature = "cuda-12050",
+    feature = "cuda-12060",
+    feature = "cuda-12080",
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
+pub type __syscall_slong_t = ::core::ffi::c_long;
+#[cfg(any(
+    feature = "cuda-11060",
+    feature = "cuda-11070",
+    feature = "cuda-11080",
+    feature = "cuda-12000",
+    feature = "cuda-12010",
+    feature = "cuda-12020",
+    feature = "cuda-12030",
+    feature = "cuda-12040",
+    feature = "cuda-12050",
+    feature = "cuda-12060",
+    feature = "cuda-12080",
+    feature = "cuda-12090",
+    feature = "cuda-13000",
+    feature = "cuda-13010",
+    feature = "cuda-13020"
+))]
+pub type __time_t = ::core::ffi::c_long;
 pub type cufileRDMAInfo_t = cufileRDMAInfo;
-pub type loff_t = ::core::ffi::c_longlong;
-pub type off_t = __darwin_off_t;
-pub type sa_family_t = __uint8_t;
+pub type loff_t = __loff_t;
+pub type off_t = __off_t;
+pub type sa_family_t = ::core::ffi::c_ushort;
 pub type sockaddr_t = sockaddr;
 #[cfg(any(
     feature = "cuda-11060",
@@ -2105,28 +2141,6 @@ pub struct CUfileStatsLevel3 {
 pub struct CUstream_st {
     _unused: [u8; 0],
 }
-#[cfg(any(
-    feature = "cuda-11060",
-    feature = "cuda-11070",
-    feature = "cuda-11080",
-    feature = "cuda-12000",
-    feature = "cuda-12010",
-    feature = "cuda-12020",
-    feature = "cuda-12030",
-    feature = "cuda-12040",
-    feature = "cuda-12050",
-    feature = "cuda-12060",
-    feature = "cuda-12080",
-    feature = "cuda-12090",
-    feature = "cuda-13000",
-    feature = "cuda-13010",
-    feature = "cuda-13020"
-))]
-/// If Bindgen could only determine the size and alignment of a
-/// type, it is represented like this.
-#[derive(PartialEq, Copy, Clone, Debug, Hash)]
-#[repr(C)]
-pub struct __BindgenOpaqueArray<T: Copy, const N: usize>(pub [T; N]);
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct cufileRDMAInfo {
@@ -2137,7 +2151,6 @@ pub struct cufileRDMAInfo {
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct sockaddr {
-    pub sa_len: __uint8_t,
     pub sa_family: sa_family_t,
     pub sa_data: [::core::ffi::c_char; 14usize],
 }
@@ -2158,10 +2171,11 @@ pub struct sockaddr {
     feature = "cuda-13010",
     feature = "cuda-13020"
 ))]
-impl<T: Copy + Default, const N: usize> Default for __BindgenOpaqueArray<T, N> {
-    fn default() -> Self {
-        Self([<T as Default>::default(); N])
-    }
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
+pub struct timespec {
+    pub tv_sec: __time_t,
+    pub tv_nsec: __syscall_slong_t,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -2251,7 +2265,7 @@ extern "C" {
         min_nr: ::core::ffi::c_uint,
         nr: *mut ::core::ffi::c_uint,
         iocbp: *mut CUfileIOEvents_t,
-        timeout: *mut __BindgenOpaqueArray<u8, 0usize>,
+        timeout: *mut timespec,
     ) -> CUfileError_t;
     #[cfg(any(
         feature = "cuda-11060",
@@ -2731,7 +2745,7 @@ mod loaded {
         min_nr: ::core::ffi::c_uint,
         nr: *mut ::core::ffi::c_uint,
         iocbp: *mut CUfileIOEvents_t,
-        timeout: *mut __BindgenOpaqueArray<u8, 0usize>,
+        timeout: *mut timespec,
     ) -> CUfileError_t {
         (culib().cuFileBatchIOGetStatus)(batch_idp, min_nr, nr, iocbp, timeout)
     }
@@ -3329,7 +3343,7 @@ mod loaded {
             min_nr: ::core::ffi::c_uint,
             nr: *mut ::core::ffi::c_uint,
             iocbp: *mut CUfileIOEvents_t,
-            timeout: *mut __BindgenOpaqueArray<u8, 0usize>,
+            timeout: *mut timespec,
         ) -> CUfileError_t,
         #[cfg(any(
             feature = "cuda-11060",

@@ -10118,7 +10118,8 @@ extern "C" {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub fn cuCtxCreate_v4(
         pctx: *mut CUcontext,
@@ -13826,7 +13827,8 @@ mod loaded {
         feature = "cuda-12080",
         feature = "cuda-12090",
         feature = "cuda-13000",
-        feature = "cuda-13010"
+        feature = "cuda-13010",
+        feature = "cuda-13020"
     ))]
     pub unsafe fn cuCtxCreate_v4(
         pctx: *mut CUcontext,
@@ -18852,7 +18854,8 @@ mod loaded {
             feature = "cuda-12080",
             feature = "cuda-12090",
             feature = "cuda-13000",
-            feature = "cuda-13010"
+            feature = "cuda-13010",
+            feature = "cuda-13020"
         ))]
         pub cuCtxCreate_v4: unsafe extern "C" fn(
             pctx: *mut CUcontext,
@@ -22664,7 +22667,8 @@ mod loaded {
                 feature = "cuda-12080",
                 feature = "cuda-12090",
                 feature = "cuda-13000",
-                feature = "cuda-13010"
+                feature = "cuda-13010",
+                feature = "cuda-13020"
             ))]
             let cuCtxCreate_v4 = __library
                 .get(b"cuCtxCreate_v4\0")
@@ -26219,7 +26223,8 @@ mod loaded {
                     feature = "cuda-12080",
                     feature = "cuda-12090",
                     feature = "cuda-13000",
-                    feature = "cuda-13010"
+                    feature = "cuda-13010",
+                    feature = "cuda-13020"
                 ))]
                 cuCtxCreate_v4,
                 cuCtxDestroy_v2,
