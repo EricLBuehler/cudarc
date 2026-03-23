@@ -1205,9 +1205,13 @@ pub mod event {
     pub unsafe fn elapsed(start: sys::CUevent, end: sys::CUevent) -> Result<f32, DriverError> {
         let mut ms: f32 = 0.0;
         unsafe {
-            #[cfg(not(any(feature = "cuda-13000", feature = "cuda-13010")))]
+            #[cfg(not(any(
+                feature = "cuda-13000",
+                feature = "cuda-13010",
+                feature = "cuda-13020"
+            )))]
             sys::cuEventElapsedTime((&mut ms) as *mut _, start, end).result()?;
-            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010"))]
+            #[cfg(any(feature = "cuda-13000", feature = "cuda-13010", feature = "cuda-13020"))]
             sys::cuEventElapsedTime_v2((&mut ms) as *mut _, start, end).result()?;
         }
         Ok(ms)
