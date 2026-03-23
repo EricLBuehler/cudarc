@@ -264,6 +264,17 @@ impl CudaContext {
         self.is_primary
     }
 
+    /// Returns whether this context supports asynchronous memory allocation.
+    ///
+    /// By default, the value of this parameter is filled by querying the
+    /// `CU_DEVICE_ATTRIBUTE_MEMORY_POOLS_SUPPORTED` attribute and checking if the number of pools
+    /// is greater than 0.
+    /// Memory allocations performed through the default [CudaStream] will use `cuMemAllocAsync`
+    /// over `cuMemAlloc` if this method returns `true`.
+    pub fn has_async_alloc(&self) -> bool {
+        self.has_async_alloc
+    }
+
     /// The number of devices available.
     pub fn device_count() -> Result<i32, DriverError> {
         result::init()?;
