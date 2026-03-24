@@ -672,7 +672,16 @@ impl CudaContext {
     /// This will swap the calling context to multi stream mode [CudaContext::is_in_multi_stream_mode()].
     /// If the context is not already in multiple stream mode, then this function will also call [CudaContext::synchronize()].
     pub fn new_stream(self: &Arc<Self>) -> Result<Arc<CudaStream>, DriverError> {
-        self.new_stream_with_priority(0)
+        self.bind_to_thread()?;
+        let prev_num_streams = self.num_streams.fetch_add(1, Ordering::Relaxed);
+        if prev_num_streams == 0 && self.is_event_tracking() {
+            self.synchronize()?;
+        }
+        let cu_stream = result::stream::create(result::stream::StreamKind::NonBlocking)?;
+        Ok(Arc::new(CudaStream {
+            cu_stream,
+            ctx: self.clone(),
+        }))
     }
 
     /// Create a new [sys::CUstream_flags::CU_STREAM_NON_BLOCKING] stream with the
