@@ -683,6 +683,33 @@ impl CudaContext {
             ctx: self.clone(),
         }))
     }
+
+    /// Create a new [sys::CUstream_flags::CU_STREAM_NON_BLOCKING] stream with the
+    /// specified priority.
+    ///
+    /// Lower numerical values indicate higher priority. Use
+    /// [`result::stream::get_priority_range`] to query the valid range.
+    ///
+    /// This will swap the calling context to multi stream mode
+    /// [`CudaContext::is_in_multi_stream_mode()`].
+    pub fn new_stream_with_priority(
+        self: &Arc<Self>,
+        priority: i32,
+    ) -> Result<Arc<CudaStream>, DriverError> {
+        self.bind_to_thread()?;
+        let prev_num_streams = self.num_streams.fetch_add(1, Ordering::Relaxed);
+        if prev_num_streams == 0 && self.is_event_tracking() {
+            self.synchronize()?;
+        }
+        let cu_stream = result::stream::create_with_priority(
+            result::stream::StreamKind::NonBlocking,
+            priority,
+        )?;
+        Ok(Arc::new(CudaStream {
+            cu_stream,
+            ctx: self.clone(),
+        }))
+    }
 }
 
 impl CudaStream {
