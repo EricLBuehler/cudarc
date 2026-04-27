@@ -1620,15 +1620,11 @@ pub mod mem_pool {
 mod tests {
     use super::super::safe::{CudaContext, CudaSlice};
     use super::*;
-    use std::println;
 
     #[test]
+    #[ignore = "must be executed with multiple gpus"]
     fn peer_transfer_contexts() -> Result<(), DriverError> {
         let ctx1 = CudaContext::new(0)?;
-        if device::get_count()? < 2 {
-            println!("Skip test because not enough cuda devices");
-            return Ok(());
-        }
         let stream1 = ctx1.default_stream();
         let a: CudaSlice<f64> = stream1.alloc_zeros::<f64>(10)?;
 
@@ -1655,12 +1651,9 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "must be executed with multiple gpus"]
     fn re_associate_context_for_memory_op() -> Result<(), DriverError> {
         let ctx1 = CudaContext::new(0)?;
-        if device::get_count()? < 2 {
-            println!("Skip test because not enough cuda devices");
-            return Ok(());
-        }
         let stream1 = ctx1.default_stream();
         let a: CudaSlice<f64> = stream1.alloc_zeros::<f64>(10)?;
 
